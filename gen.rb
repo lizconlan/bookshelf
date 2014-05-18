@@ -61,7 +61,7 @@ class BookIndex
   protected
 
   def get_folders
-    folders = Dir.glob('../*')
+    folders = Dir.glob(ARGV[0] || '../*')
     folders.delete_if { |folder| folder =~ /(^..\/_)|(\r$)/ }
   end
 
@@ -137,18 +137,19 @@ def output_book(html, book, book_type, suppress_hr = false)
   end
   html << "<#{block} class='book'>"
   html << "  <#{title_class} class='title'><a href='#{book.link}'>#{book.title}</a></#{title_class}>"
-  html << "  <img src='#{book.cover_pic}' width='160' height='160' border='0' alt=''/>" if book.cover_pic
+  html << "  <img src='#{book.cover_pic}' style='float:right;box-shadow:10px 10px 10px 5px #ccc;' alt=''/>" if book.cover_pic
   html << "  <section class='about'>"
   html << "    <span class='notes'>#{book.notes}</span> <br /><br />" unless book.notes.nil?
   html << "    <span class='authors'>#{book.authors.join(", ")}</span> <br />"
   html << "    <span class='publisher'>#{book.publisher}</span> <br />"
   html << "    <span class='isbn'>#{book.isbn}</span> " unless book.isbn.empty?
+#   https://www.googleapis.com/books/v1/volumes?q=isbn:0978739221
   html << "    <ul class='formats'>"
   book.formats.each do |format|
     html << "      <li><a href='#{format[:link]}'>#{format[:name]}</a></li>"
   end
   html << "    </ul>"
-  html << "  </section>"
+  html << "  </section><br clear='all'>"
   html << "</#{block}>"
   html << "<hr />" unless suppress_hr
 end
@@ -172,7 +173,7 @@ begin
       html << "<hr />" unless book == books.last
     end
   end
-  index.write(%Q|<html><head><meta charset="utf-8" /><head><body><h1>Bookshelf</h1>#{html.join("\n")}</body></html>|)
+  index.write(%Q|<html><head><meta charset="utf-8" /><title>Bookshelf</title><head><body style="width:50%;margin:1em auto;font-family:sans-serif;">#{html.join("\n")}</body></html>|)
   index.close
 rescue => e
   p e.message
