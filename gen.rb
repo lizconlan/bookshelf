@@ -27,7 +27,7 @@ class BookIndex
               book = create_book(subfolder_name, info)
               books << book
             else
-              p "Info not found for #{subfolder_name}"
+              puts "Info not found for #{subfolder_name}"
             end
           end
           unless books.empty?
@@ -38,10 +38,10 @@ class BookIndex
             @books << bundle
           end
         else
-          p "Info not found for #{folder_name}"
+          puts "Info not found for #{folder_name}"
         end
       rescue => e
-        p e.message
+        puts e.message
       end
     end
   end
@@ -135,7 +135,7 @@ def output_book(html, book, book_type, suppress_hr = false)
     block = "article"
     title_class = "h2"
   end
-  html << "<#{block} class='book'>"
+  html << "<#{block} class='book' itemscope='' itemtype='http://schema.org/Book'>"
   html << "  <#{title_class} class='title'><a href='#{book.link}'>#{book.title}</a></#{title_class}>"
   html << "  <img src='#{book.cover_pic}' style='float:right;box-shadow:10px 10px 10px 5px #ccc;' alt=''/>" if book.cover_pic
   html << "  <section class='about'>"
@@ -146,7 +146,7 @@ def output_book(html, book, book_type, suppress_hr = false)
 #   https://www.googleapis.com/books/v1/volumes?q=isbn:0978739221
   html << "    <ul class='formats'>"
   book.formats.each do |format|
-    html << "      <li><a href='#{format[:link]}'>#{format[:name]}</a></li>"
+    html << "      <li><a href='ibooks://#{format[:link]}'>#{format[:name]}</a></li>"
   end
   html << "    </ul>"
   html << "  </section><br clear='all'>"
@@ -176,5 +176,5 @@ begin
   index.write(%Q|<html><head><meta charset="utf-8" /><title>Bookshelf</title><head><body style="width:50%;margin:1em auto;font-family:sans-serif;">#{html.join("\n")}</body></html>|)
   index.close
 rescue => e
-  p e.message
+  puts e.message
 end
