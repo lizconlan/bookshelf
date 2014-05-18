@@ -155,7 +155,9 @@ def output_book(html, book, book_type)
                     var isbn_key = _.keys(openLibJson)[0];
                     $('span.isbn_#{book.isbn}').append('<br><time>Published: ' + openLibJson[isbn_key].publish_date + '</time>');
                     $('span.isbn_#{book.isbn}').append('<br><span>' + openLibJson[isbn_key].number_of_pages + 'pp.</span>');
+                    $('span.isbn_#{book.isbn}').append('<br><span><img itemprop=\"image\" src=\"' + openLibJson[isbn_key].cover.medium + '\"></span>');
                     }
+                    
                 })</script>"
       
   end
@@ -164,7 +166,7 @@ def output_book(html, book, book_type)
     html << "      <li><a href='#{format[:link]}'>#{format[:name]}</a></li>"
   end
   html << "    </ul>"
-  html << "  </section><br clear='all'>"
+  html << "  </section>"
   html << "</#{block}>"
 end
 
