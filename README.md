@@ -70,6 +70,10 @@ Ok, sorry, probably should have done this bit sooner...
 3. From the command line run `ruby gen.rb`
 4. Load the resulting index.html into your favourite browser
 
+Tip: instead of the script targeting the default directory, you can override the target directory by passing a new glob target to the script:
+
+    ruby gen.rb "/Users/username/Dropbox/bookshelf/*"
+
 * * *
 
 <a name="footnote-1" />
@@ -77,3 +81,4 @@ Ok, sorry, probably should have done this bit sooner...
   
 <a name="footnote-2" />
 <sup>&Dagger;</sup>If you would like a folder with lots of books in it, may I suggest [Project Gutenberg](http://www.gutenberg.org) as a good starting point
+
