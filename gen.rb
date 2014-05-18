@@ -98,8 +98,9 @@ class BookIndex
     book.authors = info["authors"]
     book.publisher = info["publisher"]
     book.isbn = info["ISBN"]
-    if File.exist?("#{folder_name}/_meta/cover.jpg")
-      book.cover_pic = "#{folder_name}/_meta/cover.jpg"
+    cover_pic_path = "#{folder_name}/_meta/cover.jpg"
+    if File.exist?(cover_pic_path)
+      book.cover_pic = cover_pic_path
     end
     book.notes = info["notes"] if info["notes"]
     book.formats = formats
@@ -194,9 +195,9 @@ begin
                         <style>
                             body {width:50%;margin:1em auto;font-family:sans-serif;}
                             a {text-decoration:none;}
-                            img[itemprop="image"] {float:right;box-shadow:10px 10px 10px 5px #ccc;}
-                            article.book{border-bottom:1pt solid black;}
-                            article.book:last-of-type{border-bottom:none;}
+                            img[itemprop="image"] {float:right;}
+                            article.book{height:300px;box-shadow:10px 10px 10px 5px gray;padding:20px;border:1pt solid gray;margin:20px;}
+                            article.book:last-of-type{}
                         </style>
                     <head>
                     <body>
