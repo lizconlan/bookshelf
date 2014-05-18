@@ -1,6 +1,7 @@
 #encoding: utf-8
 
 require 'json'
+require 'open-uri'
 
 class BookIndex
   attr_reader :books
@@ -142,8 +143,18 @@ def output_book(html, book, book_type, suppress_hr = false)
   html << "    <span class='notes'>#{book.notes}</span> <br /><br />" unless book.notes.nil?
   html << "    <span class='authors'>#{book.authors.join(", ")}</span> <br />"
   html << "    <span class='publisher'>#{book.publisher}</span> <br />"
-  html << "    <span class='isbn'>#{book.isbn}</span> " unless book.isbn.empty?
-#   https://www.googleapis.com/books/v1/volumes?q=isbn:0978739221
+  unless book.isbn.empty?
+      html << "    <span class='isbn'>#{book.isbn}</span> " 
+#       html << "    <a href='http://openlibrary.org/search?isbn=#{book.isbn}'>OpenLibrary</a>"
+      targeturl = "https://openlibrary.org/api/books?bibkeys=ISBN:" + book.isbn.tr(' ','') + "&format=json"
+      open(targeturl) { |io| 
+        jsonstring = io.read
+#         puts JSON.parse(jsonstring).inspect
+        parsed = JSON.parse(jsonstring)
+        puts parsed.values[0]['info_url'] if parsed.values[0]
+        }
+      
+  end
   html << "    <ul class='formats'>"
   book.formats.each do |format|
     html << "      <li><a href='ibooks://#{format[:link]}'>#{format[:name]}</a></li>"
@@ -173,7 +184,15 @@ begin
       html << "<hr />" unless book == books.last
     end
   end
-  index.write(%Q|<html><head><meta charset="utf-8" /><title>Bookshelf</title><head><body style="width:50%;margin:1em auto;font-family:sans-serif;">#{html.join("\n")}</body></html>|)
+  index.write(%Q|<html>
+                    <head>
+                        <meta charset="utf-8" />
+                        <title>Bookshelf</title>
+                    <head>
+                    <body style="width:50%;margin:1em auto;font-family:sans-serif;">
+                        #{html.join("\n")}
+                    </body>
+                </html>|)
   index.close
 rescue => e
   puts e.message
