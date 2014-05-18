@@ -146,24 +146,15 @@ def output_book(html, book, book_type)
   unless book.isbn.empty?
       html << "    <span class='isbn'>#{book.isbn}</span> " 
       targeturl = "https://openlibrary.org/api/books?bibkeys=ISBN:" + book.isbn.tr(' ','') + "&jscmd=data&format=json"
-      html << "<script>$.getJSON('#{targeturl}', function(remoteData){
-                    
-                    if (_.isEmpty(remoteData)) {
-                    console.log('isbn not resolved');
+      html << "<script>$.getJSON('#{targeturl}', function(openLibJson){
+                    if (_.isEmpty(openLibJson)) {
+                    console.log('No OpenLibrary data for ISBN: #{book.isbn}');
                     } else {
-                    console.log(remoteData);
-                    console.log(_.keys(remoteData));
+                    console.log(openLibJson);
+                    var isbn_key = _.keys(openLibJson)[0];
+                    console.log(openLibJson[isbn_key].url);
                     }
                 })</script>"
-     # open(targeturl) { |io| 
-#         jsonstring = io.read
-#         puts JSON.parse(jsonstring).inspect
-#         parsed = JSON.parse(jsonstring)
-#         parsedvalues = parsed.values[0]
-#         if parsedvalues
-#             html << "<img src='#{parsedvalues['thumbnail_url'].tr('S','M')}' style='float:right;'>"
-#         end
-#         }
       
   end
   html << "    <ul class='formats'>"
