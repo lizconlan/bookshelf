@@ -97,8 +97,8 @@ class BookIndex
     book.authors = info["authors"]
     book.publisher = info["publisher"]
     book.isbn = info["ISBN"]
-    if File.exist?("#{folder_name}/_meta/cover.jpeg")
-      book.cover_pic = "#{folder_name}/_meta/cover.jpeg"
+    if File.exist?("#{folder_name}/_meta/cover.jpg")
+      book.cover_pic = "#{folder_name}/_meta/cover.jpg"
     end
     book.notes = info["notes"] if info["notes"]
     book.formats = formats
@@ -137,7 +137,7 @@ def output_book(html, book, book_type, suppress_hr = false)
   end
   html << "<#{block} class='book'>"
   html << "  <#{title_class} class='title'><a href='#{book.link}'>#{book.title}</a></#{title_class}>"
-  html << "  <img src='#{book.cover_pic}' width='160' height='160' border='0' alt=''/>" if book.cover_pic
+  html << "  <img src='#{book.cover_pic}' height='160' border='0' alt=''/>" if book.cover_pic
   html << "  <section class='about'>"
   html << "    <span class='notes'>#{book.notes}</span> <br /><br />" unless book.notes.nil?
   html << "    <span class='authors'>#{book.authors.join(", ")}</span> <br />"
