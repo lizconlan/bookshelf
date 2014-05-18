@@ -138,29 +138,37 @@ def output_book(html, book, book_type, suppress_hr = false)
   end
   html << "<#{block} class='book' itemscope='' itemtype='http://schema.org/Book'>"
   html << "  <#{title_class} class='title'><a href='#{book.link}'>#{book.title}</a></#{title_class}>"
-  html << "  <img src='#{book.cover_pic}' style='float:right;box-shadow:10px 10px 10px 5px #ccc;' alt=''/>" if book.cover_pic
+  html << "  <img itemprop='image' src='#{book.cover_pic}' alt=''/>" if book.cover_pic
   html << "  <section class='about'>"
   html << "    <span class='notes'>#{book.notes}</span> <br /><br />" unless book.notes.nil?
   html << "    <span class='authors'>#{book.authors.join(", ")}</span> <br />"
   html << "    <span class='publisher'>#{book.publisher}</span> <br />"
   unless book.isbn.empty?
       html << "    <span class='isbn'>#{book.isbn}</span> " 
-#       html << "    <a href='http://openlibrary.org/search?isbn=#{book.isbn}'>OpenLibrary</a>"
-      targeturl = "https://openlibrary.org/api/books?bibkeys=ISBN:" + book.isbn.tr(' ','') + "&format=json"
-     open(targeturl) { |io| 
-        jsonstring = io.read
-        puts JSON.parse(jsonstring).inspect
-        parsed = JSON.parse(jsonstring)
-        parsedvalues = parsed.values[0]
-        if parsedvalues
-            html << "<img src='#{parsedvalues['thumbnail_url'].tr('S','M')}' style='float:right;'>"
-        end
-        }
+      targeturl = "https://openlibrary.org/api/books?bibkeys=ISBN:" + book.isbn.tr(' ','') + "&jscmd=data&format=json"
+      html << "<script>$.getJSON('#{targeturl}', function(remoteData){
+                    
+                    if (_.isEmpty(remoteData)) {
+                    console.log('isbn not resolved');
+                    } else {
+                    console.log(remoteData);
+                    console.log(_.keys(remoteData));
+                    }
+                })</script>"
+     # open(targeturl) { |io| 
+#         jsonstring = io.read
+#         puts JSON.parse(jsonstring).inspect
+#         parsed = JSON.parse(jsonstring)
+#         parsedvalues = parsed.values[0]
+#         if parsedvalues
+#             html << "<img src='#{parsedvalues['thumbnail_url'].tr('S','M')}' style='float:right;'>"
+#         end
+#         }
       
   end
   html << "    <ul class='formats'>"
   book.formats.each do |format|
-    html << "      <li><a href='ibooks://#{format[:link]}'>#{format[:name]}</a></li>"
+    html << "      <li><a href='#{format[:link]}'>#{format[:name]}</a></li>"
   end
   html << "    </ul>"
   html << "  </section><br clear='all'>"
@@ -191,8 +199,16 @@ begin
                     <head>
                         <meta charset="utf-8" />
                         <title>Bookshelf</title>
+                        <script src="http://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.3/zepto.min.js"></script>
+                        <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+                        <style>
+                            body {width:50%;margin:1em auto;font-family:sans-serif;}
+                            a {text-decoration:none;}
+                            img[itemprop="image"] {float:right;box-shadow:10px 10px 10px 5px #ccc;}
+                        </style>
                     <head>
-                    <body style="width:50%;margin:1em auto;font-family:sans-serif;">
+                    <body>
+                    <script>console.clear();</script>
                         #{html.join("\n")}
                     </body>
                 </html>|)
