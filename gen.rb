@@ -147,11 +147,14 @@ def output_book(html, book, book_type, suppress_hr = false)
       html << "    <span class='isbn'>#{book.isbn}</span> " 
 #       html << "    <a href='http://openlibrary.org/search?isbn=#{book.isbn}'>OpenLibrary</a>"
       targeturl = "https://openlibrary.org/api/books?bibkeys=ISBN:" + book.isbn.tr(' ','') + "&format=json"
-      open(targeturl) { |io| 
+     open(targeturl) { |io| 
         jsonstring = io.read
-#         puts JSON.parse(jsonstring).inspect
+        puts JSON.parse(jsonstring).inspect
         parsed = JSON.parse(jsonstring)
-        puts parsed.values[0]['info_url'] if parsed.values[0]
+        parsedvalues = parsed.values[0]
+        if parsedvalues
+            html << "<img src='#{parsedvalues['thumbnail_url'].tr('S','M')}' style='float:right;'>"
+        end
         }
       
   end
