@@ -98,8 +98,8 @@ class BookIndex
     book.authors = info["authors"]
     book.publisher = info["publisher"]
     book.isbn = info["ISBN"]
-    if File.exist?("#{folder_name}/_meta/cover.jpeg")
-      book.cover_pic = "#{folder_name}/_meta/cover.jpeg"
+    if File.exist?("#{folder_name}/_meta/cover.jpg")
+      book.cover_pic = "#{folder_name}/_meta/cover.jpg"
     end
     book.notes = info["notes"] if info["notes"]
     book.formats = formats
