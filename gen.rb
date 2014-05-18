@@ -144,7 +144,7 @@ def output_book(html, book, book_type)
   html << "    <span class='authors'>#{book.authors.join(", ")}</span> <br />"
   html << "    <span class='publisher'>#{book.publisher}</span> <br />"
   unless book.isbn.empty?
-      html << "    <span class='isbn'>#{book.isbn}</span> " 
+      html << "    <span class='isbn isbn_#{book.isbn}'>#{book.isbn}</span> " 
       targeturl = "https://openlibrary.org/api/books?bibkeys=ISBN:" + book.isbn.tr(' ','') + "&jscmd=data&format=json"
       html << "<script>$.getJSON('#{targeturl}', function(openLibJson){
                     if (_.isEmpty(openLibJson)) {
@@ -152,7 +152,8 @@ def output_book(html, book, book_type)
                     } else {
                     console.log(openLibJson);
                     var isbn_key = _.keys(openLibJson)[0];
-                    console.log(openLibJson[isbn_key].url);
+                    var publish_date = openLibJson[isbn_key].publish_date;
+                    $('span.isbn_#{book.isbn}').append('<p><time>Published: ' + publish_date + '</time></p>')
                     }
                 })</script>"
       
