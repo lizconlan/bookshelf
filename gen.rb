@@ -72,7 +72,7 @@ class BookIndex
     book_files.each do |file_name|
       format = {}
       if !File.directory?("#{file_name}")
-        format_name = file_name[file_name.rindex(".")+1..-1]
+        format_name = file_name[file_name.rindex("/")+1..-1]
         format[:name] = format_name
         format[:link] = "#{file_name}"
         formats << format
@@ -152,8 +152,8 @@ def output_book(html, book, book_type)
                     } else {
                     console.log(openLibJson);
                     var isbn_key = _.keys(openLibJson)[0];
-                    var publish_date = openLibJson[isbn_key].publish_date;
-                    $('span.isbn_#{book.isbn}').append('<p><time>Published: ' + publish_date + '</time></p>')
+                    $('span.isbn_#{book.isbn}').append('<br><time>Published: ' + openLibJson[isbn_key].publish_date + '</time>');
+                    $('span.isbn_#{book.isbn}').append('<br><span>' + openLibJson[isbn_key].number_of_pages + 'pp.</span>');
                     }
                 })</script>"
       
