@@ -128,7 +128,7 @@ class BookBundle < Book
 end
 
 
-def output_book(html, book, book_type, suppress_hr = false)
+def output_book(html, book, book_type)
   if book_type == "bundle"
     block = "section"
     title_class = "h3"
@@ -173,7 +173,6 @@ def output_book(html, book, book_type, suppress_hr = false)
   html << "    </ul>"
   html << "  </section><br clear='all'>"
   html << "</#{block}>"
-  html << "<hr />" unless suppress_hr
 end
 
 indexer = BookIndex.new
@@ -184,15 +183,14 @@ begin
   html = []
   books.each do |book|
     if book.class.to_s == "Book"
-      output_book(html, book, "book", book == books.last)
+      output_book(html, book, "book")
     else
       html << "<article class='book_bundle'>"
       html << "  <h2 class='title'><a href='#{book.link}'>#{book.title}</a></h2>"
       book.books.each do |edition|
-        output_book(html, edition, "bundle", edition == book.books.last)
+        output_book(html, edition, "bundle")
       end
       html << "</article>"
-      html << "<hr />" unless book == books.last
     end
   end
   index.write(%Q|<html>
@@ -205,6 +203,8 @@ begin
                             body {width:50%;margin:1em auto;font-family:sans-serif;}
                             a {text-decoration:none;}
                             img[itemprop="image"] {float:right;box-shadow:10px 10px 10px 5px #ccc;}
+                            article.book{border-bottom:1pt solid black;}
+                            article.book:last-of-type{border-bottom:none;}
                         </style>
                     <head>
                     <body>
