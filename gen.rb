@@ -156,7 +156,6 @@ def output_book(html, book, book_type)
                     var isbn_key = _.keys(openLibJson)[0];
                     $('span.isbn_#{book.isbn}').append('<br><time>Published: ' + openLibJson[isbn_key].publish_date + '</time>');
                     $('span.isbn_#{book.isbn}').append('<br><span>' + openLibJson[isbn_key].number_of_pages + 'pp.</span>');
-                    $('span.isbn_#{book.isbn}').append('<br><span><img itemprop=\"image\" src=\"' + openLibJson[isbn_key].cover.medium + '\"></span>');
                     }
                     
                 })</script>"
@@ -192,7 +191,7 @@ begin
   index.write(%Q|<html>
                     <head>
                         <meta charset="utf-8" />
-                        <title>Bookshelf</title>
+                        <title>#{books.length} books</title>
                         <script src="http://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.3/zepto.min.js"></script>
                         <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
                         <style>
@@ -204,8 +203,9 @@ begin
                         </style>
                     <head>
                     <body>
-                    <script>console.clear();</script>
+                        
                         #{html.join("\n")}
+                        
                     </body>
                 </html>|)
   index.close
