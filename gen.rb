@@ -1,6 +1,7 @@
 #encoding: utf-8
 
 require 'json'
+require 'open-uri'
 
 class BookIndex
   attr_reader :books
@@ -27,7 +28,7 @@ class BookIndex
               book = create_book(subfolder_name, info)
               books << book
             else
-              p "Info not found for #{subfolder_name}"
+              puts "Info not found for #{subfolder_name}"
             end
           end
           unless books.empty?
@@ -38,10 +39,10 @@ class BookIndex
             @books << bundle
           end
         else
-          p "Info not found for #{folder_name}"
+          puts "Info not found for #{folder_name}"
         end
       rescue => e
-        p e.message
+        puts e.message
       end
     end
   end
@@ -61,7 +62,7 @@ class BookIndex
   protected
 
   def get_folders
-    folders = Dir.glob('../*')
+    folders = Dir.glob(ARGV[0] || '../*')
     folders.delete_if { |folder| folder =~ /(^..\/_)|(\r$)/ }
   end
 
@@ -71,7 +72,7 @@ class BookIndex
     book_files.each do |file_name|
       format = {}
       if !File.directory?("#{file_name}")
-        format_name = file_name[file_name.rindex(".")+1..-1]
+        format_name = file_name[file_name.rindex("/")+1..-1]
         format[:name] = format_name
         format[:link] = "#{file_name}"
         formats << format
@@ -97,8 +98,9 @@ class BookIndex
     book.authors = info["authors"]
     book.publisher = info["publisher"]
     book.isbn = info["ISBN"]
-    if File.exist?("#{folder_name}/_meta/cover.jpg")
-      book.cover_pic = "#{folder_name}/_meta/cover.jpg"
+    cover_pic_path = "#{folder_name}/_meta/cover.jpg"
+    if File.exist?(cover_pic_path)
+      book.cover_pic = cover_pic_path
     end
     book.notes = info["notes"] if info["notes"]
     book.formats = formats
@@ -127,7 +129,7 @@ class BookBundle < Book
 end
 
 
-def output_book(html, book, book_type, suppress_hr = false)
+def output_book(html, book, book_type)
   if book_type == "bundle"
     block = "section"
     title_class = "h3"
@@ -135,22 +137,37 @@ def output_book(html, book, book_type, suppress_hr = false)
     block = "article"
     title_class = "h2"
   end
-  html << "<#{block} class='book'>"
+  html << "<#{block} class='book' itemscope='' itemtype='http://schema.org/Book'>"
   html << "  <#{title_class} class='title'><a href='#{book.link}'>#{book.title}</a></#{title_class}>"
-  html << "  <img src='#{book.cover_pic}' height='160' border='0' alt=''/>" if book.cover_pic
+  html << "  <img itemprop='image' src='#{book.cover_pic}' alt=''/>" if book.cover_pic
+
   html << "  <section class='about'>"
   html << "    <span class='notes'>#{book.notes}</span> <br /><br />" unless book.notes.nil?
   html << "    <span class='authors'>#{book.authors.join(", ")}</span> <br />"
   html << "    <span class='publisher'>#{book.publisher}</span> <br />"
-  html << "    <span class='isbn'>#{book.isbn}</span> " unless book.isbn.empty?
+  unless book.isbn.empty?
+      html << "    <span class='isbn isbn_#{book.isbn}'>#{book.isbn}</span> " 
+      targeturl = "https://openlibrary.org/api/books?bibkeys=ISBN:" + book.isbn.tr(' ','') + "&jscmd=data&format=json"
+      html << "<script>$.getJSON('#{targeturl}', function(openLibJson){
+                    if (_.isEmpty(openLibJson)) {
+                    console.log('No OpenLibrary data for ISBN: #{book.isbn}');
+                    } else {
+                    console.log(openLibJson);
+                    var isbn_key = _.keys(openLibJson)[0];
+                    $('span.isbn_#{book.isbn}').append('<br><time>Published: ' + openLibJson[isbn_key].publish_date + '</time>');
+                    $('span.isbn_#{book.isbn}').append('<br><span>' + openLibJson[isbn_key].number_of_pages + 'pp.</span>');
+                    }
+                    
+                })</script>"
+      
+  end
   html << "    <ul class='formats'>"
   book.formats.each do |format|
-    html << "      <li><a href='#{format[:link]}'>#{format[:name]}</a></li>"
+    html << "      <li><a href='ibooks://#{format[:link]}'>#{format[:name]}</a></li>"
   end
   html << "    </ul>"
-  html << "  </section>"
+  html << "  </section><br clear='all'>"
   html << "</#{block}>"
-  html << "<hr />" unless suppress_hr
 end
 
 indexer = BookIndex.new
@@ -161,19 +178,37 @@ begin
   html = []
   books.each do |book|
     if book.class.to_s == "Book"
-      output_book(html, book, "book", book == books.last)
+      output_book(html, book, "book")
     else
       html << "<article class='book_bundle'>"
       html << "  <h2 class='title'><a href='#{book.link}'>#{book.title}</a></h2>"
       book.books.each do |edition|
-        output_book(html, edition, "bundle", edition == book.books.last)
+        output_book(html, edition, "bundle")
       end
       html << "</article>"
-      html << "<hr />" unless book == books.last
     end
   end
-  index.write(%Q|<html><head><meta charset="utf-8" /><head><body><h1>Bookshelf</h1>#{html.join("\n")}</body></html>|)
+  index.write(%Q|<html>
+                    <head>
+                        <meta charset="utf-8" />
+                        <title>#{books.length} books</title>
+                        <script src="http://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.3/zepto.min.js"></script>
+                        <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+                        <style>
+                            body {width:50%;margin:1em auto;font-family:sans-serif;}
+                            a {text-decoration:none;}
+                            img[itemprop="image"] {float:right;}
+                            article.book{height:300px;box-shadow:10px 10px 10px 5px gray;padding:20px;border:1pt solid gray;margin:20px;}
+                            article.book:last-of-type{}
+                        </style>
+                    <head>
+                    <body>
+                        
+                        #{html.join("\n")}
+                        
+                    </body>
+                </html>|)
   index.close
 rescue => e
-  p e.message
+  puts e.message
 end
