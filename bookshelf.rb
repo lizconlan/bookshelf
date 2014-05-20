@@ -2,6 +2,7 @@
 
 require 'json'
 require 'open-uri'
+require 'erb'
 
 class Bookshelf
   attr_reader :books
