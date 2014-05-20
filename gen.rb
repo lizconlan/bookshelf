@@ -146,7 +146,7 @@ def output_book(html, book, book_type)
   html << "    <span class='authors'>#{book.authors.join(", ")}</span> <br />"
   html << "    <span class='publisher'>#{book.publisher}</span> <br />"
   unless book.isbn.empty?
-      html << "    <span class='isbn isbn_#{book.isbn}'>#{book.isbn}</span> " 
+      html << "    <span class='isbn isbn_#{book.isbn}'>#{book.isbn}</span> "
       targeturl = "https://openlibrary.org/api/books?bibkeys=ISBN:" + book.isbn.tr(' ','') + "&jscmd=data&format=json"
       html << "<script>$.getJSON('#{targeturl}', function(openLibJson){
                     if (_.isEmpty(openLibJson)) {
@@ -157,9 +157,9 @@ def output_book(html, book, book_type)
                     $('span.isbn_#{book.isbn}').append('<br><time>Published: ' + openLibJson[isbn_key].publish_date + '</time>');
                     $('span.isbn_#{book.isbn}').append('<br><span>' + openLibJson[isbn_key].number_of_pages + 'pp.</span>');
                     }
-                    
+
                 })</script>"
-      
+
   end
   html << "    <ul class='formats'>"
   book.formats.each do |format|
@@ -198,14 +198,16 @@ begin
                             body {width:50%;margin:1em auto;font-family:sans-serif;}
                             a {text-decoration:none;}
                             img[itemprop="image"] {float:right;}
+                            article.book_bundle{min-height:300px;box-shadow:10px 10px 10px 5px gray;padding:20px;border:1pt solid gray;margin:20px;}
+                            section.book{height:300px;padding:20px;border:1pt solid gray;margin:20px; width: 90%}
                             article.book{height:300px;box-shadow:10px 10px 10px 5px gray;padding:20px;border:1pt solid gray;margin:20px;}
                             article.book:last-of-type{}
                         </style>
                     <head>
                     <body>
-                        
+
                         #{html.join("\n")}
-                        
+
                     </body>
                 </html>|)
   index.close
