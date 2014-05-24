@@ -8,7 +8,7 @@ task :features do
   puts "
   * Target folder: #{ENV['shelf'] || ".."}
   * Change target: 'rake generate_index_file shelf=\"/my/target/folder/.\"'
-  * 'rake -T' to see all tasks
+  * All tasks: 'rake -T'
   "
 end
 
@@ -39,6 +39,7 @@ task :generate_index_file do
 
     index.write(renderer.result)
     index.close
+    puts "File generated: " + File.absolute_path(index)
   rescue => e
     puts e.message
   end
