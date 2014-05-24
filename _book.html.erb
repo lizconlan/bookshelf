@@ -5,22 +5,28 @@ else
   block = "article"
   title_class = "h2"
 end %>
+
 <<%= block %> class="book" itemscope="" itemtype="http://schema.org/Book">
+
   <<%= title_class %> class="title">
     <a href="<%= @book.link %>">
       <%= @book.title %>
     </a>
   </<%= title_class %>>
+  
   <% if @book.cover_pic %>
     <img itemprop="image" src="<%= @book.cover_pic %>" alt=""/>
   <% end %>
+  
   <section class="about">
     <% unless @book.notes.nil? %>
-      <span class="notes"><%= @book.notes %></span>
-      <br /><br />
+      <p class="notes"><%= @book.notes %></p>
     <% end %>
-    <span class="authors"><%= @book.authors.join(", ") %></span> <br />
-    <span class="publisher"><%= @book.publisher %></span> <br />
+    
+    <span class="authors"><%= @book.authors.join(", ") %></span>
+    
+    <span class="publisher"><%= @book.publisher %></span>
+    
     <% unless @book.isbn.empty? %>
       <span class="isbn isbn_<%= @book.isbn %>"><%= @book.isbn %></span>
       <% targeturl = "https://openlibrary.org/api/books?bibkeys=ISBN:" + @book.isbn.tr(' ','') + "&jscmd=data&format=json" %>
@@ -42,5 +48,6 @@ end %>
         <li> <i class="fa fa-file-pdf-o"></i> <a href='ibooks://<%= format[:link] %>'><%= format[:name] %></a></li>
       <% end %>
     </ul>
+    
   </section>
 </<%= block %>>
