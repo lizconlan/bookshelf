@@ -1,6 +1,17 @@
 require 'rake'
 require './bookshelf.rb'
 
+task :default => "features"
+
+desc "Describe features"
+task :features do
+  puts "
+  * Target folder: #{ENV['shelf'] || ".."}
+  * Change target: 'rake generate_index_file shelf=\"/my/target/folder/.\"'
+  * 'rake -T' to see all tasks
+  "
+end
+
 desc "Check for data files"
 task :check_for_book_data do
   target_folder = ENV['shelf'] || ".."
