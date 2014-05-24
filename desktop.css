@@ -1,0 +1,6 @@
+body {width:50%;margin:1em auto;font-family:sans-serif; padding: 1em 0;}
+a {text-decoration:none;}
+img[itemprop="image"] {float:right;}
+article.book_bundle{min-height:300px;box-shadow:10px 10px 10px 5px gray;padding:20px;border:1pt solid gray;margin:20px;}
+section.book{height:300px;padding:20px;border:1pt solid gray;margin:20px; width: 90%}
+article.book{height:300px;box-shadow:10px 10px 10px 5px gray;padding:20px;border:1pt solid gray;margin:20px;}
