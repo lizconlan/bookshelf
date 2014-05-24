@@ -8,10 +8,9 @@
       <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <head>
     <body>
-    <header><p>Generated with <a href="https://github.com/lizconlan/bookshelf">github.com/lizconlan/bookshelf</a> on <%= Time.now.asctime %>.</p>
-    </header>
-    
+        <header>
+            <p>Generated with <a href="https://github.com/lizconlan/bookshelf">github.com/lizconlan/bookshelf</a> on <%= Time.now.asctime %>.</p>
+        </header>
         <%= @html.join("\n") %>
-        
     </body>
 </html>
