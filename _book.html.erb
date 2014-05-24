@@ -5,7 +5,7 @@ else
   block = "article"
   title_class = "h2"
 end %>
-<<%= block %> class="book" itemscope=""" itemtype="http://schema.org/Book">
+<<%= block %> class="book" itemscope="" itemtype="http://schema.org/Book">
   <<%= title_class %> class="title">
     <a href="<%= @book.link %>">
       <%= @book.title %>
@@ -33,15 +33,15 @@ end %>
           var isbn_key = _.keys(openLibJson)[0];
           $('span.isbn_<%= @book.isbn %>').append('<br><time>Published: ' + openLibJson[isbn_key].publish_date + '</time>');
           $('span.isbn_<%= @book.isbn %>').append('<br><span>' + openLibJson[isbn_key].number_of_pages + 'pp.</span>');
-
-
           }
       })</script>
     <% end %>
 
     <ul class="formats">
+    <i class="fa fa-file-pdf-o"></i>
       <% @book.formats.each do |format| %>
-        <li><a href='ibooks://<%= format[:link] %>'><%= format[:name] %></a></li>
+      
+        <li>  <a href='ibooks://<%= format[:link] %>'><%= format[:name] %></a></li>
       <% end %>
     </ul>
   </section><br clear='all'>
