@@ -38,11 +38,9 @@ end %>
     <% end %>
 
     <ul class="formats">
-    
       <% @book.formats.each do |format| %>
-      
         <li> <i class="fa fa-file-pdf-o"></i> <a href='ibooks://<%= format[:link] %>'><%= format[:name] %></a></li>
       <% end %>
     </ul>
-  </section><br clear='all'>
+  </section>
 </<%= block %>>
