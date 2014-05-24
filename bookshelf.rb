@@ -42,9 +42,17 @@ class Bookshelf
           subfolders = Dir.glob("#{folder_name}/*")
           books = []
           subfolders.each do |subfolder_name|
+            ident_no = 1
             if File.exist?("#{subfolder_name}/_meta/info.js")
               info = JSON.parse(File.read("#{subfolder_name}/_meta/info.js"))
+              ident = ""
+              
+              if books.collect{ |x| x.ident }.include?(info["ISBN"])
+                ident = info["ISBN"] + "_#{ident_no}"
+                ident_no += 1
+              end
               book = create_book(subfolder_name, info)
+              book.ident = ident unless ident == ""
               books << book
             else
               puts "Info not found for #{subfolder_name}"
@@ -125,6 +133,7 @@ class Bookshelf
     book.authors = info["authors"]
     book.publisher = info["publisher"]
     book.isbn = info["ISBN"]
+    book.ident = book.isbn
     cover_pic_path = "#{folder_name}/_meta/cover.jpg"
     if File.exist?(cover_pic_path)
       book.cover_pic = cover_pic_path
@@ -136,8 +145,8 @@ class Bookshelf
 end
 
 class Book
-  attr_accessor :title, :cover_pic, :link, :publisher, :isbn, :authors, :editors, :notes, :formats
-
+  attr_accessor :ident, :title, :cover_pic, :link, :publisher, :isbn, :authors, :editors, :notes, :formats
+  
   def sort_title
     case title.downcase
     when /^a /, /^the /
