@@ -1,4 +1,5 @@
 require 'rake'
+require 'csv'
 require './bookshelf.rb'
 
 task :default => "features"
@@ -43,6 +44,36 @@ task :generate_index_file do
   rescue => e
     puts e.message
   end
+  
+end
+
+desc "Generate index.csv"
+task :generate_index_csv do
+  target_folder = ENV['shelf'] || ".."
+  shelf = Bookshelf.new(target_folder)
+  begin
+    @books = shelf.books.sort{ |a, b| a.sort_title.downcase <=> b.sort_title.downcase }
+    
+    CSV.open("index.csv", "w+") do |csv|
+      csv << ["row", "of", "CSV", "data"]
+      csv << ["another", "row"]
+      
+      
+      @books.each do |book|
+          if book.class.to_s == "Book"
+            csv << [book.title, book.cover_pic, book.link, book.publisher, book.isbn, book.authors, book.editors, book.notes, book.formats]
+          else
+            csv << [book.title]
+          end
+        end
+    
+    end
+
+    puts "Generated index.csv"
+  rescue => e
+    puts e.message
+  end
+  
 end
 
 def create_bundle(book)
@@ -59,4 +90,9 @@ end
 def output_book(book)
   @book = book
   ERB.new(File.read("_book.html.erb")).result
+end
+
+def output_csv(book)
+  @book = book
+  ERB.new(File.read("_book.csv.erb")).result
 end
