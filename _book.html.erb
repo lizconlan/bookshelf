@@ -6,7 +6,7 @@ else
   title_class = "h2"
 end %>
 
-<<%= block %> class="book" itemscope="" itemtype="http://schema.org/Book">
+<<%= block %> itemscope itemtype="http://schema.org/Book">
 
   <<%= title_class %> class="title">
     <a href="<%= @book.link %>">
