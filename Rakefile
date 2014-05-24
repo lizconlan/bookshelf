@@ -55,9 +55,7 @@ task :generate_index_csv do
     @books = shelf.books.sort{ |a, b| a.sort_title.downcase <=> b.sort_title.downcase }
     
     CSV.open("index.csv", "w+") do |csv|
-      csv << ["row", "of", "CSV", "data"]
-      csv << ["another", "row"]
-      
+
       
       @books.each do |book|
           if book.class.to_s == "Book"
@@ -65,6 +63,8 @@ task :generate_index_csv do
           else
             csv << [book.title]
           end
+          
+          csv << []
         end
     
     end
