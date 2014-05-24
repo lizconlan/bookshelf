@@ -27,9 +27,9 @@ end %>
 
       <script>$.getJSON('<%= targeturl %>', function(openLibJson){
           if (_.isEmpty(openLibJson)) {
-          console.log('No OpenLibrary data for ISBN: <%= @book.isbn %>');
+//           console.log('No OpenLibrary data for ISBN: <%= @book.isbn %>');
           } else {
-          console.log(openLibJson);
+//           console.log(openLibJson);
           var isbn_key = _.keys(openLibJson)[0];
           $('span.isbn_<%= @book.isbn %>').append('<br><time>Published: ' + openLibJson[isbn_key].publish_date + '</time>');
           $('span.isbn_<%= @book.isbn %>').append('<br><span>' + openLibJson[isbn_key].number_of_pages + 'pp.</span>');
@@ -38,10 +38,10 @@ end %>
     <% end %>
 
     <ul class="formats">
-    <i class="fa fa-file-pdf-o"></i>
+    
       <% @book.formats.each do |format| %>
       
-        <li>  <a href='ibooks://<%= format[:link] %>'><%= format[:name] %></a></li>
+        <li> <i class="fa fa-file-pdf-o"></i> <a href='ibooks://<%= format[:link] %>'><%= format[:name] %></a></li>
       <% end %>
     </ul>
   </section><br clear='all'>
