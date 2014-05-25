@@ -47,35 +47,6 @@ task :generate_index_file do
   
 end
 
-desc "Generate index.csv"
-task :generate_index_csv do
-  target_folder = ENV['shelf'] || ".."
-  shelf = Bookshelf.new(target_folder)
-  begin
-    @books = shelf.books.sort{ |a, b| a.sort_title.downcase <=> b.sort_title.downcase }
-    
-    CSV.open("index.csv", "w+") do |csv|
-
-      
-      @books.each do |book|
-          if book.class.to_s == "Book"
-            csv << [book.title, book.cover_pic, book.link, book.publisher, book.isbn, book.authors, book.editors, book.notes, book.formats]
-          else
-            csv << [book.title]
-          end
-          
-          csv << []
-        end
-    
-    end
-
-    puts "Generated index.csv"
-  rescue => e
-    puts e.message
-  end
-  
-end
-
 def create_bundle(book)
   html = []
   html << "<article class='book_bundle'>"
