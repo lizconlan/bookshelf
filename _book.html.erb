@@ -34,19 +34,21 @@ end %>
     
     <% unless @book.isbn.empty? %>
     
-      <p>ISBN: <span itemprop="isbn" class="isbn_<%= @book.isbn %>"><%= @book.isbn %></span></p>
+      <p>ISBN: <span itemprop="isbn" class="isbn_<%= @book.isbn %> ident_<%= @book.ident %>"><%= @book.isbn %></span></p>
       
       <% targeturl = "https://openlibrary.org/api/books?bibkeys=ISBN:" + @book.isbn.tr(' ','') + "&jscmd=data&format=json" %>
 
       <script>$.getJSON('<%= targeturl %>', function(openLibJson){
-          if (_.isEmpty(openLibJson)) {
-//           console.log('No OpenLibrary data for ISBN: <%= @book.isbn %>');
-          } else {
-//           console.log(openLibJson);
+        if (_.isEmpty(openLibJson)) {
+          // console.log('No OpenLibrary data for ISBN: <%= @book.isbn %>');
+        } else {
+          // console.log(openLibJson);
           var isbn_key = _.keys(openLibJson)[0];
-          $('span.isbn_<%= @book.isbn %>').append('<p itemprop="datePublished">Published: ' + openLibJson[isbn_key].publish_date + '</p>');
-          $('span.isbn_<%= @book.isbn %>').append('<p itemprop="numberOfPages">' + openLibJson[isbn_key].number_of_pages + ' pages</p>');
+          $('span.ident_<%= @book.ident %>').append('<p itemprop="datePublished">Published: ' + openLibJson[isbn_key].publish_date + '</p>');
+          if (openLibJson[isbn_key].number_of_pages != undefined) {
+            $('span.ident_<%= @book.ident %>').append('<p itemprop="numberOfPages">' + openLibJson[isbn_key].number_of_pages + ' pages</p>');
           }
+        }
       })</script>
       
     <% end %>
