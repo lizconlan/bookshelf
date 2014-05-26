@@ -34,7 +34,7 @@ end %>
     
     <% unless @book.isbn.empty? %>
     
-      <p>ISBN: <span itemprop="isbn" class="isbn_<%= @book.isbn %> ident_<%= @book.ident %>"><%= @book.isbn %></span></p>
+      <span class="ident_<%= @book.ident %>"></span>
       
       <% targeturl = "https://openlibrary.org/api/books?bibkeys=ISBN:" + @book.isbn.tr(' ','') + "&jscmd=data&format=json" %>
 
@@ -50,7 +50,6 @@ end %>
           }
         }
       })</script>
-      
     <% end %>
 
     <ul class="formats">
@@ -59,5 +58,8 @@ end %>
       <% end %>
     </ul>
     
+    <% unless @book.isbn.empty? %>
+      <p>ISBN: <span itemprop="isbn" class="isbn_<%= @book.isbn %>"><%= @book.isbn %></span></p>
+    <%end%>
   </section>
 </<%= block %>>
