@@ -52,14 +52,15 @@ def create_bundle(book)
   html << "<article class='book_bundle'>"
   html << "  <h2 class='title'><a href='#{book.link}'>#{book.title}</a></h2>"
   book.books.each do |edition|
-    html << output_book(edition)
+    html << output_book(edition, "BookBundle")
   end
   html << "</article>"
   html.join("\n")
 end
 
-def output_book(book)
+def output_book(book, book_class = "Book")
   @book = book
+  @book_class = book_class
   ERB.new(File.read("_book.html.erb")).result
 end
 

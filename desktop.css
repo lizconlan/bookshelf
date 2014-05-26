@@ -10,19 +10,18 @@ a
 img[itemprop="image"]
     {float:right;}
 
-article.book_bundle
-    {min-height:300px;
-    box-shadow:10px 10px 10px 5px gray;
-    padding:20px;
-    border:1pt solid gray;
-    margin:20px;}
+article.book_bundle {
+    padding: 10px 4px;
+    border:1pt dashed gray;
+    margin: 30px 4px;
+}
 
 section[itemtype="http://schema.org/Book"]
     {min-height:300px;
-    padding:20px;
+    box-shadow:10px 10px 10px 5px gray;
+    padding: 20px;
     border:1pt solid gray;
-    margin:20px;
-    width: 90%;}
+    margin:20px;}
 
 article[itemtype="http://schema.org/Book"]
     {min-height:300px;
@@ -30,3 +29,24 @@ article[itemtype="http://schema.org/Book"]
     padding:20px;
     border:1pt solid gray;
     margin:20px;}
+    
+article h2, article h3 {
+  font-family: 'Special Elite', cursive;
+  font-size: 1.4em;
+  border-bottom: 2px solid black;
+}
+
+article.book_bundle h2 {
+  font-family: inherit;
+  border-bottom: 0;
+  padding-left: 16px;
+}
+
+article h2 a,
+article h3 a { color: black }
+
+.notes {
+  font-family: 'Rock Salt', cursive;
+  word-spacing: 0.5em;
+  color: green;
+}
