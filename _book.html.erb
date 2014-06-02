@@ -54,7 +54,7 @@ end %>
 
     <ul class="formats">
       <% @book.formats.each do |format| %>
-        <li><a class="button orange" href='ibooks://<%= format[:link] %>'><i class="fa fa-file-pdf-o"></i><%= format[:extension] %></a></li>
+        <li><a class="button <%=@colours[format[:extension]]%>" href='<%= format[:link] %>'><i class="fa fa-file-pdf-o"></i><%= format[:extension] %></a></li>
       <% end %>
     </ul>
     

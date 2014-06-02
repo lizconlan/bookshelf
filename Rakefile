@@ -61,6 +61,7 @@ end
 def output_book(book, book_class = "Book")
   @book = book
   @book_class = book_class
+  @colours = {"pdf" => "green", "mobi" => "green", "epub" => "green"}
   ERB.new(File.read("_book.html.erb")).result
 end
 
