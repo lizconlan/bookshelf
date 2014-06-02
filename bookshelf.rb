@@ -104,15 +104,33 @@ class Bookshelf
   def get_formats(folder_name)
     book_files = Dir.glob(folder_name + "/*")
     formats = []
+    
+    book_files.delete_if { |file| File.directory?("#{file}") }
+    
+    if book_files.count > 1
+      # determine which are most likely to be the book files
+      # (as opposed to supporting materials such as READMEs)
+      # based on there being multiple occurences of the same
+      # base filename with different file extensions
+      filenames = book_files.map { |name| name[name.rindex("/")+1..-1].split(".").first }
+      tally = Hash.new(0)
+      filenames.each do |candidate|
+        tally[candidate] += 1
+      end
+      book_filename = Hash[tally.sort_by{|key, val| val}.reverse].first.first
+    
+      book_files.delete_if { |name| name[name.rindex("/")+1..-1].split(".").first != book_filename }
+    end
+    
     book_files.each do |file_name|
       format = {}
-      if !File.directory?("#{file_name}")
-        format_name = file_name[file_name.rindex("/")+1..-1]
-        format[:name] = format_name
-        format[:link] = "#{file_name}"
-        formats << format
-      end
+      format_name = file_name[file_name.rindex("/")+1..-1]
+      format[:name] = format_name
+      format[:link] = "#{file_name}"
+      format[:extension] = format_name.split(".").last
+      formats << format
     end
+      
     formats
   end
 
