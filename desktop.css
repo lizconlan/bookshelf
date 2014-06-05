@@ -7,13 +7,20 @@ body
 a
     {text-decoration:none;}
 
-img[itemprop="image"]
-    {float:right;}
+img[itemprop="image"] {
+    float:right;
+    padding: 0 0 1em 2em;
+    background-color: #fff;
+}
 
 article.book_bundle {
     padding: 10px 4px;
     border:1pt dashed gray;
     margin: 30px 4px;
+}
+
+section.about {
+  background-image:url('line.gif');
 }
 
 section[itemtype="http://schema.org/Book"]
