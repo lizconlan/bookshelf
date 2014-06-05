@@ -7,11 +7,20 @@
       <link href="desktop.css" rel="stylesheet">
       <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
       <link href='http://fonts.googleapis.com/css?family=Special+Elite|Over+the+Rainbow|Rock+Salt' rel='stylesheet' type='text/css'>
+      <script src="jquery.js"></script>
+      <script src="sort_elements.js"></script>
+      <script src="books.js"></script>
     <head>
     <body>
         <header>
             <p>Generated with <a href="https://github.com/lizconlan/bookshelf">github.com/lizconlan/<strong>bookshelf</strong></a> on <time><%= Time.now.asctime %></time>.</p>
+            
+            <nav>
+              <a id="pub_sort" href="javascript:sort_by_publisher()">Sort by Publisher</a>
+              <a id="title_sort" href="javascript:sort_by_title()">Sort by Title</a>
+            </nav>
         </header>
         <%= @html.join("\n") %>
+        <script>$('#title_sort').hide();</script>
     </body>
 </html>
