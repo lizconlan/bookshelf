@@ -4,12 +4,12 @@
       <title><%= @books.length %> books</title>
       <script src="http://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.3/zepto.min.js"></script>
       <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
-      <link href="desktop.css" rel="stylesheet">
+      <link href="assets/desktop.css" rel="stylesheet">
       <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
       <link href='http://fonts.googleapis.com/css?family=Special+Elite|Over+the+Rainbow|Rock+Salt' rel='stylesheet' type='text/css'>
-      <script src="jquery.js"></script>
-      <script src="sort_elements.js"></script>
-      <script src="books.js"></script>
+      <script src="assets/jquery.js"></script>
+      <script src="assets/sort_elements.js"></script>
+      <script src="assets/books.js"></script>
     <head>
     <body>
         <header>
@@ -19,6 +19,9 @@
               <a id="pub_sort" href="javascript:sort_by_publisher()">Sort by Publisher</a>
               <a id="title_sort" href="javascript:sort_by_title()">Sort by Title</a>
             </nav>
+            
+            <div id="publishers">
+            </div>
         </header>
         <%= @html.join("\n") %>
         <script>$('#title_sort').hide();</script>
