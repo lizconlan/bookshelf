@@ -4,12 +4,15 @@ var main = function() {
     filterPublishers(selectedPub);
   });
   $('#select_info').hide();
+  $('#title_sort').hide();
+  $('#pub_sort').click(function() {sortByPublisher();});
+  $('#title_sort').click(function() {sortByTitle();});
 }
 
 $(document).ready(main);
 
 function filterPublishers(publisher) {
-  if (publisher === 'Show All') {
+  if(publisher === 'Show All') {
     $('#books').children().show();
     $('#sort').show();
     $('#select_info').hide();
@@ -20,7 +23,7 @@ function filterPublishers(publisher) {
     
     $('#sort').hide();
     matchingBooks.show();
-    if (numberFound === 1) {
+    if(numberFound === 1) {
       var bookStr = "book";
     } else {
       var bookStr = "books";
@@ -30,7 +33,7 @@ function filterPublishers(publisher) {
   }
 }
 
-function sort_by_publisher() {
+function sortByPublisher() {
   $('article').sortElements(function(a, b){
     pub_a = $(a).find('p[itemprop="publisher"]')[0].textContent.trim();
     title_a = $(a).find('h2')[0].textContent.trim();
@@ -46,7 +49,7 @@ function sort_by_publisher() {
   $('#title_sort').show();
 }
 
-function sort_by_title() {
+function sortByTitle() {
   $('article').sortElements(function(a, b){
     title_a = $(a).find('h2')[0].textContent.trim();
     sort_key_a = title_a.trim().replace(/^(The )|(A )/, "");

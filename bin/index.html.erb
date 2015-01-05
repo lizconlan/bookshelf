@@ -23,8 +23,8 @@
                 </select>
               </form>
               <div id="sort">
-                <a id="pub_sort" href="javascript:sort_by_publisher()">Sort by Publisher</a>
-                <a id="title_sort" href="javascript:sort_by_title()">Sort by Title</a>
+                <a id="pub_sort" href="#">Sort by Publisher</a>
+                <a id="title_sort" href="#">Sort by Title</a>
               </div>
               <div id="select_info"></div>
             </nav>
@@ -32,6 +32,5 @@
         <section id="books">
           <%= @html.join("\n") %>
         </section>
-        <script>$('#title_sort').hide();</script>
     </body>
 </html>
