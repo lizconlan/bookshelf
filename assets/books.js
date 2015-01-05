@@ -46,23 +46,6 @@ function sort_by_publisher() {
   $('#title_sort').show();
 }
 
-function list_publishers() {
-  var result = [];
-  // find all the articles' publisher text
-  $.each($('article').find('p[itemprop="publisher"]'), function(i, txt) {
-    pub_name = txt.textContent.replace('Publisher: ', '');
-    if ($.inArray(pub_name, result) == -1) {
-      result.push(pub_name);
-      parent_article = $('article')[i];
-      alert(parent_article.id);
-      //parent_article.prepend('<a name="' + pub_name + '"/>');
-    }
-  });
-  result.sort();
-  
-  $('#publishers').html(result);
-}
-
 function sort_by_title() {
   $('article').sortElements(function(a, b){
     title_a = $(a).find('h2')[0].textContent.trim();
