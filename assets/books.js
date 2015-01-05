@@ -1,3 +1,24 @@
+var main = function() {
+  $('.filter').change(function() {
+    var selectedPub = $(this).val();
+    filterPublishers(selectedPub);
+  }); 
+}
+
+$(document).ready(main);
+
+function filterPublishers(publisher) {
+  if (publisher === 'Show All') {
+    $('#books').children().show();
+    $('#sort').show();
+  } else {
+    $('#books').children().hide();
+    var matchingBooks = $("article p:contains(Publisher: " + publisher + ")").parent().parent();
+    $('#sort').hide();
+    matchingBooks.show();
+  }
+}
+
 function sort_by_publisher() {
   $('article').sortElements(function(a, b){
     pub_a = $(a).find('p[itemprop="publisher"]')[0].textContent.trim();

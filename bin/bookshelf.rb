@@ -5,7 +5,7 @@ require 'open-uri'
 require 'erb'
 
 class Bookshelf
-  attr_reader :books
+  attr_reader :books, :publishers
 
   def self.check_book_data(shelf_folder)
     folders = get_folders(shelf_folder)
@@ -27,6 +27,7 @@ class Bookshelf
 
   def initialize(shelf_folder)
     @books = []
+    @publishers = []
 
     folders = Bookshelf.get_folders(shelf_folder)
     book_titles = folders.map { |title| title.gsub(/^..\//, "")}
@@ -37,6 +38,7 @@ class Bookshelf
         if File.exist?("#{folder_name}/_meta/info.js")
           info = JSON.parse(File.read("#{folder_name}/_meta/info.js"))
           book = create_book(folders[idx], info)
+          @publishers << book.publisher unless book.publisher.empty?
           @books << book
         elsif Bookshelf.contains_book_folders(folder_name)
           subfolders = Dir.glob("#{folder_name}/*")
@@ -71,6 +73,7 @@ class Bookshelf
       rescue => e
         puts e.message
       end
+      @publishers.uniq!
     end
   end
 

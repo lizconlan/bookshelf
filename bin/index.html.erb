@@ -16,14 +16,21 @@
             <p>Generated with <a href="https://github.com/lizconlan/bookshelf">github.com/lizconlan/<strong>bookshelf</strong></a> on <time><%= Time.now.asctime %></time>.</p>
             
             <nav>
-              <a id="pub_sort" href="javascript:sort_by_publisher()">Sort by Publisher</a>
-              <a id="title_sort" href="javascript:sort_by_title()">Sort by Title</a>
+              <form>
+                <select class="filter">
+                  <option>Show All</option><% @publishers.each do |pub| %>
+                  <option><%= pub %></option><% end %>
+                </select>
+              </form>
+              <div id="sort">
+                <a id="pub_sort" href="javascript:sort_by_publisher()">Sort by Publisher</a>
+                <a id="title_sort" href="javascript:sort_by_title()">Sort by Title</a>
+              </div>
             </nav>
-            
-            <div id="publishers">
-            </div>
         </header>
-        <%= @html.join("\n") %>
+        <section id="books">
+          <%= @html.join("\n") %>
+        </section>
         <script>$('#title_sort').hide();</script>
     </body>
 </html>
