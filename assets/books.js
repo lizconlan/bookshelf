@@ -2,7 +2,8 @@ var main = function() {
   $('.filter').change(function() {
     var selectedPub = $(this).val();
     filterPublishers(selectedPub);
-  }); 
+  });
+  $('#select_info').hide();
 }
 
 $(document).ready(main);
@@ -11,11 +12,21 @@ function filterPublishers(publisher) {
   if (publisher === 'Show All') {
     $('#books').children().show();
     $('#sort').show();
+    $('#select_info').hide();
   } else {
     $('#books').children().hide();
     var matchingBooks = $("article p:contains(Publisher: " + publisher + ")").parent().parent();
+    var numberFound = matchingBooks.length;
+    
     $('#sort').hide();
     matchingBooks.show();
+    if (numberFound === 1) {
+      var bookStr = "book";
+    } else {
+      var bookStr = "books";
+    }
+    $('#select_info').html('Found <strong>' + matchingBooks.length + '</strong> ' + bookStr + ' for <strong>' + publisher + '</strong>');
+    $('#select_info').show();
   }
 }
 
