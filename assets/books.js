@@ -1,4 +1,39 @@
-function sort_by_publisher() {
+var main = function() {
+  $('.pubfilter').change(function() {
+    var selectedPub = $(this).val();
+    filterPublishers(selectedPub);
+  });
+  $('#select_info').hide();
+  $('#title_sort').hide();
+  $('#pub_sort').click(function() {sortByPublisher();});
+  $('#title_sort').click(function() {sortByTitle();});
+}
+
+$(document).ready(main);
+
+function filterPublishers(publisher) {
+  if(publisher === 'Show All') {
+    $('#books').children().show();
+    $('#sort').show();
+    $('#select_info').hide();
+  } else {
+    $('#books').children().hide();
+    var matchingBooks = $("article p:contains(Publisher: " + publisher + ")").parent().parent();
+    var numberFound = matchingBooks.length;
+    
+    $('#sort').hide();
+    matchingBooks.show();
+    if(numberFound === 1) {
+      var bookStr = "book";
+    } else {
+      var bookStr = "books";
+    }
+    $('#select_info').html('Found <strong>' + matchingBooks.length + '</strong> ' + bookStr + ' for <strong>' + publisher + '</strong>');
+    $('#select_info').show();
+  }
+}
+
+function sortByPublisher() {
   $('article').sortElements(function(a, b){
     pub_a = $(a).find('p[itemprop="publisher"]')[0].textContent.trim();
     title_a = $(a).find('h2')[0].textContent.trim();
@@ -14,24 +49,7 @@ function sort_by_publisher() {
   $('#title_sort').show();
 }
 
-function list_publishers() {
-  var result = [];
-  // find all the articles' publisher text
-  $.each($('article').find('p[itemprop="publisher"]'), function(i, txt) {
-    pub_name = txt.textContent.replace('Publisher: ', '');
-    if ($.inArray(pub_name, result) == -1) {
-      result.push(pub_name);
-      parent_article = $('article')[i];
-      alert(parent_article.id);
-      //parent_article.prepend('<a name="' + pub_name + '"/>');
-    }
-  });
-  result.sort();
-  
-  $('#publishers').html(result);
-}
-
-function sort_by_title() {
+function sortByTitle() {
   $('article').sortElements(function(a, b){
     title_a = $(a).find('h2')[0].textContent.trim();
     sort_key_a = title_a.trim().replace(/^(The )|(A )/, "");

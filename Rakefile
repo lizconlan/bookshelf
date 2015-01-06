@@ -27,6 +27,7 @@ task :generate_index_file do
     @uniq = 0
     index = File.open("index.html", 'w+')
     @books = shelf.books.sort{ |a, b| a.sort_title.downcase <=> b.sort_title.downcase }
+    @publishers = shelf.publishers
     @html = []
     @books.each_with_index do |book, idx|
       @uniq = idx
