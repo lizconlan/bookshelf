@@ -16,12 +16,15 @@
             <p>Generated with <a href="https://github.com/lizconlan/bookshelf">github.com/lizconlan/<strong>bookshelf</strong></a> on <time><%= Time.now.asctime %></time>.</p>
             
             <nav>
-              <form>
-                <select class="filter">
-                  <option>Show All</option><% @publishers.each do |pub| %>
-                  <option><%= pub %></option><% end %>
-                </select>
-              </form>
+              <div id="filters">
+                <form>
+                  <label for="pubfilter">Filter by publisher</label>
+                  <select id="pubfilter" class="pubfilter">
+                    <option>Show All</option><% @publishers.each do |pub| %>
+                    <option><%= pub %></option><% end %>
+                  </select>
+                </form>
+              </div>
               <div id="sort">
                 <a id="pub_sort" href="#">Sort by Publisher</a>
                 <a id="title_sort" href="#">Sort by Title</a>

@@ -1,5 +1,5 @@
 var main = function() {
-  $('.filter').change(function() {
+  $('.pubfilter').change(function() {
     var selectedPub = $(this).val();
     filterPublishers(selectedPub);
   });
