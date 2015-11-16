@@ -33,6 +33,13 @@ function filterPublishers(publisher) {
   }
 }
 
+function filterFromHash() {
+  var hash = currentHash();
+  if len(hash) > 0 {
+    return hash.split("__");
+  }
+}
+
 function sortByPublisher() {
   $('article').sortElements(function(a, b){
     pub_a = $(a).find('p[itemprop="publisher"]')[0].textContent.trim();
@@ -61,4 +68,18 @@ function sortByTitle() {
   });
   $('#title_sort').hide();
   $('#pub_sort').show();
+}
+
+function isIE() {
+  var ua = window.navigator.userAgent;
+  var ie = ua.indexOf("MSIE ");
+  return (ie > 0);
+}
+
+function currentHash() {
+  if(isIE) {
+    return document.URL.substr(document.URL.indexOf('#')+1);
+  } else {
+    return window.location.hash.replace('#','');
+  }
 }
