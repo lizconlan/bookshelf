@@ -51,16 +51,16 @@ task :generate_index_file do
 end
 
 def create_bundle(book)
-  html = []
-  html << "<article class='book_bundle'>"
-  html << "  <h2 class='title'><a href='#{book.link}'>#{book.title}</a></h2>"
-  @uniq += 8000
-  book.books.each do |edition|
-    html << output_book(edition, "BookBundle")
-    @uniq += 1
-  end
-  html << "</article>"
-  html.join("\n")
+  # html = []
+  # html << "<article class='book_bundle'>"
+  # html << "  <h2 class='title'><a href='#{book.link}'>#{book.title}</a></h2>"
+  # @uniq += 8000
+  # book.books.each do |edition|
+  #   html << output_book(edition, "BookBundle")
+  #   @uniq += 1
+  # end
+  # html << "</article>"
+  # html.join("\n")
 end
 
 def output_book(book, book_class = "Book")

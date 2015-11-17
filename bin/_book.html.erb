@@ -1,10 +1,12 @@
-<% if @book_class == "BookBundle"
-  block = "section"
-  title_class = "h3"
-else
+<%
+#if @book_class == "BookBundle"
+#   block = "section"
+#   title_class = "h3"
+# else
   block = "article"
   title_class = "h2"
-end %>
+#end
+%>
 
 <<%= block %> itemscope itemtype="http://schema.org/Book" id="book_<%= @uniq %>">
 
