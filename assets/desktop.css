@@ -1,43 +1,52 @@
-body
-    {width:50%;
-    height:100%;
-    margin:1em auto;
-    font-family:sans-serif;
-    padding: 1em 0;}
+body {
+  margin: 1em;
+  font-family:sans-serif;
+  padding: 1em 0;
+}
 
-a
-    {text-decoration:none;}
+a {
+  text-decoration:none;
+}
+
+.z-shelf {display: flex}
 
 img[itemprop="image"] {
-    float:right;
-    padding: 0 0 1em 2em;
-    background-color: #fff;
+  padding: 0;
+  margin: auto;
+  background-color: #fff;
+  flex: none;
 }
 
 article.book_bundle {
-    padding: 10px 4px;
-    border:1pt dashed gray;
-    margin: 30px 4px;
+  padding: 10px 4px;
+  border:1pt dashed gray;
+  margin: 30px 4px;
+  text-align: center;
 }
 
-section[itemtype="http://schema.org/Book"]
-    {min-height:300px;
-    box-shadow:10px 10px 10px 5px gray;
-    padding: 20px;
-    border:1pt solid gray;
-    margin:20px;}
+section[itemtype="http://schema.org/Book"] {
+  min-height: 180px;
+  padding: 4px;
+  margin: 20px;
+}
 
-article[itemtype="http://schema.org/Book"]
-    {min-height:300px;
-    box-shadow:10px 10px 10px 5px gray;
-    padding:20px;
-    border:1pt solid gray;
-    margin:20px;}
+article[itemtype="http://schema.org/Book"] {
+  margin: 10px 15px;
+  float: left;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 230px;
+  min-width: 170px;
+}
     
 article h2, article h3 {
-  font-family: 'Special Elite', cursive;
-  font-size: 1.4em;
-  border-bottom: 2px solid black;
+  font-size: 0.8em;
+  text-align: center;
+  max-width: 12em;
+  min-width: 170px;
+  min-height: 3.5em;
+  with: 100%;
 }
 
 article.book_bundle h2 {
@@ -50,9 +59,16 @@ article h2 a,
 article h3 a { color: black }
 
 .notes {
-  font-family: 'Rock Salt', cursive;
+  font-family: cursive;
   word-spacing: 0.5em;
   color: green;
+}
+
+.about {
+  display: none;
+  max-width: 12em;
+  margin: 0 0.5em;
+  font-size: 0.8em;
 }
 
 ul.formats {

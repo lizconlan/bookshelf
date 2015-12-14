@@ -8,17 +8,19 @@ end %>
 
 <<%= block %> itemscope itemtype="http://schema.org/Book" id="book_<%= @uniq %>">
 
+  <% if @book.cover_pic %>
+    <img itemprop="image" src="<%= @book.cover_pic %>" alt="<%= @book.title %>" onclick="revealInfo(this);"/>
+  <% else %>
+    <img itemprop="image" src="missing-image.gif" alt="<%= @book.title %>">
+  <% end %>
+
   <<%= title_class %> class="title">
     <a href="<%= @book.link %>" itemprop="name">
       <%= @book.title %>
     </a>
   </<%= title_class %>>
   
-  <% if @book.cover_pic %>
-    <img itemprop="image" src="<%= @book.cover_pic %>" alt=""/>
-  <% end %>
-  
-  <section class="about">
+  <section class="about" onclick="hideInfo(this);">
   
     <% unless @book.notes.nil? %>
       <p class="notes"><%= @book.notes %></p>
@@ -38,7 +40,7 @@ end %>
       
       <% targeturl = "https://openlibrary.org/api/books?bibkeys=ISBN:" + @book.isbn.tr(' ','') + "&jscmd=data&format=json" %>
 
-      <script>$.getJSON('<%= targeturl %>', function(openLibJson){
+      <!--script>$.getJSON('<%= targeturl %>', function(openLibJson){
         if (_.isEmpty(openLibJson)) {
           // console.log('No OpenLibrary data for ISBN: <%= @book.isbn %>');
         } else {
@@ -49,7 +51,7 @@ end %>
             $('span.ident_<%= @book.ident %>').append('<p itemprop="numberOfPages">' + openLibJson[isbn_key].number_of_pages + ' pages</p>');
           }
         }
-      })</script>
+      })</script-->
     <% end %>
 
     <ul class="formats">

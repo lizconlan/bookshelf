@@ -11,6 +11,16 @@ var main = function() {
 
 $(document).ready(main);
 
+function revealInfo(image) {
+  $(image).parent().find('.about').show();
+  $(image).hide();
+}
+
+function hideInfo(block) {
+  $(block).parent().find('img').show();
+  $(block).hide();
+}
+
 function filterPublishers(publisher) {
   if(publisher === 'Show All') {
     $('#books').children().show();
