@@ -23,26 +23,40 @@
   </<%= title_class %>>
   
   <section class="about" onclick="hideInfo(this);">
-  
-    <% unless @book.notes.nil? %>
-      <p class="notes"><%= @book.notes %></p>
-    <% end %>
-        
+    <h1><%= @book.title %></h1>
+
+    <h2>Authors</h2>
     <ul class="authors">
       <% @book.authors.each do |author| %>
         <li itemprop="author"> <%= author %></li>
       <% end %>
     </ul>
+
+    <h2>Publisher</h2>
+    <p itemprop="publisher"><%= @book.publisher %></p>
     
-    <p itemprop="publisher">Publisher: <%= @book.publisher %></p>
+    <% if @book.notes %>
+      <h2>Notes</h2>
+      <p class="notes"><%= @book.notes %></p>
+    <% end %>
+
+    <h2>Available formats</h2>
+    <ul class="formats">
+      <% @book.formats.each do |format| %>
+        <li><a class="<%= format[:extension] %>" href='<%= format[:link] %>'><%= format[:extension] %></a></li>
+      <% end %>
+    </ul>
     
     <% unless @book.isbn.empty? %>
-    
+      <h2>Details</h2>
+      <p>ISBN: <span itemprop="isbn" class="isbn_<%= @book.isbn %>"><%= @book.isbn %></span></p>
+    <%end%>
+    <% unless @book.isbn.empty? %>
       <span class="ident_<%= @book.ident %>"></span>
-      
+
       <% targeturl = "https://openlibrary.org/api/books?bibkeys=ISBN:" + @book.isbn.tr(' ','') + "&jscmd=data&format=json" %>
 
-      <!--script>$.getJSON('<%= targeturl %>', function(openLibJson){
+      <script>$.getJSON('<%= targeturl %>', function(openLibJson){
         if (_.isEmpty(openLibJson)) {
           // console.log('No OpenLibrary data for ISBN: <%= @book.isbn %>');
         } else {
@@ -53,17 +67,7 @@
             $('span.ident_<%= @book.ident %>').append('<p itemprop="numberOfPages">' + openLibJson[isbn_key].number_of_pages + ' pages</p>');
           }
         }
-      })</script-->
+      })</script>
     <% end %>
-
-    <ul class="formats">
-      <% @book.formats.each do |format| %>
-        <li><a class="<%= format[:extension] %>" href='<%= format[:link] %>'><%= format[:extension] %></a></li>
-      <% end %>
-    </ul>
-    
-    <% unless @book.isbn.empty? %>
-      <p>ISBN: <span itemprop="isbn" class="isbn_<%= @book.isbn %>"><%= @book.isbn %></span></p>
-    <%end%>
   </section>
 </<%= block %>>

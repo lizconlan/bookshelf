@@ -12,12 +12,12 @@ var main = function() {
 $(document).ready(main);
 
 function revealInfo(image) {
-  $(image).parent().find('.about').show();
-  $(image).hide();
+  $('.about').hide();
+  var infoPanel = $(image).parent().find('.about');
+  infoPanel.show();
 }
 
 function hideInfo(block) {
-  $(block).parent().find('img').show();
   $(block).hide();
 }
 
@@ -28,7 +28,7 @@ function filterPublishers(publisher) {
     $('#select_info').hide();
   } else {
     $('#books').children().hide();
-    var matchingBooks = $("article p:contains(Publisher: " + publisher + ")").parent().parent();
+    var matchingBooks = $("article p[itemprop='publisher']:contains(" + publisher +")").parent().parent();
     var numberFound = matchingBooks.length;
     
     $('#sort').hide();
