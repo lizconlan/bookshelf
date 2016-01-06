@@ -13,7 +13,7 @@
   <% if @book.cover_pic %>
     <img itemprop="image" src="<%= @book.cover_pic %>" alt="<%= @book.title %>" onclick="revealInfo(this);"/>
   <% else %>
-    <img itemprop="image" src="missing-image.gif" alt="<%= @book.title %>">
+    <img itemprop="image" src="assets/missing-image.gif" alt="<%= @book.title %>" onclick="revealInfo(this);"/>
   <% end %>
 
   <<%= title_class %> class="title">
