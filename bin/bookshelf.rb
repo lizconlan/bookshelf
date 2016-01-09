@@ -3,6 +3,7 @@
 require 'json'
 require 'open-uri'
 require 'erb'
+require 'sass'
 
 class Bookshelf
   attr_reader :books, :publishers
@@ -28,6 +29,10 @@ class Bookshelf
   def initialize(shelf_folder)
     @books = []
     @publishers = []
+    
+    sass_filename = File.dirname(__FILE__) + "/style.scss"
+    css = Sass::Engine.for_file(sass_filename, {:style => :compressed}).render
+    File.open("#{File.dirname(__FILE__)}/../assets/style.css", "wb") {|f| f.write(css) }
 
     folders = Bookshelf.get_folders(shelf_folder)
     book_titles = folders.map { |title| title.gsub(/^..\//, "")}
