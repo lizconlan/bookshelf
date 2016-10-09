@@ -18,19 +18,6 @@ img[itemprop="image"] {
   flex: none;
 }
 
-/*article.book_bundle {
-  padding: 10px 4px;
-  border: 1pt dashed gray;
-  margin: 30px 4px;
-  text-align: center;
-}
-
-section[itemtype="http://schema.org/Book"] {
-  min-height: 180px;
-  padding: 4px;
-  margin: 20px;
-}*/
-
 article[itemtype="http://schema.org/Book"] {
   margin: 10px 15px;
   float: left;
@@ -106,12 +93,6 @@ article[itemtype="http://schema.org/Book"] {
     .mobi { background: url(icons/document-mobi.png) $icon-spec; }
   }
 }
-
-/*article.book_bundle h2 {
-  font-family: inherit;
-  border-bottom: 0;
-  padding-left: 16px;
-}*/
 
 .notes {
   font-family: cursive;

@@ -1,14 +1,4 @@
-<%
-#if @book_class == "BookBundle"
-#   block = "section"
-#   title_class = "h3"
-# else
-  block = "article"
-  title_class = "h2"
-#end
-%>
-
-<<%= block %> itemscope itemtype="http://schema.org/Book" id="book_<%= @uniq %>">
+<article itemscope itemtype="http://schema.org/Book" id="book_<%= @uniq %>" class="book">
 
   <% if @book.cover_pic %>
     <img itemprop="image" src="<%= @book.cover_pic %>" alt="<%= @book.title %>" onclick="revealInfo(this);"/>
@@ -16,11 +6,11 @@
     <img itemprop="image" src="assets/missing-image.gif" alt="<%= @book.title %>" onclick="revealInfo(this);"/>
   <% end %>
 
-  <<%= title_class %> class="title">
+  <h2 class="title">
     <a href="<%= @book.link %>" itemprop="name">
       <%= @book.title %>
     </a>
-  </<%= title_class %>>
+  </h2>
   
   <section class="about" onclick="hideInfo();">
     <h1><%= @book.title %></h1>
@@ -70,4 +60,4 @@
       })</script>
     <% end %>
   </section>
-</<%= block %>>
+</article>
