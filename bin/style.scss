@@ -11,11 +11,14 @@ body {
 
 a { text-decoration: none; }
 
+
 img[itemprop="image"] {
   padding: 0;
   margin: auto;
   background-color: #fff;
   flex: none;
+  
+  &:hover { cursor: pointer }
 }
 
 article[itemtype="http://schema.org/Book"] {
@@ -40,20 +43,40 @@ article[itemtype="http://schema.org/Book"] {
   
   .about {
     position: absolute;
-    padding: 1em;
+    padding: 0em;
     font-size: 1em;
-    background-color: silver;
+    background-color: white;
     top: 0;
     left: 0;
     z-index: 10;
     width: 60%;
-    min-height: 50%;
     height: auto;
-    border: 1px darkgrey solid;
     display: none;
+    border: 1px solid darkgrey;
+    min-width: 413px;
 
     h1 {
-      margin: 0.4em 0 1em 0;
+      margin: 2px;
+      border: 1px solid darkgrey;
+      padding: 0.4em;
+    }
+    
+    .content {
+      border: 1px solid darkgrey;
+      margin: 2px;
+      padding: 1em;
+      position: relative;
+      min-width: 375px;
+      
+      .coverpic {
+        position: absolute;
+        top: 1em;
+        right: 1em;
+      }
+      
+      .info_column {
+        min-width: 240px;
+      }
     }
 
     h2 {
@@ -61,6 +84,10 @@ article[itemtype="http://schema.org/Book"] {
       margin: 0.8em 0 0.4em 0;
       min-height: 0;
       font-size: 1em;
+    }
+    
+    h2, ul, p, span {
+      width: 70%;
     }
 
     ul, p {
@@ -98,4 +125,16 @@ article[itemtype="http://schema.org/Book"] {
   font-family: cursive;
   word-spacing: 0.5em;
   color: green;
+}
+
+#fade {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 9;
+  background-color: white;
+  opacity: 0.7;
+  display: none;
 }

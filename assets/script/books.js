@@ -7,20 +7,24 @@ var main = function() {
   $('#title_sort').hide();
   $('#pub_sort').click(function() {sortByPublisher();});
   $('#title_sort').click(function() {sortByTitle();});
+  $('.about').click(function() {hideInfo();});
+  $('#fade').click(function() {hideInfo();});
 }
 
 $(document).ready(main);
 
 function revealInfo(image) {
   hideInfo();
+  $('#fade').css('height', $(window).height());
+  $('#fade').show();
   var infoPanel = $(image).parent().find('.about');
   infoPanel.show();
-  //infoPanel.css({margin:'-'+($(window).height() / 2)+'px 0 0 -'+($(window).width() / 2 + 200)+'px'});
   infoPanel.css({margin:$(document).scrollTop()+100+'px 0 0 '+($(window).width() / 2 - infoPanel.width() / 2)+'px'});
 }
 
 function hideInfo() {
   $('.about').hide();
+  $('#fade').hide();
 }
 
 function filterPublishers(publisher) {
@@ -31,7 +35,7 @@ function filterPublishers(publisher) {
     $('#select_info').hide();
   } else {
     $('#books').children().hide();
-    var matchingBooks = $("article p[itemprop='publisher']:contains(" + publisher +")").parent().parent();
+    var matchingBooks = $("article p[itemprop='publisher']:contains(" + publisher +")").parent().parent().parent().parent();
     var numberFound = matchingBooks.length;
     
     $('#sort').hide();
