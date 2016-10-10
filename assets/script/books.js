@@ -7,7 +7,6 @@ var main = function() {
   $('#title_sort').hide();
   $('#pub_sort').click(function() {sortByPublisher();});
   $('#title_sort').click(function() {sortByTitle();});
-  $('.about').click(function() {hideInfo();});
   $('#fade').click(function() {hideInfo();});
 }
 
@@ -20,11 +19,23 @@ function revealInfo(image) {
   var infoPanel = $(image).parent().find('.about');
   infoPanel.show();
   infoPanel.css({margin:$(document).scrollTop()+100+'px 0 0 '+($(window).width() / 2 - infoPanel.width() / 2)+'px'});
+  if(infoPanel.find('tab_set')) {
+    $('.tab_content').hide();
+    $(infoPanel.find('.tab_content')[0]).show();
+    $(infoPanel.find('.tab_button')[0]).addClass('selected');
+  }
 }
 
 function hideInfo() {
   $('.about').hide();
   $('#fade').hide();
+}
+
+function showTab(tab) {
+  $('.tab_content').hide();
+  $('#' + tab).show();
+  $('.tab_button').removeClass('selected');
+  $('#btn_' + tab).addClass('selected');
 }
 
 function filterPublishers(publisher) {

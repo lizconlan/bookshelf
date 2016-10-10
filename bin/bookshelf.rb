@@ -47,29 +47,30 @@ class Bookshelf
           @books << book
         elsif Bookshelf.contains_book_folders(folder_name)
           subfolders = Dir.glob("#{folder_name}/*")
-          books = []
+          editions = []
           subfolders.each do |subfolder_name|
             ident_no = 1
             if File.exist?("#{subfolder_name}/_meta/info.js")
               info = JSON.parse(File.read("#{subfolder_name}/_meta/info.js"))
               ident = ""
               
-              if books.collect{ |x| x.ident }.include?(info["ISBN"])
+              if editions.collect{ |x| x.ident }.include?(info["ISBN"])
                 ident = info["ISBN"] + "_#{ident_no}"
                 ident_no += 1
               end
               book = create_book(subfolder_name, info)
               book.ident = ident unless ident == ""
-              books << book
+              editions << book
             else
               puts "Info not found for #{subfolder_name}"
             end
           end
           unless books.empty?
-            bundle = BookBundle.new
+            bundle = Book.new
+            bundle.isbn = ""
             bundle.title = folder_name.split("/").last
             bundle.link = folder_name
-            bundle.books = books
+            bundle.editions = editions
             @books << bundle
           end
         else
@@ -151,28 +152,28 @@ class Bookshelf
   end
 
   def create_book(folder_name, info)
-    formats = get_formats(folder_name)
-
     book = Book.new
     book.title = info["title"]
     book.link = folder_name
     book.authors = info["authors"]
     book.publisher = info["publisher"]
-    book.isbn = info["ISBN"]
+    book.editions = []
+    book.isbn = info["ISBN"] || ""
     book.ident = book.isbn
     cover_pic_path = "#{folder_name}/_meta/cover.jpg"
     if File.exist?(cover_pic_path)
       book.cover_pic = cover_pic_path
     end
     book.notes = info["notes"] if info["notes"]
-    book.formats = formats
+    book.formats = get_formats(folder_name)
     book
   end
 end
 
 class Book
-  attr_accessor :ident, :title, :cover_pic, :link, :publisher, :isbn, :authors, :editors, :notes, :formats
-  
+  attr_accessor :ident, :title, :cover_pic, :link, :publisher, :isbn,
+                :authors, :editors, :notes, :formats, :editions, :books
+
   def sort_title
     case title.downcase
     when /^a /, /^the /
@@ -184,8 +185,4 @@ class Book
       title
     end
   end
-end
-
-class BookBundle < Book
-  attr_accessor :books
 end

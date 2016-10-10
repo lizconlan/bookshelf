@@ -14,6 +14,17 @@
   
   <section class="about">
     <h1><%= @book.title %></h1>
+    
+    <% unless @book.editions.empty? %>
+      <div class="tab_set">
+        <ul>
+      <% @book.editions.each do |edition| %>
+        <li class="tab_button" id="btn_<%= edition.ident %>" onclick="showTab('<%= edition.ident %>')"><%= edition.title %></span>
+      <% end %>
+      </ul>
+      </div>
+    <% end %>
+    
     <div class="content">
       <div class="coverpic">
         <% if @book.cover_pic %>
@@ -21,52 +32,18 @@
         <% end %>
       </div>
       
-      <div class="info_column">
-        <h2>Authors</h2>
-        <ul class="authors">
-          <% @book.authors.each do |author| %>
-            <li itemprop="author"> <%= author %></li>
-            <% end %>
-        </ul>
-      
-        <h2>Publisher</h2>
-        <p itemprop="publisher"><%= @book.publisher %></p>
-    
-        <% if @book.notes %>
-          <h2>Notes</h2>
-          <p class="notes"><%= @book.notes %></p>
+      <% if @tabs and !@book.editions.empty? %>
+        <div class="tabs">
+        <% @tabs.each_with_index do |tab, idx| %>
+          <div class="tab_content" id="<%= @book.editions[idx].ident %>">
+            <%= tab %>
+          </div>
         <% end %>
-      </div>
-
-      <h2>Available formats</h2>
-      <ul class="formats">
-        <% @book.formats.each do |format| %>
-          <li><a class="<%= format[:extension] %>" href='<%= format[:link] %>'><%= format[:extension] %></a></li>
-        <% end %>
-      </ul>
-    
-      <% unless @book.isbn.empty? %>
-        <h2>Details</h2>
-        <p>ISBN: <span itemprop="isbn" class="isbn_<%= @book.isbn %>"><%= @book.isbn %></span></p>
-      <%end%>
-      <% unless @book.isbn.empty? %>
-        <span class="ident_<%= @book.ident %>"></span>
-
-        <% targeturl = "https://openlibrary.org/api/books?bibkeys=ISBN:" + @book.isbn.tr(' ','') + "&jscmd=data&format=json" %>
-
-        <!-- script>$.getJSON('<%= targeturl %>', function(openLibJson){
-          if ($.isEmptyObject(openLibJson)) {
-            // console.log('No OpenLibrary data for ISBN: <%= @book.isbn %>');
-          } else {
-            // console.log(openLibJson);
-           var isbn_key = Object.keys(openLibJson)[0]
-            $('span.ident_<%= @book.ident %>').append('<p itemprop="datePublished">Published: ' + openLibJson[isbn_key].publish_date + '</p>');
-            if (openLibJson[isbn_key].number_of_pages != undefined) {
-              $('span.ident_<%= @book.ident %>').append('<p itemprop="numberOfPages">' + openLibJson[isbn_key].number_of_pages + ' pages</p>');
-            }
-          }
-        })</script -->
+        </div>
+      <% else %>
+        <%= @content %>
       <% end %>
+      
     </div>
   </section>
 </article>
