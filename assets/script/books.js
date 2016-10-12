@@ -46,7 +46,7 @@ function filterPublishers(publisher) {
     $('#select_info').hide();
   } else {
     $('#books').children().hide();
-    var matchingBooks = $("article p[itemprop='publisher']:contains(" + publisher +")").parent().parent().parent().parent();
+    var matchingBooks = $("article p[itemprop='publisher']:contains(" + publisher +")").closest("article");
     var numberFound = matchingBooks.length;
     
     $('#sort').hide();
