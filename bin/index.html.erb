@@ -1,39 +1,35 @@
 <html>
-    <head>
-      <meta charset="utf-8" />
-      <title><%= @books.length %> books</title>
-      <script src="http://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.3/zepto.min.js"></script>
-      <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
-      <link href="assets/desktop.css" rel="stylesheet">
-      <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-      <link href='http://fonts.googleapis.com/css?family=Special+Elite|Over+the+Rainbow|Rock+Salt' rel='stylesheet' type='text/css'>
-      <script src="assets/jquery.js"></script>
-      <script src="assets/sort_elements.js"></script>
-      <script src="assets/books.js"></script>
-    <head>
-    <body>
-        <header>
-            <p>Generated with <a href="https://github.com/lizconlan/bookshelf">github.com/lizconlan/<strong>bookshelf</strong></a> on <time><%= Time.now.asctime %></time>.</p>
-            
-            <nav>
-              <div id="filters">
-                <form>
-                  <label for="pubfilter">Filter by publisher</label>
-                  <select id="pubfilter" class="pubfilter">
-                    <option>Show All</option><% @publishers.each do |pub| %>
-                    <option><%= pub %></option><% end %>
-                  </select>
-                </form>
-              </div>
-              <div id="sort">
-                <a id="pub_sort" href="#">Sort by Publisher</a>
-                <a id="title_sort" href="#">Sort by Title</a>
-              </div>
-              <div id="select_info"></div>
-            </nav>
-        </header>
-        <section id="books">
-          <%= @html.join("\n") %>
-        </section>
-    </body>
+  <head>
+    <meta charset="utf-8" />
+    <title><%= @books.length %> books</title>
+    <link href="assets/style.css" rel="stylesheet">
+    <script src="assets/script/jquery.js"></script>
+    <script src="assets/script/sort_elements.js"></script>
+    <script src="assets/script/books.js"></script>
+  </head>
+  <body>
+    <header>
+      <p>Generated with <a href="https://github.com/lizconlan/bookshelf">github.com/lizconlan/<strong>bookshelf</strong></a> on <time><%= Time.now.asctime %></time>.</p>
+      <nav>
+        <div id="filters">
+          <form>
+            <label for="pubfilter">Filter by publisher</label>
+            <select id="pubfilter" class="pubfilter">
+              <option>Show All</option><% @publishers.each do |pub| %>
+              <option><%= pub %></option><% end %>
+            </select>
+          </form>
+        </div>
+        <div id="sort">
+          <a id="pub_sort" href="#">Sort by Publisher</a>
+          <a id="title_sort" href="#">Sort by Title</a>
+        </div>
+        <div id="select_info"></div>
+      </nav>
+    </header>
+    <section id="books">
+      <%= @html.join("\n") %>
+    </section>
+    <div id="fade"></div>
+  </body>
 </html>

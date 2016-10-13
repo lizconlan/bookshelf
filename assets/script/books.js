@@ -7,18 +7,46 @@ var main = function() {
   $('#title_sort').hide();
   $('#pub_sort').click(function() {sortByPublisher();});
   $('#title_sort').click(function() {sortByTitle();});
+  $('#fade').click(function() {hideInfo();});
 }
 
 $(document).ready(main);
 
+function revealInfo(image) {
+  hideInfo();
+  $('#fade').css('height', $(window).height());
+  $('#fade').show();
+  var infoPanel = $(image).parent().find('.about');
+  infoPanel.show();
+  infoPanel.css({margin:$(document).scrollTop()+100+'px 0 0 '+($(window).width() / 2 - infoPanel.width() / 2)+'px'});
+  if(infoPanel.find('tab_set')) {
+    $('.tab_content').hide();
+    $(infoPanel.find('.tab_content')[0]).show();
+    $(infoPanel.find('.tab_button')[0]).addClass('selected');
+  }
+}
+
+function hideInfo() {
+  $('.about').hide();
+  $('#fade').hide();
+}
+
+function showTab(tab) {
+  $('.tab_content').hide();
+  $('#' + tab).show();
+  $('.tab_button').removeClass('selected');
+  $('#btn_' + tab).addClass('selected');
+}
+
 function filterPublishers(publisher) {
+  hideInfo();
   if(publisher === 'Show All') {
     $('#books').children().show();
     $('#sort').show();
     $('#select_info').hide();
   } else {
     $('#books').children().hide();
-    var matchingBooks = $("article p:contains(Publisher: " + publisher + ")").parent().parent();
+    var matchingBooks = $("article p[itemprop='publisher']:contains(" + publisher +")").closest("article");
     var numberFound = matchingBooks.length;
     
     $('#sort').hide();
@@ -34,6 +62,7 @@ function filterPublishers(publisher) {
 }
 
 function sortByPublisher() {
+  hideInfo();
   $('article').sortElements(function(a, b){
     pub_a = $(a).find('p[itemprop="publisher"]')[0].textContent.trim();
     title_a = $(a).find('h2')[0].textContent.trim();
@@ -50,6 +79,7 @@ function sortByPublisher() {
 }
 
 function sortByTitle() {
+  hideInfo();
   $('article').sortElements(function(a, b){
     title_a = $(a).find('h2')[0].textContent.trim();
     sort_key_a = title_a.trim().replace(/^(The )|(A )/, "");
@@ -61,4 +91,25 @@ function sortByTitle() {
   });
   $('#title_sort').hide();
   $('#pub_sort').show();
+}
+
+
+function showMoreInfo(isbn, book_id) {
+  target = "https://openlibrary.org/api/books?bibkeys=ISBN:" + isbn.trim() + "&jscmd=data&format=json";
+  panel = $('span.ident_' + book_id);
+  var data = '';
+
+  $.getJSON(target, function(openLibJson){
+    if ($.isEmptyObject(openLibJson)) {
+      // console.log('No OpenLibrary data for ISBN: ' + isbn);
+    } else {
+     isbn_key = Object.keys(openLibJson)[0];
+     data = openLibJson[isbn_key];
+    }
+  }).done( function() {
+    panel.append('<p itemprop="datePublished">Published: ' + data.publish_date + '</p>');
+    if (data.number_of_pages != undefined) {
+      panel.append('<p itemprop="numberOfPages">' + data.number_of_pages + ' pages</p>');
+    }
+  });
 }

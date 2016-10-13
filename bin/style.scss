@@ -1,0 +1,185 @@
+$font-stack: sans-serif;
+$icon-spec: no-repeat 0 50%;
+$book-tile-width: 170px;
+$book-tile-height: 230px;
+
+body { 
+  margin: 1em;
+  font-family: $font-stack;
+  padding: 1em 0;
+}
+
+a { text-decoration: none; }
+
+
+img[itemprop="image"] {
+  padding: 0;
+  margin: auto;
+  background-color: #fff;
+  flex: none;
+  
+  &:hover { cursor: pointer }
+}
+
+article[itemtype="http://schema.org/Book"] {
+  margin: 10px 15px;
+  float: left;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: $book-tile-height;
+  min-width: $book-tile-width;
+
+  h2 {
+    font-size: 0.8em;
+    text-align: center;
+    max-width: 12em;
+    min-width: $book-tile-width;
+    min-height: 3.5em;
+    
+    a { color: black;}
+    
+  }
+  
+  .about {
+    position: absolute;
+    padding: 0em;
+    font-size: 1em;
+    background-color: white;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 60%;
+    height: auto;
+    display: none;
+    border: 1px solid darkgrey;
+    min-width: 413px;
+
+    h1 {
+      margin: 2px;
+      border: 1px solid darkgrey;
+      padding: 0.4em;
+    }
+    
+    .tab_set {
+      border: 1px solid darkgrey;
+      margin: 2px 2px -3px 2px;
+      padding: 0.4em;
+      padding-bottom: 0;
+      border-bottom: 0;
+      min-width: 375px;
+      position: relative;
+      list-style: none;
+      
+      .tab_button {
+        z-index: 0;
+        margin: 0 4px;
+        padding: 0 4px;
+        border: 1px solid #AAA;
+        background: darken(#ECECEC, 7%);
+        display: inline-block;
+        z-index: 4;
+        
+        &:hover {
+          cursor: pointer;
+          background: #ECECEC;
+        }
+      }
+      
+      .tab_button.selected {
+        z-index: 2;
+        background: white;
+        border-bottom: 1px solid #fff;
+        
+        &:hover {
+          cursor: default;
+        }
+      }
+    }
+    
+    .content {
+      border: 1px solid darkgrey;
+      margin: 2px;
+      padding: 1em;
+      position: relative;
+      min-width: 375px;
+      z-index: -1;
+      
+      .coverpic {
+        position: absolute;
+        top: 1em;
+        right: 1em;
+      }
+      
+      .info_column {
+        min-width: 240px;
+      }
+      
+      .tab_content {
+        display: none;
+      }
+      
+      .tabs :first-child {
+        display: block;
+      }
+    }
+
+    h2 {
+      text-align: left;
+      margin: 0.8em 0 0.4em 0;
+      min-height: 0;
+      font-size: 1em;
+    }
+    
+    h2, ul, p, span {
+      width: 70%;
+    }
+
+    ul, p {
+      padding: 0;
+      margin: 0 1em;
+      line-height: 1.5em;
+      list-style: none;
+      text-align: left;
+
+      .formats {
+        padding: 0;
+        list-style: none;
+      }
+    }
+
+    li {
+      margin: 0;
+      text-align: left;
+    }
+
+    .pdf, .epub, .mobi {
+      padding: 0 0 1px 20px;
+      min-height: 24px;
+    }
+
+    .pdf { background: url(icons/document-pdf.png) $icon-spec; }
+
+    .epub { background: url(icons/document-epub.png) $icon-spec; }
+
+    .mobi { background: url(icons/document-mobi.png) $icon-spec; }
+  }
+}
+
+.notes {
+  font-family: cursive;
+  word-spacing: 0.5em;
+  color: green;
+}
+
+#fade {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background-color: white;
+  opacity: 0.7;
+  display: none;
+}

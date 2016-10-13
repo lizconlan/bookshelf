@@ -28,10 +28,11 @@ task :generate_index_file do
     index = File.open("index.html", 'w+')
     @books = shelf.books.sort{ |a, b| a.sort_title.downcase <=> b.sort_title.downcase }
     @publishers = shelf.publishers
+    
     @html = []
     @books.each_with_index do |book, idx|
       @uniq = idx
-      if book.class.to_s == "Book"
+      if book.editions.empty?
         @html << output_book(book)
       else
         @html << create_bundle(book)
@@ -51,26 +52,30 @@ task :generate_index_file do
 end
 
 def create_bundle(book)
-  html = []
-  html << "<article class='book_bundle'>"
-  html << "  <h2 class='title'><a href='#{book.link}'>#{book.title}</a></h2>"
-  @uniq += 8000
-  book.books.each do |edition|
-    html << output_book(edition, "BookBundle")
-    @uniq += 1
+  @colours = {"pdf" => "green", "mobi" => "green", "epub" => "green"}
+  @tabs = []
+  book.editions.each do |edition|
+    @book = edition
+    @tabs << ERB.new(File.read("bin/_detail.html.erb")).result
   end
-  html << "</article>"
-  html.join("\n")
+  
+  @book = Book.new
+  @book.title = book.title
+  @book.cover_pic = book.editions.first.cover_pic
+  @book.publisher = book.editions.first.publisher
+  @book.editions = book.editions
+  ERB.new(File.read("bin/_book.html.erb")).result
 end
 
-def output_book(book, book_class = "Book")
+def output_book(book)
   @book = book
-  @book_class = book_class
   @colours = {"pdf" => "green", "mobi" => "green", "epub" => "green"}
+  @content = ERB.new(File.read("bin/_detail.html.erb")).result
   ERB.new(File.read("bin/_book.html.erb")).result
 end
 
 def output_csv(book)
   @book = book
+  @editions = nil
   ERB.new(File.read("_book.csv.erb")).result
 end
