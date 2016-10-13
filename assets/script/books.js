@@ -92,3 +92,24 @@ function sortByTitle() {
   $('#title_sort').hide();
   $('#pub_sort').show();
 }
+
+
+function showMoreInfo(isbn, book_id) {
+  target = "https://openlibrary.org/api/books?bibkeys=ISBN:" + isbn.trim() + "&jscmd=data&format=json";
+  panel = $('span.ident_' + book_id);
+  var data = '';
+
+  $.getJSON(target, function(openLibJson){
+    if ($.isEmptyObject(openLibJson)) {
+      // console.log('No OpenLibrary data for ISBN: ' + isbn);
+    } else {
+     isbn_key = Object.keys(openLibJson)[0];
+     data = openLibJson[isbn_key];
+    }
+  }).done( function() {
+    panel.append('<p itemprop="datePublished">Published: ' + data.publish_date + '</p>');
+    if (data.number_of_pages != undefined) {
+      panel.append('<p itemprop="numberOfPages">' + data.number_of_pages + ' pages</p>');
+    }
+  });
+}

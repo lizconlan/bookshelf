@@ -28,19 +28,4 @@
   <p>ISBN: <span itemprop="isbn" class="isbn_<%= @book.isbn %>"><%= @book.isbn %></span></p>
 
   <span class="ident_<%= @book.ident %>"></span>
-
-  <% targeturl = "https://openlibrary.org/api/books?bibkeys=ISBN:" + @book.isbn.tr(' ','') + "&jscmd=data&format=json" %>
-
-  <!-- script>$.getJSON('<%= targeturl %>', function(openLibJson){
-    if ($.isEmptyObject(openLibJson)) {
-      // console.log('No OpenLibrary data for ISBN: <%= @book.isbn %>');
-    } else {
-      // console.log(openLibJson);
-     var isbn_key = Object.keys(openLibJson)[0]
-      $('span.ident_<%= @book.ident %>').append('<p itemprop="datePublished">Published: ' + openLibJson[isbn_key].publish_date + '</p>');
-      if (openLibJson[isbn_key].number_of_pages != undefined) {
-        $('span.ident_<%= @book.ident %>').append('<p itemprop="numberOfPages">' + openLibJson[isbn_key].number_of_pages + ' pages</p>');
-      }
-    }
-  })</script -->
 <% end %>
