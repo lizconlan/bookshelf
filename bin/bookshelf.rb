@@ -181,8 +181,7 @@ class Book
   def sort_title
     case title.downcase
     when /^a /, /^the /
-      words = title.split(" ")
-      words.reverse!
+      words = title.split(" ").reverse
       first_word = words.pop
       "#{words.reverse.join(" ")}, #{first_word}"
     else
