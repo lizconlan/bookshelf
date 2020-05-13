@@ -75,9 +75,9 @@ Tip: vary the value of `shelf=` to change the target directory for the script
 
 * * *
 
-<a name="footnote-1" />
+<a name="footnote-1"></a>
 <sup>&dagger;</sup>If you don't have a folder with lots of books in it<sup>[&Dagger;](#footnote-2)</sup>, you may have come to the wrong place
 
-<a name="footnote-2" />
+<a name="footnote-2"></a>
 <sup>&Dagger;</sup>If you would like a folder with lots of books in it, may I suggest [Project Gutenberg](http://www.gutenberg.org) as a good starting point
 
