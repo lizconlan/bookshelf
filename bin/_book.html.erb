@@ -1,49 +1,46 @@
-<article itemscope itemtype="http://schema.org/Book" id="book_<%= @uniq %>" class="book">
+      <article itemscope itemtype="http://schema.org/Book" id="book_<%= @uniq %>" class="book">
+<% if @book.cover_pic %>
+        <img itemprop="image" src="<%= @book.cover_pic %>" alt="<%= @book.title %>" onclick="revealInfo(this);"/>
+<% else %>
+        <img itemprop="image" src="assets/missing-image.gif" alt="<%= @book.title %>" onclick="revealInfo(this);"/>
+<% end %>
 
-  <% if @book.cover_pic %>
-    <img itemprop="image" src="<%= @book.cover_pic %>" alt="<%= @book.title %>" onclick="revealInfo(this);"/>
-  <% else %>
-    <img itemprop="image" src="assets/missing-image.gif" alt="<%= @book.title %>" onclick="revealInfo(this);"/>
-  <% end %>
+        <h2 class="title">
+          <a href="<%= @book.link %>" itemprop="name">
+            <%= @book.title %>
+          </a>
+        </h2>
 
-  <h2 class="title">
-    <a href="<%= @book.link %>" itemprop="name">
-      <%= @book.title %>
-    </a>
-  </h2>
-  
-  <section class="about">
-    <h1><%= @book.title %></h1>
-    
-    <% unless @book.editions.empty? %>
-      <div class="tab_set">
-        <ul>
-      <% @book.editions.each do |edition| %>
-        <li class="tab_button" id="btn_<%= edition.ident %>" onclick="showTab('<%= edition.ident %>')"><%= edition.title %></span>
-      <% end %>
-      </ul>
-      </div>
-    <% end %>
-    
-    <div class="content">
-      <div class="coverpic">
-        <% if @book.cover_pic %>
-          <img src="<%= @book.cover_pic %>" alt="<%= @book.title%> (cover)" />
-        <% end %>
-      </div>
-      
-      <% if @tabs and !@book.editions.empty? %>
-        <div class="tabs">
-        <% @tabs.each_with_index do |tab, idx| %>
-          <div class="tab_content" id="<%= @book.editions[idx].ident %>">
-            <%= tab %>
+        <section class="about">
+          <h1><%= @book.title %></h1>
+<% unless @book.editions.empty? %>
+          <div class="tab_set">
+            <ul>
+<% @book.editions.each do |edition| %>
+              <li class="tab_button" id="btn_<%= edition.ident %>" onclick="showTab('<%= edition.ident %>')"><%= edition.title %></span>
+<% end %>
+            </ul>
           </div>
-        <% end %>
-        </div>
-      <% else %>
-        <%= @content %>
-      <% end %>
-      
-    </div>
-  </section>
-</article>
+<% end %>
+
+          <div class="content">
+            <div class="coverpic">
+<% if @book.cover_pic %>
+              <img src="<%= @book.cover_pic %>" alt="<%= @book.title%> (cover)" />
+<% end %>
+            </div>
+
+<% if @tabs and !@book.editions.empty? %>
+            <div class="tabs">
+<% @tabs.each_with_index do |tab, idx| %>
+              <div class="tab_content" id="<%= @book.editions[idx].ident %>">
+                <%= tab %>
+              </div>
+<% end %>
+            </div>
+<% else %>
+            <%= @content %>
+<% end %>
+          </div>
+        </section>
+      </article>
