@@ -156,7 +156,7 @@ class Bookshelf
   end
 
   def create_book(folder_name, info)
-    book = Book.new
+    book = Book.new(folder_name: folder_name)
     book.title = info["title"]
     book.link = folder_name
     book.authors = info["authors"]
@@ -164,10 +164,6 @@ class Bookshelf
     book.editions = []
     book.isbn = info["ISBN"] || ""
     book.ident = book.isbn
-    cover_pic_path = "#{folder_name}/_meta/cover.jpg"
-    if File.exist?(cover_pic_path)
-      book.cover_pic = cover_pic_path
-    end
     book.notes = info["notes"] if info["notes"]
     book.formats = get_formats(folder_name)
     book
@@ -175,8 +171,25 @@ class Bookshelf
 end
 
 class Book
-  attr_accessor :ident, :title, :cover_pic, :link, :publisher, :isbn,
-                :authors, :editors, :notes, :formats, :editions, :books
+  attr_accessor :ident, :title, :link, :publisher, :isbn, :authors,
+                :editors, :notes, :formats, :editions, :formats
+
+  def initialize(folder_name: nil)
+    @folder_name = folder_name
+  end
+
+  def cover_pic=(path)
+    @edition_cover_pic = path
+  end
+
+  def cover_pic
+    if @folder_name
+      path = "#{@folder_name}/_meta/cover.jpg"
+      return path if File.exist?(path)
+    elsif defined?(@edition_cover_pic)
+      return @edition_cover_pic
+    end
+  end
 
   def sort_title
     case title.downcase
