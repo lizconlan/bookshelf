@@ -40,44 +40,18 @@ class Bookshelf
     book_titles.each_with_index do |title, idx|
       begin
         folder_name = folders[idx]
-        if File.exist?("#{folder_name}/_meta/info.js")
-          info = JSON.parse(File.read("#{folder_name}/_meta/info.js"))
-          book = create_book(folders[idx], info)
-          @publishers << book.publisher unless book.publisher.empty?
-          @books << book
-        elsif Bookshelf.contains_book_folders(folder_name)
-          subfolders = Dir.glob("#{folder_name}/*")
-          editions = []
-          subfolders.each do |subfolder_name|
-            ident_no = 1
-            if File.exist?("#{subfolder_name}/_meta/info.js")
-              info = JSON.parse(File.read("#{subfolder_name}/_meta/info.js"))
-              ident = ""
 
-              if editions.collect{ |x| x.ident }.include?(info["ISBN"])
-                ident = info["ISBN"] + "_#{ident_no}"
-                ident_no += 1
-              end
-              book = create_book(subfolder_name, info)
-              book.ident = ident unless ident == ""
-              editions << book
-            else
-              puts "Info not found for #{subfolder_name}"
-            end
-          end
-          unless books.empty?
-            bundle = Book.new
-            bundle.title = folder_name.split("/").last
-            bundle.link = folder_name
-            bundle.editions = editions
-            @books << bundle
-          end
+        if File.exist?("#{folder_name}/_meta/info.js")
+          list_book(folder_name)
+        elsif Bookshelf.contains_book_folders(folder_name)
+          list_editions(folder_name)
         else
           puts "Info not found for #{folder_name}"
         end
       rescue => e
         puts e.message
       end
+
       @publishers.uniq!
     end
   end
@@ -100,6 +74,46 @@ class Bookshelf
 
   protected
 
+  def list_book(folder_name)
+    info = JSON.parse(File.read("#{folder_name}/_meta/info.js"))
+    book = create_book(folder_name, info)
+    @publishers << book.publisher unless book.publisher.empty?
+    @books << book
+  end
+
+  def list_editions(folder_name)
+    subfolders = Dir.glob("#{folder_name}/*")
+    editions = []
+
+    subfolders.each do |subfolder_name|
+      ident_no = 1
+      if File.exist?("#{subfolder_name}/_meta/info.js")
+        info = JSON.parse(File.read("#{subfolder_name}/_meta/info.js"))
+        ident = ""
+
+        if editions.collect{ |x| x.ident }.include?(info["ISBN"])
+          ident = info["ISBN"] + "_#{ident_no}"
+          ident_no += 1
+        end
+
+        book = create_book(subfolder_name, info)
+        book.ident = ident unless ident == ""
+        editions << book
+      else
+        puts "Info not found for #{subfolder_name}"
+      end
+    end
+
+    unless editions.empty?
+      book_bundle = Book.new
+      book_bundle.title = folder_name.split("/").last
+      book_bundle.link = folder_name
+      book_bundle.editions = editions
+      @books << book_bundle
+      @publishers << editions.first.publisher unless editions.first.publisher.empty?
+    end
+  end
+
   def self.get_folders(target_folder)
     case target_folder
     when /\/$/
@@ -112,8 +126,6 @@ class Bookshelf
     folders = Dir.glob(target_folder)
     folders.delete_if { |folder| folder =~ /(^..\/_)|(\r$)/ }
   end
-
-
 
   def self.contains_book_folders(folder_name)
     folder_contents = Dir.glob("#{folder_name}/*")
