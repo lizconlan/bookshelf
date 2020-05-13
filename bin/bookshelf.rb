@@ -29,7 +29,7 @@ class Bookshelf
   def initialize(shelf_folder)
     @books = []
     @publishers = []
-    
+
     sass_filename = File.dirname(__FILE__) + "/style.scss"
     css = Sass::Engine.for_file(sass_filename, {:style => :compressed}).render
     File.open("#{File.dirname(__FILE__)}/../assets/style.css", "wb") {|f| f.write(css) }
@@ -53,7 +53,7 @@ class Bookshelf
             if File.exist?("#{subfolder_name}/_meta/info.js")
               info = JSON.parse(File.read("#{subfolder_name}/_meta/info.js"))
               ident = ""
-              
+
               if editions.collect{ |x| x.ident }.include?(info["ISBN"])
                 ident = info["ISBN"] + "_#{ident_no}"
                 ident_no += 1
@@ -117,9 +117,9 @@ class Bookshelf
   def get_formats(folder_name)
     book_files = Dir.glob(folder_name + "/*")
     formats = []
-    
+
     book_files.delete_if { |file| File.directory?("#{file}") }
-    
+
     if book_files.count > 1
       # determine which are most likely to be the book files
       # (as opposed to supporting materials such as READMEs)
@@ -131,10 +131,10 @@ class Bookshelf
         tally[candidate] += 1
       end
       book_filename = Hash[tally.sort_by{|key, val| val}.reverse].first.first
-    
+
       book_files.delete_if { |name| name[name.rindex("/")+1..-1].split(".").first != book_filename }
     end
-    
+
     book_files.each do |file_name|
       format = {}
       format_name = file_name[file_name.rindex("/")+1..-1]
@@ -143,7 +143,7 @@ class Bookshelf
       format[:extension] = format_name.split(".").last
       formats << format
     end
-      
+
     formats
   end
 
