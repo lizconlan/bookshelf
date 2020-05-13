@@ -95,6 +95,10 @@ class Bookshelf
     @books.select { |book| book.authors.join("|").include?(text) }
   end
 
+  def sort_by_title
+    books.sort{ |a, b| a.sort_title.downcase <=> b.sort_title.downcase }
+  end
+
   protected
 
   def self.get_folders(target_folder)
