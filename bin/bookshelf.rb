@@ -156,17 +156,15 @@ class Bookshelf
   end
 
   def create_book(folder_name, info)
-    book = Book.new(folder_name: folder_name)
-    book.title = info["title"]
-    book.link = folder_name
-    book.authors = info["authors"]
-    book.publisher = info["publisher"]
-    book.editions = []
-    book.isbn = info["ISBN"] || ""
-    book.ident = book.isbn
-    book.notes = info["notes"] if info["notes"]
-    book.formats = get_formats(folder_name)
-    book
+    Book.new(
+      folder_name: folder_name,
+      title: info["title"],
+      authors: info["authors"],
+      publisher: info["publisher"],
+      isbn: info["ISBN"],
+      ident: info["ISBN"],
+      notes: info["notes"]
+     )
   end
 end
 
@@ -174,8 +172,16 @@ class Book
   attr_accessor :ident, :title, :link, :publisher, :isbn, :authors,
                 :editors, :notes, :formats, :editions, :formats
 
-  def initialize(folder_name: nil)
-    @folder_name = folder_name
+  def initialize(folder_name: nil, title: nil, authors: [], publisher: "", isbn: "", ident: "", notes: "")
+    @folder_name, @link = folder_name
+    @title = title
+    @authors = authors
+    @publisher = publisher
+    @isbn = isbn
+    @ident = ident
+    @notes = notes
+    @formats = get_formats
+    @editions = []
   end
 
   def cover_pic=(path)
