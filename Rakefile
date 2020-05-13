@@ -40,7 +40,7 @@ task :generate_index_file do
     end
 
     @book_html = @html.join("\n")
-    renderer = ERB.new(File.read("bin/index.html.erb"))
+    renderer = ERB.new(File.read("bin/index.html.erb"), trim_mode: "<>")
 
     index.write(renderer.result)
     index.close
@@ -48,7 +48,7 @@ task :generate_index_file do
   rescue => e
     puts e.message
   end
-  
+
 end
 
 def create_bundle(book)
@@ -56,26 +56,26 @@ def create_bundle(book)
   @tabs = []
   book.editions.each do |edition|
     @book = edition
-    @tabs << ERB.new(File.read("bin/_detail.html.erb")).result
+    @tabs << ERB.new(File.read("bin/_detail.html.erb"), trim_mode: "<>").result
   end
-  
+
   @book = Book.new
   @book.title = book.title
   @book.cover_pic = book.editions.first.cover_pic
   @book.publisher = book.editions.first.publisher
   @book.editions = book.editions
-  ERB.new(File.read("bin/_book.html.erb")).result
+  ERB.new(File.read("bin/_book.html.erb"), trim_mode: "<>").result
 end
 
 def output_book(book)
   @book = book
   @colours = {"pdf" => "green", "mobi" => "green", "epub" => "green"}
-  @content = ERB.new(File.read("bin/_detail.html.erb")).result
-  ERB.new(File.read("bin/_book.html.erb")).result
+  @content = ERB.new(File.read("bin/_detail.html.erb"), trim_mode: "<>").result
+  ERB.new(File.read("bin/_book.html.erb"), trim_mode: "<>").result
 end
 
 def output_csv(book)
   @book = book
   @editions = nil
-  ERB.new(File.read("_book.csv.erb")).result
+  ERB.new(File.read("_book.csv.erb"), trim_mode: "<>").result
 end
