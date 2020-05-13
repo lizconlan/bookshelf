@@ -67,7 +67,6 @@ class Bookshelf
           end
           unless books.empty?
             bundle = Book.new
-            bundle.isbn = ""
             bundle.title = folder_name.split("/").last
             bundle.link = folder_name
             bundle.editions = editions
@@ -114,38 +113,7 @@ class Bookshelf
     folders.delete_if { |folder| folder =~ /(^..\/_)|(\r$)/ }
   end
 
-  def get_formats(folder_name)
-    book_files = Dir.glob(folder_name + "/*")
-    formats = []
 
-    book_files.delete_if { |file| File.directory?("#{file}") }
-
-    if book_files.count > 1
-      # determine which are most likely to be the book files
-      # (as opposed to supporting materials such as READMEs)
-      # based on there being multiple occurences of the same
-      # base filename with different file extensions
-      filenames = book_files.map { |name| name[name.rindex("/")+1..-1].split(".").first }
-      tally = Hash.new(0)
-      filenames.each do |candidate|
-        tally[candidate] += 1
-      end
-      book_filename = Hash[tally.sort_by{|key, val| val}.reverse].first.first
-
-      book_files.delete_if { |name| name[name.rindex("/")+1..-1].split(".").first != book_filename }
-    end
-
-    book_files.each do |file_name|
-      format = {}
-      format_name = file_name[file_name.rindex("/")+1..-1]
-      format[:name] = format_name
-      format[:link] = "#{file_name}"
-      format[:extension] = format_name.split(".").last
-      formats << format
-    end
-
-    formats
-  end
 
   def self.contains_book_folders(folder_name)
     folder_contents = Dir.glob("#{folder_name}/*")
@@ -207,4 +175,48 @@ class Book
       title
     end
   end
+
+  protected
+
+  def get_formats
+    _formats = []
+
+    files = get_book_files
+
+    files.each do |file_name|
+      format = {}
+      format_name = file_name[file_name.rindex("/")+1..-1]
+      format[:name] = format_name
+      format[:link] = "#{file_name}"
+      format[:extension] = format_name.split(".").last
+      _formats << format
+    end
+
+    _formats
+  end
+
+  def get_book_files
+    return [] unless @folder_name
+
+    files = Dir.glob(@folder_name + "/*")
+
+    # remove directory names
+    files.delete_if { |file| File.directory?("#{file}") }
+
+    if files.count > 1
+      # determine which are most likely to be the book files
+      # (as opposed to supporting materials such as READMEs)
+      # based on there being multiple occurences of the same
+      # base filename with different file extensions
+      filenames = files.map { |name| name[name.rindex("/")+1..-1].split(".").first }
+
+      tally = filenames.inject(Hash.new(0)) { |total, e| total[e] += 1 ; total }
+      winner = Hash[tally.sort_by { |key, val| val }.reverse].first.first
+
+      files.delete_if { |name| name[name.rindex("/")+1..-1].split(".").first != winner }
+    end
+
+    files
+  end
+
 end
