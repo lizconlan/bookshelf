@@ -65,7 +65,7 @@ class Bookshelf
     puts ""
 
     puts "Admire your books here: "
-    puts "  #{File.absolute_path(shelf)}"
+    puts "  #{File.absolute_path(shelf)}/index.html"
     puts ""
   end
 
