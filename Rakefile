@@ -44,9 +44,6 @@ task :generate_index_file do
 
     index.write(renderer.result)
     index.close
-    puts "Admire your books here: "
-    puts "  #{File.absolute_path(index)}"
-    puts ""
   rescue => e
     puts e.message
   end

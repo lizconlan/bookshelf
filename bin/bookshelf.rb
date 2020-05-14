@@ -87,6 +87,10 @@ class Bookshelf
       end
     end
     puts ""
+
+    puts "Admire your books here: "
+    puts "  #{File.absolute_path(shelf_folder)}"
+    puts ""
   end
 
   def find_by_title(text)
