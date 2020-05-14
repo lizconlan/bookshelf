@@ -37,23 +37,56 @@ class Bookshelf
     folders = Bookshelf.get_folders(shelf_folder)
     book_titles = folders.map { |title| title.gsub(/^..\//, "")}
 
+    @incompletes = []
+    @strays = []
+
     book_titles.each_with_index do |title, idx|
       begin
         folder_name = folders[idx]
 
+        # single book in the folder
         if File.exist?("#{folder_name}/_meta/info.js")
           list_book(folder_name)
+        # multiple editions of book in the folder
         elsif Bookshelf.contains_book_folders(folder_name)
           list_editions(folder_name)
+        elsif File.directory?(folder_name)
+          @incompletes << folder_name
+        # stray files
         else
-          puts "Info not found for #{folder_name}"
+          @strays << folder_name
         end
       rescue => e
         puts e.message
+        return # something went wrong, stop
       end
 
       @publishers.uniq!
     end
+
+    puts ""
+    puts "Book Report"
+    puts "==========="
+    puts ""
+
+    puts "Your shelves contain #{folders.count} books…"
+    puts ""
+
+    unless @incompletes.empty?
+      puts "Metadata not found for: "
+      @incompletes.each do |folder_name|
+        puts "  #{folder_name.sub("../", "")}"
+      end
+      puts ""
+    end
+
+    unless @strays.empty?
+      puts "Misfiled book(s) detected:"
+      @strays.each do |file_name|
+        puts "  #{file_name.sub("../", "")}"
+      end
+    end
+    puts ""
   end
 
   def find_by_title(text)
