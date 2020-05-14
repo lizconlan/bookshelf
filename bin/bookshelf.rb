@@ -6,7 +6,7 @@ require 'erb'
 require 'sass'
 
 class Bookshelf
-  attr_reader :books, :publishers
+  attr_reader :books, :publishers, :incompletes, :strays
 
   def self.check_book_data(shelf_folder)
     folders = get_folders(shelf_folder)
