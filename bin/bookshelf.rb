@@ -29,6 +29,8 @@ class Bookshelf
   def initialize(shelf_folder)
     @books = []
     @publishers = []
+    @incompletes = []
+    @strays = []
 
     sass_filename = File.dirname(__FILE__) + "/style.scss"
     css = Sass::Engine.for_file(sass_filename, {:style => :compressed}).render
@@ -36,9 +38,6 @@ class Bookshelf
 
     folders = Bookshelf.get_folders(shelf_folder)
     book_titles = folders.map { |title| title.gsub(/^..\//, "")}
-
-    @incompletes = []
-    @strays = []
 
     book_titles.each_with_index do |title, idx|
       begin
@@ -64,6 +63,10 @@ class Bookshelf
       @publishers.uniq!
     end
 
+    show_book_report(folders, @incompletes, @strays, shelf_folder)
+  end
+
+  def show_book_report(folders, incompletes, strays, shelf)
     puts ""
     puts "Book Report"
     puts "==========="
@@ -72,24 +75,24 @@ class Bookshelf
     puts "Your shelves contain #{folders.count} books…"
     puts ""
 
-    unless @incompletes.empty?
+    unless incompletes.empty?
       puts "Metadata not found for: "
-      @incompletes.each do |folder_name|
+      incompletes.each do |folder_name|
         puts "  #{folder_name.sub("../", "")}"
       end
       puts ""
     end
 
-    unless @strays.empty?
+    unless strays.empty?
       puts "Misfiled book(s) detected:"
-      @strays.each do |file_name|
+      strays.each do |file_name|
         puts "  #{file_name.sub("../", "")}"
       end
     end
     puts ""
 
     puts "Admire your books here: "
-    puts "  #{File.absolute_path(shelf_folder)}"
+    puts "  #{File.absolute_path(shelf)}"
     puts ""
   end
 
