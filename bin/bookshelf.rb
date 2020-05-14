@@ -31,10 +31,9 @@ class Bookshelf
     @publishers = []
     @incompletes = []
     @strays = []
+    @shelf_folder = shelf_folder
 
-    sass_filename = File.dirname(__FILE__) + "/style.scss"
-    css = Sass::Engine.for_file(sass_filename, {:style => :compressed}).render
-    File.open("#{File.dirname(__FILE__)}/../assets/style.css", "wb") {|f| f.write(css) }
+    generate_css(File.dirname(__FILE__) + "/style.scss")
 
     folders = Bookshelf.get_folders(shelf_folder)
     book_titles = folders.map { |title| title.gsub(/^..\//, "")}
@@ -151,6 +150,13 @@ class Bookshelf
       book_bundle.editions = editions
       @books << book_bundle
       @publishers << editions.first.publisher unless editions.first.publisher.empty?
+    end
+  end
+
+  def generate_css(sass_file)
+    css = Sass::Engine.for_file(sass_file, {:style => :compressed}).render
+    File.open("#{File.dirname(__FILE__)}/../assets/style.css", "wb") do |f|
+      f.write(css)
     end
   end
 
