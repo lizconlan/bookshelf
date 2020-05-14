@@ -36,32 +36,8 @@ class Bookshelf
     generate_css(File.dirname(__FILE__) + "/style.scss")
 
     folders = Bookshelf.get_folders(shelf_folder)
-    book_titles = folders.map { |title| title.gsub(/^..\//, "")}
 
-    book_titles.each_with_index do |title, idx|
-      begin
-        folder_name = folders[idx]
-
-        # single book in the folder
-        if File.exist?("#{folder_name}/_meta/info.js")
-          list_book(folder_name)
-        # multiple editions of book in the folder
-        elsif Bookshelf.contains_book_folders(folder_name)
-          list_editions(folder_name)
-        elsif File.directory?(folder_name)
-          @incompletes << folder_name
-        # stray files
-        else
-          @strays << folder_name
-        end
-      rescue => e
-        puts e.message
-        return # something went wrong, stop
-      end
-
-      @publishers.uniq!
-    end
-
+    populate_shelves(folders)
     show_book_report(folders, @incompletes, @strays, shelf_folder)
   end
 
@@ -112,6 +88,34 @@ class Bookshelf
   end
 
   protected
+
+  def populate_shelves(folders)
+    book_titles = folders.map { |title| title.gsub(/^..\//, "")}
+
+    book_titles.each_with_index do |title, idx|
+      begin
+        folder_name = folders[idx]
+
+        # single book in the folder
+        if File.exist?("#{folder_name}/_meta/info.js")
+          list_book(folder_name)
+        # multiple editions of book in the folder
+        elsif Bookshelf.contains_book_folders(folder_name)
+          list_editions(folder_name)
+        elsif File.directory?(folder_name)
+          @incompletes << folder_name
+        # stray files
+        else
+          @strays << folder_name
+        end
+      rescue => e
+        puts e.message
+        return # something went wrong, stop
+      end
+
+      @publishers.uniq!
+    end
+  end
 
   def list_book(folder_name)
     info = JSON.parse(File.read("#{folder_name}/_meta/info.js"))
