@@ -197,8 +197,8 @@ class Bookshelf
 end
 
 class Book
-  attr_accessor :ident, :title, :link, :publisher, :isbn, :authors,
-                :editors, :notes, :formats, :editions, :formats
+  attr_reader :isbn, :authors, :editors, :notes, :formats
+  attr_accessor :title, :link, :ident, :publisher, :editions
 
   def initialize(folder_name: nil, title: nil, authors: [], publisher: "", isbn: "", ident: "", notes: "")
     @folder_name, @link = folder_name
