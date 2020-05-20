@@ -278,5 +278,4 @@ class Book
 
     files
   end
-
 end
