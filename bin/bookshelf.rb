@@ -36,7 +36,7 @@ class Bookshelf
     folders = Bookshelf.get_folders(shelf_folder)
 
     populate_shelves(folders)
-    show_book_report(folders, @incompletes, @strays, shelf_folder)
+    show_book_report(folders, @incompletes, @strays, shelf_folder) unless ENV["RACK_ENV"] == "test"
   end
 
   def show_book_report(folders, incompletes, strays, shelf)
@@ -156,8 +156,15 @@ class Bookshelf
   end
 
   def generate_css(sass_file)
+    target_dir =
+      if ENV["RACK_ENV"] == "test"
+        "#{File.dirname(__FILE__)}/test/assets"
+      else
+        "#{File.dirname(__FILE__)}/../assets"
+      end
+
     css = Sass::Engine.for_file(sass_file, {:style => :compressed}).render
-    File.open("#{File.dirname(__FILE__)}/../assets/style.css", "wb") do |f|
+    File.open("#{target_dir}/style.css", "wb") do |f|
       f.write(css)
     end
   end
