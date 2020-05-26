@@ -1,5 +1,6 @@
 require_relative "test_helper"
 require_relative "../book"
+require_relative "../edition"
 
 class TestBook < Minitest::Test
 
@@ -89,8 +90,51 @@ class TestBook < Minitest::Test
     it { assert_equal(false, book.editions?) }
 
     it 'returns true if is at least one appended edition' do
-      book.editions << {}
+      book.append_edition(Edition.new(book))
       assert_equal(true, book.editions?)
+    end
+  end
+
+  describe '#append_edition' do
+    let(:book) { Book.new }
+    let(:edition) { Edition.new(book) }
+
+    describe 'success' do
+      it 'adds a new edition to the book' do
+        book.append_edition(edition)
+        assert_equal(1, book.editions.count)
+        assert_equal([edition], book.editions)
+      end
+
+      it { assert_equal(true, book.append_edition(edition)) }
+    end
+
+    describe 'trying to add the same edition twice' do
+      before { book.append_edition(edition) }
+
+      it 'does not add the duplicate' do
+        book.append_edition(edition)
+        assert_equal(1, book.editions.count)
+      end
+
+      it { assert_equal(false, book.append_edition(edition)) }
+    end
+
+    describe 'trying to add an object which is not an Edition' do
+      it 'raises an error' do
+        err = assert_raises(ArgumentError) { book.append_edition(Hash.new) }
+        assert_equal("Expected 'Edition', got 'Hash'", err.message)
+      end
+    end
+
+    describe 'trying to add an edition that belongs to a different book' do
+      let(:wrong_book) { Book.new }
+      let(:edition) { Edition.new(wrong_book) }
+
+      it 'raises an error' do
+        err = assert_raises(ArgumentError) { book.append_edition(edition) }
+        assert_match(/#<Edition.* does not belong to #<Book/, err.message)
+      end
     end
   end
 

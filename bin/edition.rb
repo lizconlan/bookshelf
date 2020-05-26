@@ -26,4 +26,5 @@ class Edition < Book
   end
 
   undef editions
+  undef append_edition
 end

@@ -31,6 +31,23 @@ class Book
     end
   end
 
+  def append_edition(edition)
+    unless edition.is_a?(Edition)
+      raise ArgumentError.new("Expected 'Edition', got '#{edition.class}'")
+    end
+
+    unless self == edition.book
+      raise ArgumentError.new("#{edition.to_s} does not belong to #{self.to_s}")
+    end
+
+    if editions.include?(edition)
+      false
+    else
+      editions << edition
+      true
+    end
+  end
+
   def sort_title
     case title.downcase
     when /^a /, /^the /
