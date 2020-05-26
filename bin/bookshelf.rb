@@ -39,7 +39,7 @@ class Bookshelf
     folders = Bookshelf.get_folders(shelf_folder)
 
     populate_shelves(folders)
-    show_book_report(folders, @incompletes, @strays, shelf_folder) unless ENV["RACK_ENV"] == "test"
+    show_book_report(books, @incompletes, @strays, shelf_folder) unless ENV["RACK_ENV"] == "test"
   end
 
   def show_book_report(folders, incompletes, strays, shelf)
