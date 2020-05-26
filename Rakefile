@@ -32,10 +32,10 @@ task :generate_index_file do
     @html = []
     @books.each_with_index do |book, idx|
       @uniq = idx
-      if book.editions.empty?
-        @html << output_book(book)
-      else
+      if book.editions?
         @html << create_bundle(book)
+      else
+        @html << output_book(book)
       end
     end
 
@@ -58,11 +58,7 @@ def create_bundle(book)
     @tabs << ERB.new(File.read("bin/_detail.html.erb"), trim_mode: "<>").result
   end
 
-  @book = Book.new
-  @book.title = book.title
-  @book.cover_pic = book.editions.first.cover_pic
-  @book.publisher = book.editions.first.publisher
-  @book.editions = book.editions
+  @book = book
   ERB.new(File.read("bin/_book.html.erb"), trim_mode: "<>").result
 end
 

@@ -134,35 +134,42 @@ class Bookshelf
 
   def list_editions(folder_name)
     subfolders = Dir.glob("#{folder_name}/*")
+    return unless subfolders.count > 0
     editions = []
+    book = nil
+    ident_no = 1
+
+    book_info =
+      {
+        title: folder_name.split("/").last,
+        folder_name: folder_name
+      }
 
     subfolders.each do |subfolder_name|
-      ident_no = 1
       if File.exist?("#{subfolder_name}/_meta/info.js")
-        info = JSON.parse(File.read("#{subfolder_name}/_meta/info.js"))
-        ident = ""
-
-        if editions.collect{ |x| x.ident }.include?(info["ISBN"])
-          ident = info["ISBN"] + "_#{ident_no}"
-          ident_no += 1
-        end
-
-        book = create_book(subfolder_name, info)
-        book.ident = ident unless ident == ""
-        editions << book
+        info = JSON.parse(File.read("#{subfolder_name}/_meta/info.js")).symbolize_keys
+        book_info[:isbn] = info[:ISBN] if info[:ISBN] && !book_info[:isbn]
+        info.delete(:ISBN)
+        book_info[:publisher] = info.delete(:publisher)
+        ident = "#{book_info[:isbn]}_#{ident_no}"
+        ident_no += 1
+        info[:ident] = ident
+        info[:folder_name] = "#{subfolder_name}"
+        editions << info.symbolize_keys
       else
         puts "Info not found for #{subfolder_name}"
       end
     end
 
-    unless editions.empty?
-      book_bundle = Book.new
-      book_bundle.title = folder_name.split("/").last
-      book_bundle.link = folder_name
-      book_bundle.editions = editions
-      @books << book_bundle
-      @publishers << editions.first.publisher unless editions.first.publisher.empty?
+    book = Book.new(book_info)
+
+    editions.each do |edition_info|
+      edition = Edition.new(book, edition_info)
+      book.append_edition(edition)
     end
+
+    @books << book
+    @publishers << book.publisher
   end
 
   def generate_css(sass_file)
