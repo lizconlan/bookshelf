@@ -1,6 +1,6 @@
 require_relative 'book'
 
-class Edition
+class Edition < Book
   attr_reader :ident, :isbn, :authors, :editors, :notes, :formats, :book,
               :title, :link, :publisher
 
@@ -11,7 +11,7 @@ class Edition
     @ident = ident || @isbn
     @authors = authors || book.authors
     @notes = notes || book.notes
-    @formats = formats || book.formats
+    @formats = get_formats
     @title =
       if title
         "#{book.title} - #{title}"
@@ -20,4 +20,10 @@ class Edition
       end
     @publisher = book.publisher
   end
+
+  def editions?
+    false
+  end
+
+  undef editions
 end
