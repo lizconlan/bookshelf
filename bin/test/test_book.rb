@@ -14,6 +14,7 @@ class TestBook < Minitest::Test
       it { assert_empty(book.isbn) }
       it { assert_empty(book.ident) }
       it { assert_empty(book.notes) }
+      it { assert_equal(1, book.editions.count) }
     end
 
     describe 'passing in attributes' do

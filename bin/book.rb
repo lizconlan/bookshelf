@@ -1,3 +1,5 @@
+require_relative 'editions'
+
 class Book
   attr_reader :isbn, :authors, :editors, :notes, :formats
   attr_accessor :title, :link, :ident, :publisher, :editions
@@ -11,7 +13,7 @@ class Book
     @ident = ident
     @notes = notes
     @formats = get_formats
-    @editions = []
+    @editions = Editions.new
   end
 
   def editions?
