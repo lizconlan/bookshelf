@@ -14,6 +14,10 @@ class Book
     @editions = []
   end
 
+  def editions?
+    !editions.empty?
+  end
+
   def cover_pic=(path)
     @edition_cover_pic = path
   end

@@ -83,4 +83,15 @@ class TestBook < Minitest::Test
     end
   end
 
+  describe '#editions?' do
+    let(:book) { Book.new }
+
+    it { assert_equal(false, book.editions?) }
+
+    it 'returns true if is at least one appended edition' do
+      book.editions << {}
+      assert_equal(true, book.editions?)
+    end
+  end
+
 end

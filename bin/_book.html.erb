@@ -13,7 +13,7 @@
 
         <section class="about">
           <h1><%= @book.title %></h1>
-<% unless @book.editions.empty? %>
+<% if @book.editions? %>
           <div class="tab_set">
             <ul>
 <% @book.editions.each do |edition| %>
@@ -30,7 +30,7 @@
 <% end %>
             </div>
 
-<% if @tabs and !@book.editions.empty? %>
+<% if @tabs and @book.editions? %>
             <div class="tabs">
 <% @tabs.each_with_index do |tab, idx| %>
               <div class="tab_content" id="<%= @book.editions[idx].ident %>">
