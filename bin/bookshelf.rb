@@ -133,7 +133,7 @@ class Bookshelf
   end
 
   def list_editions(folder_name)
-    subfolders = Dir.glob("#{folder_name}/*")
+    subfolders = Dir.glob("#{folder_name}/*").reverse
     return unless subfolders.count > 0
     editions = []
     book = nil
