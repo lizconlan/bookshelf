@@ -6,6 +6,13 @@ require 'sass'
 require_relative 'book'
 require_relative 'edition'
 
+# borrowed from Rails::ActiveSupport
+class Hash
+  def symbolize_keys
+    transform_keys { |key| key.to_sym rescue key }
+  end
+end
+
 class Bookshelf
   attr_reader :books, :publishers, :incompletes, :strays
 
