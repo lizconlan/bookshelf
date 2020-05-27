@@ -154,7 +154,7 @@ class Bookshelf
         ident = "#{book_info[:isbn]}_#{ident_no}"
         ident_no += 1
         info[:ident] = ident
-        info[:folder_name] = "#{subfolder_name}"
+        info[:folder_name] = "#{folder_name}/#{subfolder_name}"
         editions << info.symbolize_keys
       else
         puts "Info not found for #{subfolder_name}"
