@@ -78,10 +78,14 @@ class TestBook < Minitest::Test
       it { assert_equal("#{example_folder}/_meta/cover.jpg", book.cover_pic) }
     end
 
-    describe 'no default image but one was manually assigned' do
-      before { book.cover_pic = "#{example_folder}/_meta/cover2.jpg" }
+    describe 'the edition has its own image' do
+      let(:example_folder) { "bin/test/test-shelf/edition" }
+      let(:book) { Book.new(folder_name: example_folder) }
+      let(:edition) { Edition.new(book, folder_name: "#{example_folder}/v1") }
 
-      it { assert_equal("#{example_folder}/_meta/cover2.jpg", book.cover_pic) }
+      before { book.append_edition(edition) }
+
+      it { assert_equal(edition.cover_pic, book.cover_pic) }
     end
   end
 

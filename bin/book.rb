@@ -20,16 +20,12 @@ class Book
     !editions.empty?
   end
 
-  def cover_pic=(path)
-    @edition_cover_pic = path
-  end
-
   def cover_pic
-    if @folder_name
+    if editions?
+      editions.first.cover_pic
+    elsif @folder_name
       path = "#{@folder_name}/_meta/cover.jpg"
       return path if File.exist?(path)
-    elsif defined?(@edition_cover_pic)
-      return @edition_cover_pic
     end
   end
 

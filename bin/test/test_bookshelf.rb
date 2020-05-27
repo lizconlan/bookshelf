@@ -21,7 +21,7 @@ class TestBookshelf < Minitest::Test
       assert_equal(true, File.exists?(stylesheet))
     end
 
-    it { assert_equal(2, bookshelf.books.count) }
+    it { assert_equal(3, bookshelf.books.count) }
     it { assert_equal(1, bookshelf.publishers.count) }
     it { assert_equal(1, bookshelf.strays.count) }
     it { assert_equal(1, bookshelf.incompletes.count) }
