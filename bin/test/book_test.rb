@@ -1,6 +1,6 @@
 require_relative "test_helper"
-require_relative "../book"
-require_relative "../edition"
+require_relative "../lib/book"
+require_relative "../lib/edition"
 
 class TestBook < Minitest::Test
 

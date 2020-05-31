@@ -41,7 +41,7 @@ class Bookshelf
     @strays = []
     @shelf_folder = shelf_folder
 
-    generate_css(File.dirname(__FILE__) + "/style.scss")
+    generate_css(File.dirname(__FILE__) + "/../style/style.scss")
 
     folders = Bookshelf.get_folders(shelf_folder)
 
@@ -175,9 +175,9 @@ class Bookshelf
   def generate_css(sass_file)
     target_dir =
       if ENV["RACK_ENV"] == "test"
-        "#{File.dirname(__FILE__)}/test/assets"
+        "#{File.dirname(__FILE__)}/../test/assets"
       else
-        "#{File.dirname(__FILE__)}/../assets"
+        "#{File.dirname(__FILE__)}/../../assets"
       end
 
     css = Sass::Engine.for_file(sass_file, {:style => :compressed, :cache => false}).render

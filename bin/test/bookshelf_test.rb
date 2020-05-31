@@ -1,5 +1,5 @@
 require_relative "test_helper"
-require_relative "../bookshelf"
+require_relative "../lib/bookshelf"
 
 class TestBookshelf < Minitest::Test
 

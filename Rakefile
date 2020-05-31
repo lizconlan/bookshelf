@@ -1,6 +1,12 @@
 require 'rake'
 require 'csv'
-require './bin/bookshelf.rb'
+require './bin/lib/bookshelf.rb'
+require 'rake/testtask'
+
+Rake::TestTask.new do |t|
+  t.pattern = "bin/test/*_test.rb"
+  t.warning = false
+end
 
 task :default => "features"
 

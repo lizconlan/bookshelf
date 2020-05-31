@@ -1,5 +1,5 @@
 require_relative "test_helper"
-require_relative "../edition"
+require_relative "../lib/edition"
 
 class TestEdition < Minitest::Test
 
@@ -62,4 +62,5 @@ class TestEdition < Minitest::Test
 
     it { assert_equal(false, edition.editions?) }
   end
+
 end
