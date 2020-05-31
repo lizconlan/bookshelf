@@ -180,7 +180,7 @@ class Bookshelf
         "#{File.dirname(__FILE__)}/../assets"
       end
 
-    css = Sass::Engine.for_file(sass_file, {:style => :compressed}).render
+    css = Sass::Engine.for_file(sass_file, {:style => :compressed, :cache => false}).render
     File.open("#{target_dir}/style.css", "wb") do |f|
       f.write(css)
     end
