@@ -202,7 +202,7 @@ class Bookshelf
   def self.contains_book_folders(folder_name)
     folder_contents = Dir.glob("#{folder_name}/*")
     folder_contents.each do |subfolder|
-      return true if File.exists?("#{subfolder}/_meta/info.js")
+      return true if File.exist?("#{subfolder}/_meta/info.js")
     end
     false
   end

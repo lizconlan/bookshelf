@@ -9,16 +9,16 @@ class TestBookshelf < Minitest::Test
     let(:bookshelf) { Bookshelf.new(shelf_folder) }
 
     before do
-      File.delete(stylesheet) if File.exists?(stylesheet)
+      File.delete(stylesheet) if File.exist?(stylesheet)
     end
 
     after do
-      File.delete(stylesheet) if File.exists?(stylesheet)
+      File.delete(stylesheet) if File.exist?(stylesheet)
     end
 
     it 'should create a style.css file' do
       Bookshelf.new(shelf_folder)
-      assert_equal(true, File.exists?(stylesheet))
+      assert_equal(true, File.exist?(stylesheet))
     end
 
     it { assert_equal(3, bookshelf.books.count) }
