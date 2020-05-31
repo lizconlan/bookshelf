@@ -46,7 +46,7 @@ task :generate_index_file do
     end
 
     @book_html = @html.join("\n")
-    renderer = ERB.new(File.read("bin/index.html.erb"), trim_mode: "<>")
+    renderer = ERB.new(File.read("bin/views/index.html.erb"), trim_mode: "<>")
 
     index.write(renderer.result)
     index.close
@@ -61,18 +61,18 @@ def create_bundle(book)
   @tabs = []
   book.editions.each do |edition|
     @book = edition
-    @tabs << ERB.new(File.read("bin/_detail.html.erb"), trim_mode: "<>").result
+    @tabs << ERB.new(File.read("bin/views/_detail.html.erb"), trim_mode: "<>").result
   end
 
   @book = book
-  ERB.new(File.read("bin/_book.html.erb"), trim_mode: "<>").result
+  ERB.new(File.read("bin/views/_book.html.erb"), trim_mode: "<>").result
 end
 
 def output_book(book)
   @book = book
   @colours = {"pdf" => "green", "mobi" => "green", "epub" => "green"}
-  @content = ERB.new(File.read("bin/_detail.html.erb"), trim_mode: "<>").result
-  ERB.new(File.read("bin/_book.html.erb"), trim_mode: "<>").result
+  @content = ERB.new(File.read("bin/views/_detail.html.erb"), trim_mode: "<>").result
+  ERB.new(File.read("bin/views/_book.html.erb"), trim_mode: "<>").result
 end
 
 def output_csv(book)
