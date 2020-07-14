@@ -1,17 +1,10 @@
-require 'json'
 require 'open-uri'
 require 'erb'
 require 'sass'
 
 require_relative 'book'
 require_relative 'edition'
-
-# borrowed from Rails::ActiveSupport
-class Hash
-  def symbolize_keys
-    transform_keys { |key| key.to_sym rescue key }
-  end
-end
+require_relative 'book_binder'
 
 class Bookshelf
   attr_reader :books, :publishers, :incompletes, :strays
@@ -19,8 +12,6 @@ class Bookshelf
   def self.check_book_data(shelf_folder)
     folders = get_folders(shelf_folder)
     folders.each do |folder_name|
-      # check the contents of the subfolder(s)
-      # if there are any (a parent folder is not expected to have metadata)
       if contains_book_folders(folder_name)
         check_book_data(folder_name)
       else
@@ -95,7 +86,7 @@ class Bookshelf
     books.sort{ |a, b| a.sort_title.downcase <=> b.sort_title.downcase }
   end
 
-  protected
+  private
 
   def populate_shelves(folders)
     book_titles = folders.map { |title| title.gsub(/^..\//, "")}
@@ -105,16 +96,14 @@ class Bookshelf
         folder_name = folders[idx]
 
         # single book in the folder
-        if File.exist?("#{folder_name}/_meta/info.js")
-          list_book(folder_name)
-        # multiple editions of book in the folder
-        elsif Bookshelf.contains_book_folders(folder_name)
-          list_editions(folder_name)
-        elsif File.directory?(folder_name)
-          @incompletes << folder_name
-        # stray files
+        if valid_book_folder(folder_name)
+          list_book(folder_name, Bookshelf.contains_book_folders(folder_name))
         else
-          @strays << folder_name
+          if File.directory?(folder_name)
+            @incompletes << folder_name
+          else
+            @strays << folder_name
+          end
         end
       rescue => e
         puts e.message
@@ -125,51 +114,16 @@ class Bookshelf
     end
   end
 
-  def list_book(folder_name)
-    info = JSON.parse(File.read("#{folder_name}/_meta/info.js"))
-    book = create_book(folder_name, info)
-    @publishers << book.publisher unless book.publisher.empty?
-    @books << book
-  end
-
-  def list_editions(folder_name)
-    subfolders = Dir.glob("#{folder_name}/*").reverse
-    return unless subfolders.count > 0
-    editions = []
-    book = nil
-    ident_no = 1
-
-    book_info =
-      {
-        title: folder_name.split("/").last,
-        folder_name: folder_name
-      }
-
-    subfolders.each do |subfolder_name|
-      if File.exist?("#{subfolder_name}/_meta/info.js")
-        info = JSON.parse(File.read("#{subfolder_name}/_meta/info.js")).symbolize_keys
-        book_info[:isbn] = info[:ISBN] if info[:ISBN] && !book_info[:isbn]
-        info.delete(:ISBN)
-        book_info[:publisher] = info.delete(:publisher)
-        ident = "#{book_info[:isbn]}_#{ident_no}"
-        ident_no += 1
-        info[:ident] = ident
-        info[:folder_name] = "#{folder_name}/#{subfolder_name}"
-        editions << info.symbolize_keys
+  def list_book(folder_name, editions = false)
+    book =
+      if editions
+        BookBinder.create_book_with_editions(folder_name)
       else
-        puts "Info not found for #{subfolder_name}"
+        BookBinder.create_book(folder_name)
       end
-    end
 
-    book = Book.new(book_info)
-
-    editions.each do |edition_info|
-      edition = Edition.new(book, edition_info)
-      book.append_edition(edition)
-    end
-
+    @publishers << book.publisher if book.publisher
     @books << book
-    @publishers << book.publisher
   end
 
   def generate_css(sass_file)
@@ -199,6 +153,8 @@ class Bookshelf
     folders.delete_if { |folder| folder =~ /(^..\/_)|(\r$)/ }
   end
 
+  # check the contents of the subfolder(s)
+  # if there are any (a parent folder is not expected to have metadata)
   def self.contains_book_folders(folder_name)
     folder_contents = Dir.glob("#{folder_name}/*")
     folder_contents.each do |subfolder|
@@ -207,15 +163,7 @@ class Bookshelf
     false
   end
 
-  def create_book(folder_name, info)
-    Book.new(
-      folder_name: folder_name,
-      title: info["title"],
-      authors: info["authors"],
-      publisher: info["publisher"],
-      isbn: info["ISBN"],
-      ident: info["ISBN"],
-      notes: info["notes"]
-     )
+  def valid_book_folder(folder_name)
+    File.exist?("#{folder_name}/_meta/info.js") || Bookshelf.contains_book_folders(folder_name)
   end
 end
