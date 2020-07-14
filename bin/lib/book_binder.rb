@@ -46,6 +46,10 @@ module BookBinder
     end
   end
 
+  def self.get_book_data(target_folder)
+    get_folders(target_folder)
+  end
+
   private
 
   def self.read_info(path)

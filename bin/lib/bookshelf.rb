@@ -18,9 +18,9 @@ class Bookshelf
 
     generate_css(File.dirname(__FILE__) + "/../style/style.scss")
 
-    folders = Bookshelf.get_folders(shelf_folder)
+    book_data = BookBinder.get_book_data(shelf_folder)
 
-    populate_shelves(folders)
+    populate_shelves(book_data)
     show_book_report(books, @incompletes, @strays, shelf_folder) unless ENV["RACK_ENV"] == "test"
   end
 
@@ -122,19 +122,6 @@ class Bookshelf
     File.open("#{target_dir}/style.css", "wb") do |f|
       f.write(css)
     end
-  end
-
-  def self.get_folders(target_folder)
-    case target_folder
-    when /\/$/
-      target_folder = "#{target_folder}*"
-    when /\*$/
-      #yay, leave it alone
-    else
-      target_folder = "#{target_folder}/*"
-    end
-    folders = Dir.glob(target_folder)
-    folders.delete_if { |folder| folder =~ /(^..\/_)|(\r$)/ }
   end
 
   # check the contents of the subfolder(s)
