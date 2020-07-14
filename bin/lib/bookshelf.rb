@@ -17,11 +17,8 @@ class Bookshelf
     @shelf_folder = shelf_folder
 
     generate_css(File.dirname(__FILE__) + "/../style/style.scss")
-
-    book_data = BookBinder.get_book_data(shelf_folder)
-
-    populate_shelves(book_data)
-    show_book_report(books, @incompletes, @strays, shelf_folder) unless ENV["RACK_ENV"] == "test"
+    populate_shelves(BookBinder.get_book_data(shelf_folder))
+    show_book_report(@books, @incompletes, @strays, shelf_folder) unless ENV["RACK_ENV"] == "test"
   end
 
   def show_book_report(folders, incompletes, strays, shelf)
@@ -72,42 +69,11 @@ class Bookshelf
 
   private
 
-  def populate_shelves(folders)
-    book_titles = folders.map { |title| title.gsub(/^..\//, "")}
-
-    book_titles.each_with_index do |title, idx|
-      begin
-        folder_name = folders[idx]
-
-        # single book in the folder
-        if valid_book_folder(folder_name)
-          list_book(folder_name, Bookshelf.contains_book_folders(folder_name))
-        else
-          if File.directory?(folder_name)
-            @incompletes << folder_name
-          else
-            @strays << folder_name
-          end
-        end
-      rescue => e
-        puts e.message
-        return # something went wrong, stop
-      end
-
-      @publishers.uniq!
-    end
-  end
-
-  def list_book(folder_name, editions = false)
-    book =
-      if editions
-        BookBinder.create_book_with_editions(folder_name)
-      else
-        BookBinder.create_book(folder_name)
-      end
-
-    @publishers << book.publisher if book.publisher
-    @books << book
+  def populate_shelves(book_data)
+    @books = book_data[:books]
+    @incompletes = book_data[:incompletes]
+    @strays = book_data[:strays]
+    @publishers = book_data[:publishers].uniq!
   end
 
   def generate_css(sass_file)
@@ -122,19 +88,5 @@ class Bookshelf
     File.open("#{target_dir}/style.css", "wb") do |f|
       f.write(css)
     end
-  end
-
-  # check the contents of the subfolder(s)
-  # if there are any (a parent folder is not expected to have metadata)
-  def self.contains_book_folders(folder_name)
-    folder_contents = Dir.glob("#{folder_name}/*")
-    folder_contents.each do |subfolder|
-      return true if File.exist?("#{subfolder}/_meta/info.js")
-    end
-    false
-  end
-
-  def valid_book_folder(folder_name)
-    File.exist?("#{folder_name}/_meta/info.js") || Bookshelf.contains_book_folders(folder_name)
   end
 end

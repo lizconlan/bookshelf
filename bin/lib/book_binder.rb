@@ -47,7 +47,36 @@ module BookBinder
   end
 
   def self.get_book_data(target_folder)
-    get_folders(target_folder)
+    folders = get_folders(target_folder)
+    book_titles = folders.map { |title| title.gsub(/^..\//, "")}
+    books = []
+    incompletes = []
+    strays = []
+    publishers = []
+
+    book_titles.each_with_index do |title, idx|
+      folder_name = folders[idx]
+
+      # single book in the folder
+      if valid_book_folder(folder_name)
+        book =
+          if contains_book_folders(folder_name)
+            create_book_with_editions(folder_name)
+          else
+            create_book(folder_name)
+          end
+
+        books << book
+        publishers << book.publisher if book.publisher
+      else
+        if File.directory?(folder_name)
+          incompletes << folder_name
+        else
+          strays << folder_name
+        end
+      end
+    end
+    { books: books, incompletes: incompletes, strays: strays, publishers: publishers }
   end
 
   private
@@ -123,5 +152,19 @@ module BookBinder
     end
     folders = Dir.glob(target_folder)
     folders.delete_if { |folder| folder =~ /(^..\/_)|(\r$)/ }
+  end
+
+  # check the contents of the subfolder(s)
+  # if there are any (a parent folder is not expected to have metadata)
+  def self.contains_book_folders(folder_name)
+    folder_contents = Dir.glob("#{folder_name}/*")
+    folder_contents.each do |subfolder|
+      return true if File.exist?("#{subfolder}/_meta/info.js")
+    end
+    false
+  end
+
+  def self.valid_book_folder(folder)
+    File.exist?("#{folder}/_meta/info.js") || contains_book_folders(folder)
   end
 end

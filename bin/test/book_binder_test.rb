@@ -46,4 +46,21 @@ class TestBookBinder < Minitest::Test
     end
   end
 
+  describe '.get_book_data' do
+    let(:shelf_folder) { "bin/test/test-shelf" }
+    let(:subject) { BookBinder.get_book_data(shelf_folder) }
+
+    it { assert_equal(3, subject[:books].count) }
+    it { assert_equal(Book, subject[:books].first.class) }
+
+    it { assert_equal(1, subject[:publishers].uniq.count) }
+    it { assert_equal("TestBooks Inc", subject[:publishers].first) }
+
+    it { assert_equal(1, subject[:incompletes].count) }
+    it { assert_equal("#{shelf_folder}/incomplete-book", subject[:incompletes].first) }
+
+    it { assert_equal(1, subject[:strays].count) }
+    it { assert_equal("#{shelf_folder}/pg11-images.epub", subject[:strays].first) }
+  end
+
 end
