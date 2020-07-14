@@ -15,7 +15,6 @@ class TestEdition < Minitest::Test
       it { assert_empty(edition.ident) }
       it { assert_empty(edition.notes) }
       it { assert_nil(edition.title) }
-      it { assert_raises(NameError) { edition.editions } }
     end
 
     describe 'no book passed in' do

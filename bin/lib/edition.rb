@@ -1,6 +1,6 @@
-require_relative 'book'
+require_relative 'publication'
 
-class Edition < Book
+class Edition < Publication
   attr_reader :ident, :isbn, :authors, :editors, :notes, :formats, :book,
               :title, :link, :publisher
 
@@ -24,7 +24,4 @@ class Edition < Book
   def editions?
     false
   end
-
-  undef editions
-  undef append_edition
 end
