@@ -9,22 +9,6 @@ require_relative 'book_binder'
 class Bookshelf
   attr_reader :books, :publishers, :incompletes, :strays
 
-  def self.check_book_data(shelf_folder)
-    folders = get_folders(shelf_folder)
-    folders.each do |folder_name|
-      if contains_book_folders(folder_name)
-        check_book_data(folder_name)
-      else
-        unless File.exist?("#{folder_name}/_meta/info.js")
-          puts "no info.js file for #{folder_name}"
-        end
-        unless File.exist?("#{folder_name}/_meta/cover.jpg")
-          puts "no cover image for #{folder_name}"
-        end
-      end
-    end
-  end
-
   def initialize(shelf_folder)
     @books = []
     @publishers = []

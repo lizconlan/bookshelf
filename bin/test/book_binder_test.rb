@@ -30,4 +30,20 @@ class TestBookBinder < Minitest::Test
     it { assert_equal("0-2642-9358-X", edition.isbn) }
   end
 
+  describe '.check_book_data' do
+    let(:shelf_folder) { "bin/test/test-shelf" }
+
+    it "warns about missing info.js files" do
+      assert_output /no info\.js file for #{shelf_folder}\/incomplete-book/ do
+        BookBinder.check_book_data(shelf_folder)
+      end
+    end
+
+    it "warns about missing cover images" do
+      assert_output /no cover image for #{shelf_folder}\/incomplete-book/ do
+        BookBinder.check_book_data(shelf_folder)
+      end
+    end
+  end
+
 end

@@ -30,6 +30,22 @@ module BookBinder
     book
   end
 
+  def self.check_book_data(shelf_folder)
+    folders = get_folders(shelf_folder)
+    folders.each do |folder_name|
+      if contains_book_folders(folder_name)
+        check_book_data(folder_name)
+      else
+        unless File.exist?("#{folder_name}/_meta/info.js")
+          puts "no info.js file for #{folder_name}"
+        end
+        unless File.exist?("#{folder_name}/_meta/cover.jpg")
+          puts "no cover image for #{folder_name}"
+        end
+      end
+    end
+  end
+
   private
 
   def self.read_info(path)
@@ -80,5 +96,28 @@ module BookBinder
       ident: info[:ISBN],
       notes: info[:notes]
     )
+  end
+
+  # check the contents of the subfolder(s)
+  # if there are any (a parent folder is not expected to have metadata)
+  def self.contains_book_folders(folder_name)
+    folder_contents = Dir.glob("#{folder_name}/*")
+    folder_contents.each do |subfolder|
+      return true if File.exist?("#{subfolder}/_meta/info.js")
+    end
+    false
+  end
+
+  def self.get_folders(target_folder)
+    case target_folder
+    when /\/$/
+      target_folder = "#{target_folder}*"
+    when /\*$/
+      #yay, leave it alone
+    else
+      target_folder = "#{target_folder}/*"
+    end
+    folders = Dir.glob(target_folder)
+    folders.delete_if { |folder| folder =~ /(^..\/_)|(\r$)/ }
   end
 end

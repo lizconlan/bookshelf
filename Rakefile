@@ -22,7 +22,7 @@ end
 desc "Check for data files"
 task :check_for_book_data do
   target_folder = ENV['shelf'] || ".."
-  Bookshelf.check_book_data(target_folder)
+  BookBinder.check_book_data(target_folder)
 end
 
 desc "Generate index.html"
