@@ -12,6 +12,10 @@ class Publication
     end
   end
 
+  def self_published?
+    @publisher == ""
+  end
+
   def editions ; end
 
   def cover_pic
