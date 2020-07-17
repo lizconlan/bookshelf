@@ -9,6 +9,8 @@ require_relative 'book_binder'
 class Bookshelf
   attr_reader :books, :publishers, :incompletes, :strays
 
+  SELFPUB_NAME = "Self published".freeze
+
   def initialize(shelf_folder)
     @books = []
     @publishers = []
@@ -73,7 +75,16 @@ class Bookshelf
     @books = book_data[:books]
     @incompletes = book_data[:incompletes]
     @strays = book_data[:strays]
-    @publishers = book_data[:publishers].uniq!
+    @publishers = sort_publishers(book_data[:publishers].uniq)
+  end
+
+  def sort_publishers(pubs)
+    self_published = pubs.delete("")
+    sorted = pubs.sort
+    if self_published
+      sorted << SELFPUB_NAME
+    end
+    sorted
   end
 
   def generate_css(sass_file)
