@@ -43,7 +43,7 @@ class Publication
       _formats << format
     end
 
-    _formats
+    _formats.sort_by! { |key| key[:name] }
   end
 
   def get_book_files

@@ -161,11 +161,12 @@ article[itemtype="http://schema.org/Book"] {
       line-height: 1.5em;
       list-style: none;
       text-align: left;
+    }
 
-      .formats {
-        padding: 0;
-        list-style: none;
-      }
+    ul.formats {
+      padding: 0;
+      list-style: none;
+      min-height: 74px;
     }
 
     li {
