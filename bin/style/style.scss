@@ -87,10 +87,12 @@ article[itemtype="http://schema.org/Book"] {
       padding: 0.4em;
       padding-bottom: 0;
       border-bottom: 0;
-      min-width: 375px;
+      width: 100%;
       position: relative;
       list-style: none;
-      
+
+      ul { width: 100%; }
+
       .tab_button {
         z-index: 0;
         margin: 0 4px;

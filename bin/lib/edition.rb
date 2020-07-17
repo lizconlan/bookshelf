@@ -12,12 +12,7 @@ class Edition < Publication
     @authors = authors || book.authors
     @notes = notes || book.notes
     @formats = get_formats
-    @title =
-      if title
-        "#{book.title} - #{title}"
-      else
-        book.title
-      end
+    @title = title || book.title
     @publisher = book.publisher
   end
 
