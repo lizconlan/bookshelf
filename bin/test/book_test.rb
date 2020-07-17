@@ -36,6 +36,22 @@ class TestBook < Minitest::Test
       it { assert_equal("1234", book.ident) }
       it { assert_equal("this book does not exist", book.notes) }
     end
+
+    describe 'attributes passed as nil instead of "" by json' do
+      let(:book) do
+        Book.new(
+          title: "Test Book",
+          authors: nil,
+          publisher: nil,
+          isbn: nil,
+        )
+      end
+
+      it { assert_equal("Test Book", book.title) }
+      it { assert_equal([], book.authors) }
+      it { assert_equal("", book.publisher) }
+      it { assert_equal("", book.isbn)}
+    end
   end
 
   describe '#sort_title' do

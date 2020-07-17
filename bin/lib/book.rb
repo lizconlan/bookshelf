@@ -7,11 +7,11 @@ class Book < Publication
   def initialize(folder_name: nil, title: nil, authors: [], publisher: "", isbn: "", ident: "", notes: "")
     @folder_name, @link = folder_name
     @title = title
-    @authors = authors
-    @publisher = publisher
-    @isbn = isbn
-    @ident = ident
-    @notes = notes
+    @authors = authors || []
+    @publisher = publisher || ""
+    @isbn = isbn || ""
+    @ident = ident || ""
+    @notes = notes || ""
     @formats = get_formats
     @editions = Editions.new
   end
