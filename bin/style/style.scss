@@ -183,3 +183,21 @@ article[itemtype="http://schema.org/Book"] {
   opacity: 0.7;
   display: none;
 }
+
+.ribbon:before{
+  font-weight: bold;
+  font-size: 12px;
+  content: 'more editions';
+  background-color: black;
+  color: white;
+  padding: 0;
+  margin: -10px 16%;
+  top: 6px;
+  width: 115px;
+  height: 16px;
+  text-align: center;
+  position: relative;
+  display: inline-block;
+  float: right;
+  box-shadow:1px 1px 4px rgba(0,0,0,0.5)
+}
