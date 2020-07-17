@@ -28,7 +28,6 @@ img[itemprop="image"] {
   margin: auto;
   background-color: #fff;
   flex: none;
-  
   &:hover { cursor: pointer }
 }
 
@@ -80,7 +79,7 @@ article[itemtype="http://schema.org/Book"] {
       border: 1px solid darkgrey;
       padding: 0.4em;
     }
-    
+
     .tab_set {
       border: 1px solid darkgrey;
       margin: 2px 2px -3px 2px;
@@ -101,24 +100,23 @@ article[itemtype="http://schema.org/Book"] {
         background: darken(#ECECEC, 7%);
         display: inline-block;
         z-index: 4;
-        
+
         &:hover {
           cursor: pointer;
           background: #ECECEC;
         }
       }
-      
+
       .tab_button.selected {
         z-index: 2;
         background: white;
         border-bottom: 1px solid #fff;
-        
         &:hover {
           cursor: default;
         }
       }
     }
-    
+
     .content {
       border: 1px solid darkgrey;
       margin: 2px;
@@ -126,21 +124,21 @@ article[itemtype="http://schema.org/Book"] {
       position: relative;
       min-width: 375px;
       z-index: -1;
-      
+
       .coverpic {
         position: absolute;
         top: 1em;
         right: 1em;
       }
-      
+
       .info_column {
         min-width: 240px;
       }
-      
+
       .tab_content {
         display: none;
       }
-      
+
       .tabs :first-child {
         display: block;
       }
@@ -152,7 +150,7 @@ article[itemtype="http://schema.org/Book"] {
       min-height: 0;
       font-size: 1em;
     }
-    
+
     h2, ul, p, span {
       width: 70%;
     }
