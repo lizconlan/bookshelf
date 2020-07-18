@@ -5,6 +5,6 @@ gem 'rake', '12.3.3'
 gem 'sass', '3.2.7'
 
 group :test do
-  gem 'byebug'
+  gem 'byebug', '~> 11.1.0'
   gem 'minitest', '~> 5.14.0'
 end
