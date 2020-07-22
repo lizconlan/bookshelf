@@ -159,4 +159,12 @@ class TestBook < Minitest::Test
     end
   end
 
+  describe '#self_published?' do
+    let(:self_published_book) { Book.new }
+    let(:trad_published_book) { Book.new(publisher: 'test') }
+
+    it { assert_equal(self_published_book.self_published?, true) }
+    it { assert_equal(trad_published_book.self_published?, false) }
+  end
+
 end

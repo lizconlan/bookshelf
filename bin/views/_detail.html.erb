@@ -7,7 +7,7 @@
               </ul>
 
               <h2>Publisher</h2>
-              <p itemprop="publisher"><%= @book.publisher %></p>
+              <p itemprop="publisher"><%= @book.self_published? ? Bookshelf::SELFPUB_NAME : @book.publisher %></p>
 <% if @book.notes %>
               <h2>Notes</h2>
               <p class="notes"><%= @book.notes %></p>

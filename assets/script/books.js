@@ -13,12 +13,9 @@ var main = function() {
 $(document).ready(main);
 
 function revealInfo(image) {
-  hideInfo();
-  $('#fade').css('height', $(window).height());
   $('#fade').show();
   var infoPanel = $(image).parent().find('.about');
   infoPanel.show();
-  infoPanel.css({margin:$(document).scrollTop()+100+'px 0 0 '+($(window).width() / 2 - infoPanel.width() / 2)+'px'});
   if(infoPanel.find('tab_set')) {
     $('.tab_content').hide();
     $(infoPanel.find('.tab_content')[0]).show();
@@ -48,7 +45,7 @@ function filterPublishers(publisher) {
     $('#books').children().hide();
     var matchingBooks = $("article p[itemprop='publisher']:contains(" + publisher +")").closest("article");
     var numberFound = matchingBooks.length;
-    
+
     $('#sort').hide();
     matchingBooks.show();
     if(numberFound === 1) {
@@ -67,11 +64,11 @@ function sortByPublisher() {
     pub_a = $(a).find('p[itemprop="publisher"]')[0].textContent.trim();
     title_a = $(a).find('h2')[0].textContent.trim();
     sort_key_a = pub_a.trim() + "__" + title_a.trim().replace(/^(The )|(A )/, "");
-    
+
     pub_b = $(b).find('p[itemprop="publisher"]')[0].textContent.trim();
     title_b = $(b).find('h2')[0].textContent.trim();
     sort_key_b = pub_b.trim() + "__" + title_b.trim().replace(/^(The )|(A )/, "");
-    
+
     return sort_key_a.toLowerCase().localeCompare(sort_key_b.toLowerCase());
   });
   $('#pub_sort').hide();
@@ -83,10 +80,10 @@ function sortByTitle() {
   $('article').sortElements(function(a, b){
     title_a = $(a).find('h2')[0].textContent.trim();
     sort_key_a = title_a.trim().replace(/^(The )|(A )/, "");
-    
+
     title_b = $(b).find('h2')[0].textContent.trim();
     sort_key_b = title_b.trim().replace(/^(The )|(A )/, "");
-    
+
     return sort_key_a.toLowerCase().localeCompare(sort_key_b.toLowerCase());
   });
   $('#title_sort').hide();

@@ -16,7 +16,7 @@
             <label for="pubfilter">Filter by publisher</label>
             <select id="pubfilter" class="pubfilter">
               <option>Show All</option><% @publishers.each do |pub| %>
-              <option><%= pub %></option><% end %>
+              <option><%= pub == "" ? Bookshelf::SELFPUB_NAME : pub %></option><% end %>
             </select>
           </form>
         </div>

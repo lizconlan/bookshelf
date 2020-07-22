@@ -1,4 +1,4 @@
-      <article itemscope itemtype="http://schema.org/Book" id="book_<%= @uniq %>" class="book">
+      <article itemscope itemtype="http://schema.org/Book" id="book_<%= @uniq %>" class="book <%= "ribbon" if @book.editions? %>">
 <% if @book.cover_pic %>
         <img itemprop="image" src="<%= @book.cover_pic %>" alt="<%= @book.title %>" onclick="revealInfo(this);"/>
 <% else %>

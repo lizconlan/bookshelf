@@ -51,7 +51,7 @@ class TestEdition < Minitest::Test
 
       it { assert_equal(book.isbn, edition.isbn) }
       it { assert_equal("2nd printing", edition.notes) }
-      it { assert_equal("The Complete Works - 2008 edit", edition.title) }
+      it { assert_equal("2008 edit", edition.title) }
     end
   end
 

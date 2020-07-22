@@ -12,6 +12,10 @@ class Publication
     end
   end
 
+  def self_published?
+    @publisher == ""
+  end
+
   def editions ; end
 
   def cover_pic
@@ -39,7 +43,7 @@ class Publication
       _formats << format
     end
 
-    _formats
+    _formats.sort_by! { |key| key[:name] }
   end
 
   def get_book_files
