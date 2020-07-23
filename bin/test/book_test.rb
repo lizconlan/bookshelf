@@ -180,6 +180,8 @@ class TestBook < Minitest::Test
       it { assert_equal('1234', edition1.isbn) }
       it { assert_equal('5678', edition2.isbn) }
       it { assert_equal('1234', book.isbn) }
+      it { assert_equal('1234_1', edition1.ident) }
+      it { assert_equal('1234_2', edition2.ident) }
     end
   end
 
