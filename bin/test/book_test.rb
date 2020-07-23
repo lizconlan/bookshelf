@@ -157,6 +157,30 @@ class TestBook < Minitest::Test
         assert_match(/#<Edition.* does not belong to #<Book/, err.message)
       end
     end
+
+    describe 'multiple editions with their own isbns' do
+      let!(:book) { Book.new(title: 'Test') }
+
+      let!(:edition1) do
+        _edition = Edition.new(book, isbn: '1234')
+        book.append_edition(_edition)
+        _edition
+      end
+
+      let!(:edition2) do
+        _edition = Edition.new(book, isbn: '5678')
+        book.append_edition(_edition)
+        _edition
+      end
+
+      it { assert_equal('Test', book.title) }
+      it { assert_equal(2, book.editions.count) }
+      it { assert_equal(book.editions[0], edition1) }
+      it { assert_equal(book.editions[1], edition2) }
+      it { assert_equal('1234', edition1.isbn) }
+      it { assert_equal('5678', edition2.isbn) }
+      it { assert_equal('1234', book.isbn) }
+    end
   end
 
   describe '#self_published?' do

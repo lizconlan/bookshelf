@@ -33,6 +33,7 @@ class Book < Publication
       false
     else
       editions << edition
+      set_isbn(edition.isbn) if isbn == ""
       true
     end
   end
@@ -46,5 +47,11 @@ class Book < Publication
     else
       title
     end
+  end
+
+  private
+
+  def set_isbn(val)
+    @isbn = val
   end
 end
