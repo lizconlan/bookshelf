@@ -1,3 +1,4 @@
+require "minitest/bang"
 require "minitest/autorun"
 require "byebug"
 
