@@ -98,18 +98,13 @@ module BookBinder
 
   def self.traverse_dirs(subfolders, folder_name)
     book_info = book_template(folder_name)
-    ident_no = 1
     editions = []
 
     subfolders.each do |subfolder_name|
       if File.exist?("#{subfolder_name}/_meta/info.js")
         edition_info = JSON.parse(File.read("#{subfolder_name}/_meta/info.js")).symbolize_keys
-        book_info[:isbn] = edition_info[:ISBN] if edition_info[:ISBN] && !book_info[:isbn]
-        edition_info.delete(:ISBN)
+        edition_info[:isbn] = edition_info.delete(:ISBN) unless edition_info[:isbn]
         book_info[:publisher] = edition_info.delete(:publisher)
-        ident = "#{book_info[:isbn]}_#{ident_no}"
-        ident_no += 1
-        edition_info[:ident] = ident
         edition_info[:folder_name] = "#{folder_name}/#{subfolder_name}"
         editions << edition_info.symbolize_keys
       else
@@ -126,7 +121,6 @@ module BookBinder
       authors: info[:authors],
       publisher: info[:publisher],
       isbn: info[:ISBN],
-      ident: info[:ISBN],
       notes: info[:notes]
     )
   end
