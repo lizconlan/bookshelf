@@ -24,16 +24,20 @@
 <% end %>
 
           <div class="content">
+<% if @book.cover_pic and !@book.editions? %>
             <div class="coverpic">
-<% if @book.cover_pic %>
               <img src="<%= @book.cover_pic %>" alt="<%= @book.title%> (cover)" />
-<% end %>
             </div>
-
+<% end %>
 <% if @tabs and @book.editions? %>
             <div class="tabs">
 <% @tabs.each_with_index do |tab, idx| %>
               <div class="tab_content" id="<%= @book.editions[idx].ident %>">
+                            <div class="coverpic">
+<% if @book.editions? and @book.editions[idx].cover_pic %>
+              <img src="<%= @book.editions[idx].cover_pic %>" alt="<%= @book.title%> (cover)" />
+<% end %>
+            </div>
                 <%= tab %>
               </div>
 <% end %>
