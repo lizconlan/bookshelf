@@ -21,7 +21,7 @@
 <% end %>
             </ul>
 
-<% unless @book.isbn.empty? %>
+<% unless @book.isbn == "" %>
             <h2>Details</h2>
             <p>ISBN: <span itemprop="isbn" class="isbn_<%= @book.isbn %>"><%= @book.isbn %></span></p>
 
