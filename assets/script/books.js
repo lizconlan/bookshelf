@@ -142,7 +142,7 @@ function searchBooks(form) {
   if (matchingAuthors.length > 0) { matchingBooks = matchingBooks.add(matchingAuthors) }
   if (matchingTitles.length > 0) { matchingBooks = matchingBooks.add(matchingTitles) }
 
-  matchingBooks.show();
+  matchingBooks.sortElements(titleSort()).show();
 
   let numberFound = matchingBooks.length;
 
