@@ -1,6 +1,7 @@
 var main = function() {
   $('.pubfilter').change(function() {
     var selectedPub = $(this).val();
+    if(selectedPub) { clearSearchBox(); }
     filterPublishers(selectedPub);
   });
   $('#select_info').hide();
@@ -26,6 +27,10 @@ function revealInfo(image) {
 function hideInfo() {
   $('.about').hide();
   $('#fade').hide();
+}
+
+function clearSearchBox() {
+  $('#search_box').val("");
 }
 
 function clearPublishers() {
@@ -124,3 +129,34 @@ function showMoreInfo(isbn, book_id) {
     }
   });
 }
+
+function searchAuthors(form) {
+  hideInfo();
+  clearPublishers();
+  $('#title_sort').hide();
+  $('#pub_sort').hide();
+  $('#select_info').hide();
+  let author = form.search_box.value;
+  let matchingBooks = $("article ul[class='authors']:contains(" + author +")").closest("article");
+  $('#books').children().hide();
+  let numberFound = matchingBooks.length;
+  matchingBooks.show();
+
+  if(numberFound === 1) {
+    var bookStr = "book";
+  } else {
+    var bookStr = "books";
+  }
+
+  $('#select_info').html('Found <strong>' + matchingBooks.length + '</strong> ' + bookStr + ' matching "<strong>' + author + '</strong>"');
+  $('#select_info').show();
+}
+
+// case insensitive modifier for jQuery :contains
+// lifted from CSS Tricks
+// https://css-tricks.com/snippets/jquery/make-jquery-contains-case-insensitive/
+$.expr[":"].contains = $.expr.createPseudo(function(arg) {
+  return function( elem ) {
+    return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+  };
+});
