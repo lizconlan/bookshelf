@@ -11,18 +11,29 @@
     <header>
       <p>Generated with <a href="https://github.com/lizconlan/bookshelf">github.com/lizconlan/<strong>bookshelf</strong></a> on <time><%= Time.now.asctime %></time>.</p>
       <nav>
-        <div id="filters">
-          <form>
-            <label for="pubfilter">Filter by publisher</label>
-            <select id="pubfilter" class="pubfilter">
-              <option>Show All</option><% @publishers.each do |pub| %>
-              <option><%= pub == "" ? Bookshelf::SELFPUB_NAME : pub %></option><% end %>
-            </select>
-          </form>
-        </div>
-        <div id="sort">
-          <a id="pub_sort" href="#">Sort by Publisher</a>
-          <a id="title_sort" href="#">Sort by Title</a>
+        <div class="row">
+          <div>
+            <div id="filters">
+              <form>
+                <label for="pubfilter">Filter by publisher</label><br>
+                <select id="pubfilter" class="pubfilter">
+                  <option>Show All</option><% @publishers.each do |pub| %>
+                  <option><%= pub == "" ? Bookshelf::SELFPUB_NAME : pub %></option><% end %>
+                </select>
+              </form>
+            </div>
+            <div id="sort">
+              <a id="pub_sort" href="#">Sort by Publisher</a>
+              <a id="title_sort" href="#">Sort by Title</a>
+            </div>
+          </div>
+          <div id="search">
+            <form id="author_search" action="javascript: searchAuthors(this);">
+              <label for="search_box">Search by author name</label><br>
+              <input id="search_box" type="textbox">
+              <button type="submit" id="search_button">Search</button>
+            </form>
+          </div>
         </div>
         <div id="select_info"></div>
       </nav>
