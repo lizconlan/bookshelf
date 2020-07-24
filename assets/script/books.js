@@ -141,7 +141,8 @@ function searchBooks(form) {
   $('#books').children().hide();
 
   let matchingAuthors = []
-  let matchingBooks = []
+  let matchingTitles = []
+  let matchingBooks = $("article ul[class='zero-results']");
 
   let raw_term = form.search_box.value;
   let search_operator = getSearchOperator(raw_term);
@@ -152,12 +153,15 @@ function searchBooks(form) {
   }
 
   if(!search_operator || search_operator == 'title') {
-    matchingBooks = searchTitles(search_term);
+    matchingTitles = searchTitles(search_term);
   }
 
-  let numberFound = matchingBooks.length + matchingAuthors.length;
-  if (matchingAuthors.length > 0) { matchingAuthors.show(); }
-  if (matchingBooks.length > 0) { matchingBooks.show(); }
+  if (matchingAuthors.length > 0) { matchingBooks = matchingBooks.add(matchingAuthors) }
+  if (matchingTitles.length > 0) { matchingBooks = matchingBooks.add(matchingTitles) }
+
+  matchingBooks.show();
+
+  let numberFound = matchingBooks.length;
 
   if(numberFound === 1) {
     var bookStr = "book";
