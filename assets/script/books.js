@@ -4,7 +4,7 @@ var main = function() {
     if(selectedPub) { clearSearchBox(); }
     filterPublishers(selectedPub);
   });
-  $('#select_info').hide();
+  $('#nav_info').hide();
   $('#title_sort').hide();
   $('#pub_sort').click(function() {sortByPublisher();});
   $('#title_sort').click(function() {sortByTitle();});
@@ -59,7 +59,7 @@ function filterPublishers(publisher) {
   if(publisher === 'Show All') {
     $('#books').children().show();
     $('#sort').show();
-    $('#select_info').hide();
+    $('#nav_info').hide();
   } else {
     $('#books').children().hide();
     var matchingBooks = $("article p[itemprop='publisher']:contains(" + publisher +")").closest("article");
@@ -72,8 +72,8 @@ function filterPublishers(publisher) {
     } else {
       var bookStr = "books";
     }
-    $('#select_info').html('Found <strong>' + matchingBooks.length + '</strong> ' + bookStr + ' for <strong>' + publisher + '</strong>');
-    $('#select_info').show();
+    $('#nav_info').html('Found <strong>' + matchingBooks.length + '</strong> ' + bookStr + ' for <strong>' + publisher + '</strong>');
+    $('#nav_info').show();
   }
 }
 
@@ -150,8 +150,8 @@ function searchBooks(form) {
     var bookStr = "books";
   }
 
-  $('#select_info').html('Found <strong>' + numberFound + '</strong> ' + bookStr + ' matching "<strong>' + search_term + '</strong>"');
-  $('#select_info').show();
+  $('#nav_info').html('Found <strong>' + numberFound + '</strong> ' + bookStr + ' matching "<strong>' + search_term + '</strong>"');
+  $('#nav_info').show();
 }
 
 // case insensitive modifier for jQuery :contains
