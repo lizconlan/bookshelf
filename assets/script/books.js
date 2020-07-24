@@ -130,15 +130,15 @@ function showMoreInfo(isbn, book_id) {
   });
 }
 
-function searchAuthors(form) {
+function searchBooks(form) {
   hideInfo();
   clearPublishers();
   $('#title_sort').hide();
   $('#pub_sort').hide();
-  $('#select_info').hide();
-  let author = form.search_box.value;
-  let matchingAuthors = $("article ul[class='authors']:contains(" + author +")").closest("article");
-  let matchingBooks = $("article a[itemprop='name']:contains(" + author +")").closest("article");
+  $('#nav_info').hide();
+  let search_term = form.search_box.value;
+  let matchingAuthors = $("article ul[class='authors']:contains(" + search_term +")").closest("article");
+  let matchingBooks = $("article a[itemprop='name']:contains(" + search_term +")").closest("article");
   $('#books').children().hide();
   let numberFound = matchingBooks.length + matchingAuthors.length;
   matchingAuthors.show();
@@ -150,7 +150,7 @@ function searchAuthors(form) {
     var bookStr = "books";
   }
 
-  $('#select_info').html('Found <strong>' + numberFound + '</strong> ' + bookStr + ' matching "<strong>' + author + '</strong>"');
+  $('#select_info').html('Found <strong>' + numberFound + '</strong> ' + bookStr + ' matching "<strong>' + search_term + '</strong>"');
   $('#select_info').show();
 }
 
