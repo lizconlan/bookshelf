@@ -13,6 +13,8 @@ var main = function() {
 
 $(document).ready(main);
 
+let validSearchOperators = ['title', 'author']
+
 function revealInfo(image) {
   $('#fade').show();
   var infoPanel = $(image).parent().find('.about');
@@ -136,13 +138,26 @@ function searchBooks(form) {
   $('#title_sort').hide();
   $('#pub_sort').hide();
   $('#nav_info').hide();
-  let search_term = form.search_box.value;
-  let matchingAuthors = $("article ul[class='authors']:contains(" + search_term +")").closest("article");
-  let matchingBooks = $("article a[itemprop='name']:contains(" + search_term +")").closest("article");
   $('#books').children().hide();
+
+  let matchingAuthors = []
+  let matchingBooks = []
+
+  let raw_term = form.search_box.value;
+  let search_operator = getSearchOperator(raw_term);
+  let search_term = raw_term.replace(search_operator + ':', '').trim();
+
+  if(!search_operator || search_operator == 'author') {
+    matchingAuthors = searchAuthors(search_term);
+  }
+
+  if(!search_operator || search_operator == 'title') {
+    matchingBooks = searchTitles(search_term);
+  }
+
   let numberFound = matchingBooks.length + matchingAuthors.length;
-  matchingAuthors.show();
-  matchingBooks.show();
+  if (matchingAuthors.length > 0) { matchingAuthors.show(); }
+  if (matchingBooks.length > 0) { matchingBooks.show(); }
 
   if(numberFound === 1) {
     var bookStr = "book";
@@ -152,6 +167,23 @@ function searchBooks(form) {
 
   $('#nav_info').html('Found <strong>' + numberFound + '</strong> ' + bookStr + ' matching "<strong>' + search_term + '</strong>"');
   $('#nav_info').show();
+}
+
+function searchAuthors(term) {
+  return $("article ul[class='authors']:contains(" + term + ")").closest("article");
+}
+
+function searchTitles(term) {
+  return $("article a[itemprop='name']:contains(" + term + ")").closest("article");
+}
+
+function getSearchOperator(query) {
+  candidate = query.split(':')[0]
+  if(jQuery.inArray(candidate, validSearchOperators) !== -1) {
+    return candidate;
+  } else {
+    return null;
+  }
 }
 
 // case insensitive modifier for jQuery :contains
