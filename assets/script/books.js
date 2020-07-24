@@ -28,6 +28,20 @@ function hideInfo() {
   $('#fade').hide();
 }
 
+function clearPublishers() {
+  $('.pubfilter').val("");
+}
+
+function resetPublishers() {
+  $('.pubfilter').val("Show All");
+}
+
+function resetState() {
+  hideInfo();
+  $('#pub_sort').show();
+  $('#title_sort').hide();
+}
+
 function showTab(tab) {
   $('.tab_content').hide();
   $('#' + tab).show();
@@ -36,7 +50,7 @@ function showTab(tab) {
 }
 
 function filterPublishers(publisher) {
-  hideInfo();
+  resetState();
   if(publisher === 'Show All') {
     $('#books').children().show();
     $('#sort').show();
@@ -77,6 +91,7 @@ function sortByPublisher() {
 
 function sortByTitle() {
   hideInfo();
+  resetPublishers();
   $('article').sortElements(function(a, b){
     title_a = $(a).find('h2')[0].textContent.trim();
     sort_key_a = title_a.trim().replace(/^(The )|(A )/, "");
@@ -89,7 +104,6 @@ function sortByTitle() {
   $('#title_sort').hide();
   $('#pub_sort').show();
 }
-
 
 function showMoreInfo(isbn, book_id) {
   target = "https://openlibrary.org/api/books?bibkeys=ISBN:" + isbn.trim() + "&jscmd=data&format=json";
