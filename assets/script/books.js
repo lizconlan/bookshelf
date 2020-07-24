@@ -137,9 +137,11 @@ function searchAuthors(form) {
   $('#pub_sort').hide();
   $('#select_info').hide();
   let author = form.search_box.value;
-  let matchingBooks = $("article ul[class='authors']:contains(" + author +")").closest("article");
+  let matchingAuthors = $("article ul[class='authors']:contains(" + author +")").closest("article");
+  let matchingBooks = $("article a[itemprop='name']:contains(" + author +")").closest("article");
   $('#books').children().hide();
-  let numberFound = matchingBooks.length;
+  let numberFound = matchingBooks.length + matchingAuthors.length;
+  matchingAuthors.show();
   matchingBooks.show();
 
   if(numberFound === 1) {
@@ -148,7 +150,7 @@ function searchAuthors(form) {
     var bookStr = "books";
   }
 
-  $('#select_info').html('Found <strong>' + matchingBooks.length + '</strong> ' + bookStr + ' matching "<strong>' + author + '</strong>"');
+  $('#select_info').html('Found <strong>' + numberFound + '</strong> ' + bookStr + ' matching "<strong>' + author + '</strong>"');
   $('#select_info').show();
 }
 
