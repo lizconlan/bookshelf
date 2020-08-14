@@ -1,8 +1,8 @@
-      <article itemscope itemtype="http://schema.org/Book" id="book_<%= @uniq %>" class="book <%= "ribbon" if @book.editions? %>">
+      <article itemscope itemtype="http://schema.org/Book" id="book_<%= @uniq %>" class="book <%= "ribbon" if @book.editions? %>" data-controller="books">
 <% if @book.cover_pic %>
-        <img itemprop="image" src="<%= @book.cover_pic %>" alt="<%= @book.title %>" onclick="revealInfo(this);"/>
+        <img itemprop="image" src="<%= @book.cover_pic %>" alt="<%= @book.title %>" data-action="click->books#reveal_info"/>
 <% else %>
-        <img itemprop="image" src="assets/missing-image.gif" alt="<%= @book.title %>" onclick="revealInfo(this);"/>
+        <img itemprop="image" src="assets/missing-image.gif" alt="<%= @book.title %>" data-action="click->books#reveal_info"/>
 <% end %>
 
         <h2 class="title">
@@ -17,7 +17,7 @@
           <div class="tab_set">
             <ul>
 <% @book.editions.each do |edition| %>
-              <li class="tab_button" id="btn_<%= edition.ident %>" onclick="showTab('<%= edition.ident %>')"><%= edition.title %></span>
+              <li class="tab_button" id="btn_<%= edition.ident %>"  data-controller="editions" data-action="click->editions#show_tab"><%= edition.title %></span>
 <% end %>
             </ul>
           </div>
