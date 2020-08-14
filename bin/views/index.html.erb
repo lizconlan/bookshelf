@@ -5,30 +5,31 @@
     <link href="assets/style.css" rel="stylesheet">
     <script src="assets/script/jquery.js"></script>
     <script src="assets/script/sort_elements.js"></script>
-    <script src="assets/script/books.js"></script>
+    <script src="assets/script/stimulus.umd.js"></script>
+    <script src="assets/script/application.js"></script>
   </head>
   <body>
     <header>
       <p>Generated with <a href="https://github.com/lizconlan/bookshelf">github.com/lizconlan/<strong>bookshelf</strong></a> on <time><%= Time.now.asctime %></time>.</p>
-      <nav>
+      <nav data-controller="start">
         <div class="row">
           <div>
             <div id="filters">
-              <form>
+              <form data-controller="filter">
                 <label for="pubfilter">Filter by publisher</label><br>
-                <select id="pubfilter" class="pubfilter">
+                <select id="pubfilter" class="pubfilter" data-action="filter#filter">
                   <option>Show All</option><% @publishers.each do |pub| %>
                   <option><%= pub == "" ? Bookshelf::SELFPUB_NAME : pub %></option><% end %>
                 </select>
               </form>
             </div>
-            <div id="sort">
-              <a id="pub_sort" href="#">Sort by Publisher</a>
-              <a id="title_sort" href="#">Sort by Title</a>
+            <div id="sort" data-controller="sort">
+              <a id="pub_sort" href="#" data-action="sort#publisher_sort">Sort by Publisher</a>
+              <a id="title_sort" href="#" data-action="sort#title_sort">Sort by Title</a>
             </div>
           </div>
-          <div id="search">
-            <form id="book_search" action="javascript: searchBooks(this);">
+          <div id="search" data-controller="search">
+            <form id="book_search" data-action="search#search_books">
               <label for="search_box">Search</label><br>
               <input id="search_box" type="textbox">
               <button type="submit" id="search_button">Search</button>
@@ -41,6 +42,6 @@
     <section id="books">
 <%= @html.join("\n") %>
     </section>
-    <div id="fade"></div>
+    <div id="fade" data-controller="notbooks" data-action="click->notbooks#close_books"></div>
   </body>
 </html>
