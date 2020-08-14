@@ -25,10 +25,18 @@
 
   application.register("start", class extends Stimulus.Controller {
     initialize() {
+      $("h1").css("color", "#fff")
+      $("header").height(110)
+      $("#nav_info").show()
+      $("#filters").show()
       $(".pubfilter").val("Show All")
-      $("#title_sort").hide()
+      $("#pub_sort").show()
+      $("#search").show()
       $("#search_box").val("")
       $("#fade").hide()
+      $("img[itemprop='image']").hover(function() {
+        $(this).css("cursor","pointer")
+      })
 
       // case insensitive modifier for jQuery :contains
       // lifted from CSS Tricks

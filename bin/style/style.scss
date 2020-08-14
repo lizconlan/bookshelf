@@ -32,6 +32,14 @@ header {
       flex-grow: 2;
       padding-left: 2em;
     }
+
+    div#nav_info,
+    div#filters,
+    div#search,
+    a#pub_sort,
+    a#title_sort {
+      display: none;
+    }
   }
 
   div#select_info {
@@ -58,7 +66,6 @@ section#books {
   width: 90%;
   margin: 0 auto;
   position: absolute;
-  top: 120px;
 }
 
 article[itemtype="http://schema.org/Book"] {
