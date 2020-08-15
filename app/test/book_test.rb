@@ -82,7 +82,7 @@ class TestBook < Minitest::Test
 
   describe '#cover_pic' do
     let(:book) { Book.new }
-    let(:example_folder) { "bin/test/test-shelf/book1" }
+    let(:example_folder) { "app/test/test-shelf/book1" }
 
     describe 'no image was assigned' do
       it { assert_nil(book.cover_pic) }
@@ -95,7 +95,7 @@ class TestBook < Minitest::Test
     end
 
     describe 'the edition has its own image' do
-      let(:example_folder) { "bin/test/test-shelf/edition" }
+      let(:example_folder) { "app/test/test-shelf/edition" }
       let(:book) { Book.new(folder_name: example_folder) }
       let(:edition) { Edition.new(book, folder_name: "#{example_folder}/v1") }
 

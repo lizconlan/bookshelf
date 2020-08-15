@@ -4,7 +4,7 @@ require_relative "../lib/bookshelf"
 class TestBookshelf < Minitest::Test
 
   describe '.new' do
-    let(:shelf_folder) { 'bin/test/test-shelf' }
+    let(:shelf_folder) { 'app/test/test-shelf' }
     let(:stylesheet) { "#{shelf_folder}/../assets/style.css" }
     let(:bookshelf) { Bookshelf.new(shelf_folder) }
 

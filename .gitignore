@@ -2,5 +2,5 @@ index.html
 assets/style.css
 .DS_Store
 .sass-cache
-bin/test/assets/**/*
+app/test/assets/**/*
 .byebug_history

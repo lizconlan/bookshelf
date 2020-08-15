@@ -4,7 +4,7 @@ require_relative "../lib/book_binder"
 class TestBookBinder < Minitest::Test
 
   describe '.create_book' do
-    let(:example_folder) { "bin/test/test-shelf/book1" }
+    let(:example_folder) { "app/test/test-shelf/book1" }
     let(:subject) { BookBinder.create_book(example_folder) }
     let(:book) { subject }
 
@@ -17,7 +17,7 @@ class TestBookBinder < Minitest::Test
   end
 
   describe '.create_book_with_editions' do
-    let(:example_folder) { "bin/test/test-shelf/edition" }
+    let(:example_folder) { "app/test/test-shelf/edition" }
     let(:subject) { BookBinder.create_book_with_editions(example_folder) }
     let(:book) { subject }
     let(:edition) { book.editions.first }
@@ -31,7 +31,7 @@ class TestBookBinder < Minitest::Test
   end
 
   describe '.check_book_data' do
-    let(:shelf_folder) { "bin/test/test-shelf" }
+    let(:shelf_folder) { "app/test/test-shelf" }
 
     it "warns about missing info.js files" do
       assert_output /no info\.js file for #{shelf_folder}\/incomplete-book/ do
@@ -47,7 +47,7 @@ class TestBookBinder < Minitest::Test
   end
 
   describe '.get_book_data' do
-    let(:shelf_folder) { "bin/test/test-shelf" }
+    let(:shelf_folder) { "app/test/test-shelf" }
     let(:subject) { BookBinder.get_book_data(shelf_folder) }
 
     it { assert_equal(3, subject[:books].count) }
