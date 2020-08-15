@@ -8,7 +8,7 @@
     <script src="assets/script/stimulus.umd.js"></script>
     <script src="assets/script/application.js"></script>
   </head>
-  <body>
+  <body data-controller="sort">
     <header>
       <p>Generated with <a href="https://github.com/lizconlan/bookshelf">github.com/lizconlan/<strong>bookshelf</strong></a> on <time><%= Time.now.asctime %></time>.</p>
       <nav data-controller="start">
@@ -23,7 +23,7 @@
                 </select>
               </form>
             </div>
-            <div id="sort" data-controller="sort">
+            <div id="sort">
               <a id="pub_sort" href="#" data-action="sort#publisher_sort">Sort by Publisher</a>
               <a id="title_sort" href="#" data-action="sort#title_sort">Sort by Title</a>
             </div>
@@ -31,7 +31,7 @@
           <div id="search" data-controller="search">
             <form id="book_search" data-action="search#search_books">
               <label for="search_box">Search</label><br>
-              <input id="search_box" type="textbox">
+              <input id="search_box" type="textbox" data-target="search.term">
               <button type="submit" id="search_button">Search</button>
             </form>
           </div>
@@ -44,6 +44,6 @@
     <section id="books">
 <%= @html.join("\n") %>
     </section>
-    <div id="fade" data-controller="notbooks" data-action="click->notbooks#close_books"></div>
+    <div id="fade" data-controller="notbook" data-action="click->notbook#close_books"></div>
   </body>
 </html>

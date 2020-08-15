@@ -49,27 +49,37 @@
     }
   })
 
-  application.register("books", class extends Stimulus.Controller {
+  application.register("book", class extends Stimulus.Controller {
+    static get targets() {
+      return [ "panel", "tabset", "button", "content" ]
+    }
+
     reveal_info() {
       $("#fade").show()
-      let infoPanel = $(this.element).find(".about")
-      infoPanel.show()
-      if(infoPanel.find("tab_set")) {
-        $(".tab_content").hide()
-        $(infoPanel.find(".tab_content")[0]).show()
-        $(infoPanel.find(".tab_button")[0]).addClass("selected")
+      $(this.panelTarget).show()
+      if(this.tabsetTarget) {
+        this.contentTargets.forEach((element, idx) => {
+          $(element).hide()
+        })
+        $(this.contentTarget).show()
+        this.buttonTarget.classList.add("selected")
       }
     }
-  })
 
-  application.register("editions", class extends Stimulus.Controller {
-    show_tab() {
-      let tab_button = this.element
-      let tab_id = this.element.id.replace("btn_", "")
-      $(".tab_content").hide()
-      $("#" + tab_id).show()
-      $(".tab_button").removeClass("selected")
-      $(tab_button).addClass("selected")
+    show_tab(evt) {
+      let idx = evt.target.dataset.idx
+
+      // unselect all buttons
+      this.buttonTargets.forEach((element, idx) => {
+        element.classList.remove("selected")
+      })
+      this.buttonTargets[idx].classList.add("selected")
+
+      // hide open panels
+      this.contentTargets.forEach((element, idx) => {
+        $(element).hide()
+      })
+      $(this.contentTargets[idx]).show()
     }
   })
 
@@ -109,7 +119,7 @@
     }
   })
 
-  application.register("notbooks", class extends Stimulus.Controller {
+  application.register("notbook", class extends Stimulus.Controller {
     close_books() {
       $('.about').hide();
       $('#fade').hide();
@@ -117,6 +127,10 @@
   })
 
   application.register("search", class extends Stimulus.Controller {
+    static get targets() {
+      return [ "term" ]
+    }
+
     search_books() {
       this._clear()
 
@@ -124,7 +138,7 @@
       let matchingTitles = []
       let matchingBooks = $("article ul[class='zero-results']")
 
-      let rawTerm = $("#search_box").val()
+      let rawTerm = this.termTarget.value
       let searchOperator = this._getSearchOperator(rawTerm);
       let searchTerm = rawTerm.replace(searchOperator + ':', '').trim()
 
@@ -183,10 +197,14 @@
   })
 
   application.register("sort", class extends Stimulus.Controller {
+    static get targets() {
+      return [ "article" ]
+    }
+
     publisher_sort() {
       $('.about').hide()
       $('#fade').hide()
-      $('article').sortElements(publisherSort)
+      $(this.articleTargets).sortElements(publisherSort)
       $('#pub_sort').hide()
       $('#title_sort').show()
     }
@@ -194,7 +212,7 @@
     title_sort() {
       $('.about').hide()
       $('#fade').hide()
-      $('article').sortElements(titleSort)
+      $(this.articleTargets).sortElements(titleSort)
       $('#title_sort').hide()
       $('#pub_sort').show()
     }

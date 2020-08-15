@@ -66,7 +66,7 @@ Which allows me to a) group them in a way that looks reasonably sensible to me (
 Ok, sorry, probably should have done this bit sooner...
 
 1. Git clone your own copy of the repository
-2. Drop `assets` and `bin` directories and the `Rakefile` into the top level directory of [a folder structure that's arranged a bit like mine](#file-structure) and has lots of books in it<sup>[&dagger;](#footnote-1)</sup>
+2. Drop `assets` and `app` directories and the `Rakefile` into the top level directory of [a folder structure that's arranged a bit like mine](#file-structure) and has lots of books in it<sup>[&dagger;](#footnote-1)</sup>
 3. From the command line, navigate to the folder you copied the files into and run:
     <pre>rake generate_index_file shelf="."</pre>
 4. Load the resulting index.html into your favourite browser
