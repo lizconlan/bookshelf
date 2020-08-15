@@ -49,7 +49,7 @@
     }
   })
 
-  application.register("books", class extends Stimulus.Controller {
+  application.register("book", class extends Stimulus.Controller {
     static get targets() {
       return [ "panel", "tabset", "button", "content" ]
     }
@@ -119,7 +119,7 @@
     }
   })
 
-  application.register("notbooks", class extends Stimulus.Controller {
+  application.register("notbook", class extends Stimulus.Controller {
     close_books() {
       $('.about').hide();
       $('#fade').hide();
