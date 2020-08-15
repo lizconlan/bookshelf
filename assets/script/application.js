@@ -25,7 +25,7 @@
 
   application.register("start", class extends Stimulus.Controller {
     initialize() {
-      $("h1").css("color", "#fff")
+      $("h1.fallback").css("color", "#fff")
       $("header").height(110)
       $("#nav_info").show()
       $("#filters").show()
