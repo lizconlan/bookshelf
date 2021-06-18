@@ -48,9 +48,7 @@
   })
 
   application.register("book", class extends Stimulus.Controller {
-    static get targets() {
-      return [ "panel", "tabset", "button", "content" ]
-    }
+    static targets = ["panel", "tabset", "button", "content"]
 
     reveal_info() {
       document.querySelector('#fade').style.display = "block"
