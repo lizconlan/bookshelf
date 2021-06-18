@@ -4,3 +4,4 @@ assets/style.css
 .sass-cache
 app/test/assets/**/*
 .byebug_history
+node_modules
