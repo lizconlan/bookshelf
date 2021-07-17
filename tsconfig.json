@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "declaration": false,
+    "lib": ["dom"],
+    "module": "commonjs",
+    "rootDir": "./app/src",
+    "noImplicitUseStrict": true,
+    "sourceMap": true
+  },
+  "moduleResolution": "node",
+  "compileOnSave": false
+}
