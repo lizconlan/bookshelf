@@ -1,4 +1,4 @@
-      <article itemscope itemtype="http://schema.org/Book" id="book_<%= @uniq %>" class="book <%= "ribbon" if @book.editions? %>" data-controller="book" data-target="sort.article">
+      <article itemscope itemtype="http://schema.org/Book" id="book_<%= @uniq %>" class="book <%= "ribbon" if @book.editions? %>" data-controller="book" data-book-target="article" data-sort-target="article">
 <% if @book.cover_pic %>
         <img itemprop="image" src="<%= @book.cover_pic %>" alt="<%= @book.title %>" data-action="click->book#reveal_info"/>
 <% else %>
@@ -11,13 +11,13 @@
           </a>
         </h2>
 
-        <section class="about" data-target="book.panel">
+        <section class="about" data-book-target="panel">
           <h1><%= @book.title %></h1>
 <% if @book.editions? %>
           <div class="tab_set">
             <ul>
 <% @book.editions.each_with_index do |edition, idx| %>
-              <li class="tab_button" id="btn_<%= edition.ident %>"  data-target="book.button" data-idx="<%= idx %>" data-action="click->book#show_tab"><%= edition.title %></span>
+              <li class="tab_button" id="btn_<%= edition.ident %>"  data-book-target="button" data-idx="<%= idx %>" data-action="click->book#show_tab"><%= edition.title %></span>
 <% end %>
             </ul>
           </div>
@@ -30,9 +30,9 @@
             </div>
 <% end %>
 <% if @tabs and @book.editions? %>
-            <div class="tabs" data-target="book.tabset">
+            <div class="tabs" data-book-target="tabset">
 <% @tabs.each_with_index do |tab, idx| %>
-              <div class="tab_content" id="<%= @book.editions[idx].ident %>" data-target="book.content">
+              <div class="tab_content" id="<%= @book.editions[idx].ident %>" data-book-target="content">
                             <div class="coverpic">
 <% if @book.editions? and @book.editions[idx].cover_pic %>
               <img src="<%= @book.editions[idx].cover_pic %>" alt="<%= @book.title%> (cover)" />
