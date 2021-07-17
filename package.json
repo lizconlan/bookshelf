@@ -1,0 +1,14 @@
+{
+  "name": "bookshelf",
+  "private": true,
+  "devDependencies": {
+    "gulp": "4.0.2",
+    "gulp-cli": "2.2.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-debug": "^4.0.0"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
+  },
+  "version": "0.1.0"
+}
