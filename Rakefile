@@ -50,6 +50,8 @@ task :generate_index_file do
 
     index.write(renderer.result)
     index.close
+
+    `gulp build`
   rescue => e
     puts e.message
   end
