@@ -1,6 +1,8 @@
 index.html
 assets/style.css
+assets/script/application*
 .DS_Store
 .sass-cache
 app/test/assets/**/*
 .byebug_history
+node_modules

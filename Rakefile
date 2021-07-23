@@ -25,6 +25,25 @@ task :check_for_book_data do
   BookBinder.check_book_data(target_folder)
 end
 
+desc "Installs the dev tools required to build the project"
+task :install do
+  if `which npm` == ""
+    puts "You need to install npm on your machine, please run: npm install -g npm"
+    puts "More details here: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm"
+    return
+  end
+
+  puts "Installing npm modules…"
+  `npm install`
+  puts ""
+
+  puts "Updating ruby gems…"
+  `bundle install`
+  puts ""
+
+  puts "Done!"
+end
+
 desc "Generate index.html"
 task :generate_index_file do
   target_folder = ENV['shelf'] || ".."
@@ -50,6 +69,8 @@ task :generate_index_file do
 
     index.write(renderer.result)
     index.close
+
+    `gulp build`
   rescue => e
     puts e.message
   end
