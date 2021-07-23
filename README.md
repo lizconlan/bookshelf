@@ -61,9 +61,14 @@ Ok, sorry, probably should have done this bit sooner...
 
 1. Git clone your own copy of the repository
 2. Drop `assets` and `app` directories and the `Rakefile` into the top level directory of [a folder structure that's arranged a bit like mine](#file-structure) and has lots of books in it<sup>[&dagger;](#footnote-1)</sup>
-3. From the command line, navigate to the folder you copied the files into and run:
+3. From the command line, navigate to the folder you copied the files into
+4. Install the prerequisites
+    * Let's assume you already have ruby
+    * Install the bundler gem (if you don't already have it) with `gem install bundler` (the version used by the project is at the end of the `Gemfile.lock` file)
+    * Run `rake install` to install the bundled gems and npm
+5. Run the rake file to generate the HTML:
     <pre>rake generate_index_file shelf="."</pre>
-4. Load the resulting index.html into your favourite browser
+6. Load the resulting index.html into your favourite browser
 
 Tip: vary the value of `shelf=` to change the target directory for the script
 
@@ -74,4 +79,3 @@ Tip: vary the value of `shelf=` to change the target directory for the script
 
 <a name="footnote-2"></a>
 <sup>&Dagger;</sup>If you would like a folder with lots of books in it, may I suggest [Project Gutenberg](http://www.gutenberg.org) as a good starting point
-
