@@ -169,6 +169,43 @@ post '/books' do
   redirect '/'
 end
 
+# ── Add metadata to existing folder ──────────────────────────────────────────
+
+get '/books/:id/init' do
+  @folder_path = decode_id(params[:id])
+  halt 404, 'Folder not found' unless File.directory?(@folder_path)
+  @id          = params[:id]
+  @folder_name = File.basename(@folder_path)
+  erb :init
+end
+
+post '/books/:id/init' do
+  folder_path = decode_id(params[:id])
+  halt 404, 'Folder not found' unless File.directory?(folder_path)
+
+  title     = params[:title].to_s.strip
+  authors   = params[:authors].to_s.split(',').map(&:strip).reject(&:empty?)
+  publisher = params[:publisher].to_s.strip
+  isbn      = params[:isbn].to_s.strip
+  notes     = params[:notes].to_s.strip
+  cover_url = params[:cover_url].to_s.strip
+
+  FileUtils.mkdir_p("#{folder_path}/_meta")
+  info = build_info(title, authors, publisher, isbn, notes)
+  File.write("#{folder_path}/_meta/info.js", JSON.pretty_generate(info))
+
+  unless cover_url.empty?
+    begin
+      fetch_and_resize_cover(cover_url, "#{folder_path}/_meta/cover.jpg")
+    rescue => e
+      session[:flash_error] = "Metadata saved but cover fetch failed: #{e.message}"
+    end
+  end
+
+  session[:flash_success] = "\u2018#{title}\u2019 metadata saved"
+  redirect "/books/#{params[:id]}/edit"
+end
+
 # ── Edit book ─────────────────────────────────────────────────────────────────
 
 get '/books/:id/edit' do

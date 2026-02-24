@@ -1,0 +1,82 @@
+<h1>Add metadata: <em><%= ERB::Util.html_escape(@folder_name) %></em></h1>
+<p style="color:#666; margin-top:-0.5rem;">Folder already exists on disk &mdash; this will create <code>_meta/info.js</code> inside it.</p>
+
+<div style="background:#f0f4ef; padding:1rem 1.2rem; border-radius:6px; margin-bottom:1.5rem; border:1px solid #d0dece;">
+  <label for="isbn-lookup" style="margin-top:0;">ISBN Lookup <small>(auto-fills the form below)</small></label>
+  <div style="display:flex; gap:0.5rem; align-items:flex-start;">
+    <input type="text" id="isbn-lookup" placeholder="Enter ISBN-10 or ISBN-13" style="flex:1;">
+    <button type="button" onclick="lookupIsbn()">Look Up</button>
+  </div>
+  <div id="lookup-status" style="margin-top:0.5rem; font-size:0.88rem; min-height:1.2em;"></div>
+</div>
+
+<form action="/books/<%= @id %>/init" method="post">
+  <label for="title">Title <span style="color:#c00;">*</span></label>
+  <input type="text" id="title" name="title" required autofocus
+         value="<%= ERB::Util.html_escape(@folder_name) %>">
+
+  <label for="authors">Authors <small>(comma-separated)</small></label>
+  <input type="text" id="authors" name="authors" placeholder="Jane Smith, Bob Jones">
+
+  <label for="publisher">Publisher</label>
+  <input type="text" id="publisher" name="publisher">
+
+  <label for="isbn">ISBN</label>
+  <input type="text" id="isbn" name="isbn" placeholder="978-0-000-00000-0">
+
+  <label for="notes">Notes</label>
+  <textarea id="notes" name="notes" rows="3"></textarea>
+
+  <label for="cover_url">Cover image URL <small>(optional &mdash; will be fetched and resized)</small></label>
+  <input type="url" id="cover_url" name="cover_url" placeholder="https://covers.openlibrary.org/&hellip;">
+
+  <div style="margin-top:1.2rem; display:flex; gap:0.75rem; align-items:center;">
+    <button type="submit">Save Metadata</button>
+    <a href="/" class="btn btn-secondary">Cancel</a>
+  </div>
+</form>
+
+<script>
+async function lookupIsbn() {
+  const isbn = document.getElementById('isbn-lookup').value.trim();
+  const status = document.getElementById('lookup-status');
+  if (!isbn) { status.textContent = 'Please enter an ISBN first.'; return; }
+
+  status.style.color = '#555';
+  status.textContent = 'Looking up\u2026';
+
+  try {
+    const res = await fetch('/isbn_lookup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ isbn })
+    });
+    const data = await res.json();
+
+    if (data.error) {
+      status.style.color = '#721c24';
+      status.textContent = '\u2717 ' + data.error;
+      return;
+    }
+
+    if (data.title)  document.getElementById('title').value  = data.title;
+    if (data.authors && data.authors.length)
+                     document.getElementById('authors').value = data.authors.join(', ');
+    if (data.publishers && data.publishers.length)
+                     document.getElementById('publisher').value = data.publishers[0];
+                     document.getElementById('isbn').value = isbn;
+    if (data.cover_url)
+                     document.getElementById('cover_url').value = data.cover_url;
+
+    status.style.color = '#155724';
+    status.textContent = '\u2713 Metadata loaded from OpenLibrary';
+  } catch (e) {
+    status.style.color = '#721c24';
+    status.textContent = '\u2717 Lookup failed: ' + e.message;
+  }
+}
+
+document.getElementById('isbn-lookup').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); lookupIsbn(); }
+});
+</script>

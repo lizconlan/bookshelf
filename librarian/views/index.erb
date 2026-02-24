@@ -3,7 +3,14 @@
 <% unless @incompletes.empty? %>
   <div class="flash-error">
     <strong><%= @incompletes.count %> folder<%= @incompletes.count == 1 ? '' : 's' %> without metadata:</strong>
-    <%= @incompletes.map { |f| File.basename(f) }.join(', ') %>
+    <ul style="margin:0.4rem 0 0; padding-left:1.2rem;">
+      <% @incompletes.each do |f| %>
+        <li>
+          <%= ERB::Util.html_escape(File.basename(f)) %>
+          &ndash; <a href="/books/<%= encode_id(f) %>/init" style="color:#721c24;">add metadata</a>
+        </li>
+      <% end %>
+    </ul>
   </div>
 <% end %>
 
