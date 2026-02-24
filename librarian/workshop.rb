@@ -70,3 +70,19 @@ helpers do
     image.write path
   end
 end
+
+# ── Book listing ────────────────────────────────────────────────────────────
+
+get '/' do
+  result = BookBinder.get_book_data(SHELF)
+  @books = result[:books].sort_by { |b| b.sort_title.downcase }
+  @incompletes = result[:incompletes]
+  erb :index
+end
+
+get '/covers/:id' do
+  folder_path = decode_id(params[:id])
+  cover_path = "#{folder_path}/_meta/cover.jpg"
+  halt 404 unless File.exist?(cover_path)
+  send_file cover_path, type: 'image/jpeg'
+end
