@@ -160,3 +160,32 @@ post '/books' do
   session[:flash_success] = "\u2018#{title}\u2019 added to the library"
   redirect '/'
 end
+
+# ── Edit book ─────────────────────────────────────────────────────────────────
+
+get '/books/:id/edit' do
+  @folder_path = decode_id(params[:id])
+  halt 404, 'Book not found' unless File.exist?("#{@folder_path}/_meta/info.js")
+
+  @id       = params[:id]
+  @info     = read_info(@folder_path)
+  @has_cover = cover_exists?(@folder_path)
+  erb :edit
+end
+
+patch '/books/:id' do
+  folder_path = decode_id(params[:id])
+  halt 404, 'Book not found' unless File.exist?("#{folder_path}/_meta/info.js")
+
+  title     = params[:title].to_s.strip
+  authors   = params[:authors].to_s.split(',').map(&:strip).reject(&:empty?)
+  publisher = params[:publisher].to_s.strip
+  isbn      = params[:isbn].to_s.strip
+  notes     = params[:notes].to_s.strip
+
+  info = build_info(title, authors, publisher, isbn, notes)
+  File.write("#{folder_path}/_meta/info.js", JSON.pretty_generate(info))
+
+  session[:flash_success] = "\u2018#{title}\u2019 updated"
+  redirect '/'
+end
