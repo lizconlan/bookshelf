@@ -189,3 +189,29 @@ patch '/books/:id' do
   session[:flash_success] = "\u2018#{title}\u2019 updated"
   redirect '/'
 end
+
+# ── Cover image ───────────────────────────────────────────────────────────────
+
+post '/books/:id/cover' do
+  folder_path = decode_id(params[:id])
+  halt 404, 'Book not found' unless File.exist?("#{folder_path}/_meta")
+
+  dest = "#{folder_path}/_meta/cover.jpg"
+
+  begin
+    if params[:cover_file] && params[:cover_file][:tempfile]
+      FileUtils.cp(params[:cover_file][:tempfile].path, dest)
+      resize_cover(dest)
+      session[:flash_success] = 'Cover image uploaded and resized'
+    elsif params[:cover_url] && !params[:cover_url].to_s.strip.empty?
+      fetch_and_resize_cover(params[:cover_url].strip, dest)
+      session[:flash_success] = 'Cover image fetched and resized'
+    else
+      session[:flash_error] = 'No file or URL provided'
+    end
+  rescue => e
+    session[:flash_error] = "Cover update failed: #{e.message}"
+  end
+
+  redirect "/books/#{params[:id]}/edit"
+end
