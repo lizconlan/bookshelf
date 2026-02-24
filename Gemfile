@@ -3,6 +3,8 @@ source 'https://rubygems.org'
 gem 'json', '~> 2.3.0'
 gem 'rake', '12.3.3'
 gem 'sass', '3.2.7'
+gem 'sinatra'
+gem 'mini_magick'
 
 group :test do
   gem 'byebug', '~> 11.1.0'
