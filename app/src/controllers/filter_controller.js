@@ -1,9 +1,5 @@
   application.register("filter", class extends Stimulus.Controller {
     filter() {
-      Array.from(document.querySelector("#books").children).forEach((element, idx) => {
-        element.style.display = "block"
-      })
-
       let selectedPub = document.querySelector(".pubfilter").value
       if(selectedPub) { document.querySelector("#search_box").value = "" }
       this.filterPublishers(selectedPub)
