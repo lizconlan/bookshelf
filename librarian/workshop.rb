@@ -215,3 +215,15 @@ post '/books/:id/cover' do
 
   redirect "/books/#{params[:id]}/edit"
 end
+
+# ── Rebuild static viewer ─────────────────────────────────────────────────────
+
+post '/rebuild' do
+  project_root = File.expand_path('..', __dir__)
+  @output, status = Open3.capture2e(
+    'bundle', 'exec', 'rake', 'generate_index_file',
+    chdir: project_root
+  )
+  @success = status.success?
+  erb :rebuild
+end

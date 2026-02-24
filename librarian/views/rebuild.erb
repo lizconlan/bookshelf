@@ -1,0 +1,12 @@
+<h1>Rebuild <% if @success %>Complete<% else %>Failed<% end %></h1>
+
+<% if @success %>
+  <div class="flash-success">&#10003; Shelf rebuilt — <code>index.html</code> is up to date.</div>
+<% else %>
+  <div class="flash-error">&#10007; Rebuild encountered errors (see output below).</div>
+<% end %>
+
+<h2>Rake output</h2>
+<pre><%= ERB::Util.html_escape(@output) %></pre>
+
+<a href="/" class="btn">&#8592; Back to Library</a>
