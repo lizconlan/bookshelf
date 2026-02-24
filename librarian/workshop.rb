@@ -86,3 +86,77 @@ get '/covers/:id' do
   halt 404 unless File.exist?(cover_path)
   send_file cover_path, type: 'image/jpeg'
 end
+
+# ── Add book ─────────────────────────────────────────────────────────────────
+
+get '/books/new' do
+  erb :new
+end
+
+post '/isbn_lookup' do
+  isbn = params[:isbn].to_s.gsub(/[^0-9Xx]/, '').upcase
+  halt 400, { error: 'ISBN required' }.to_json if isbn.length < 10
+
+  content_type :json
+  begin
+    url = URI("https://openlibrary.org/api/books?bibkeys=ISBN:#{isbn}&format=json&jscmd=data")
+    response = Net::HTTP.get(url)
+    data = JSON.parse(response)
+    key = "ISBN:#{isbn}"
+
+    if data[key]
+      book_data = data[key]
+      {
+        title:     book_data['title'],
+        authors:   (book_data['authors']   || []).map { |a| a['name'] },
+        publishers:(book_data['publishers'] || []).map { |p| p['name'] },
+        cover_url: book_data.dig('cover', 'large') ||
+                   book_data.dig('cover', 'medium') ||
+                   book_data.dig('cover', 'small')
+      }.to_json
+    else
+      { error: 'Book not found on OpenLibrary' }.to_json
+    end
+  rescue => e
+    { error: "Lookup failed: #{e.message}" }.to_json
+  end
+end
+
+post '/books' do
+  title     = params[:title].to_s.strip
+  authors   = params[:authors].to_s.split(',').map(&:strip).reject(&:empty?)
+  publisher = params[:publisher].to_s.strip
+  isbn      = params[:isbn].to_s.strip
+  notes     = params[:notes].to_s.strip
+  cover_url = params[:cover_url].to_s.strip
+
+  if title.empty?
+    session[:flash_error] = 'Title is required'
+    redirect '/books/new'
+    return
+  end
+
+  folder_name = sanitize_folder_name(title)
+  folder_path = File.join(SHELF, folder_name)
+
+  if File.exist?(folder_path)
+    session[:flash_error] = "A folder named \u2018#{folder_name}\u2019 already exists"
+    redirect '/books/new'
+    return
+  end
+
+  FileUtils.mkdir_p("#{folder_path}/_meta")
+  info = build_info(title, authors, publisher, isbn, notes)
+  File.write("#{folder_path}/_meta/info.js", JSON.pretty_generate(info))
+
+  unless cover_url.empty?
+    begin
+      fetch_and_resize_cover(cover_url, "#{folder_path}/_meta/cover.jpg")
+    rescue => e
+      session[:flash_error] = "Book created but cover fetch failed: #{e.message}"
+    end
+  end
+
+  session[:flash_success] = "\u2018#{title}\u2019 added to the library"
+  redirect '/'
+end
