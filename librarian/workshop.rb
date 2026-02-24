@@ -15,6 +15,9 @@ SHELF = ENV.fetch('BOOKSHELF_PATH', File.expand_path('../../', __dir__))
 # Dir.glob treats [ ] { } * ? as pattern characters; escape for BookBinder
 SHELF_GLOB = SHELF.gsub(/[\[\]\{\}\*\?\\]/) { |c| "\\#{c}" }
 
+_config_file = File.join(File.dirname(__FILE__), 'config.json')
+EXCLUDE = File.exist?(_config_file) ? (JSON.parse(File.read(_config_file))['exclude'] || []) : []
+
 enable :sessions
 enable :method_override
 
@@ -77,8 +80,11 @@ end
 
 get '/' do
   result = BookBinder.get_book_data(SHELF_GLOB)
-  @books = result[:books].sort_by { |b| b.sort_title.downcase }
+  @books = result[:books]
+    .reject { |b| EXCLUDE.include?(File.basename(book_folder(b))) }
+    .sort_by { |b| b.sort_title.downcase }
   @incompletes = result[:incompletes]
+    .reject { |f| EXCLUDE.include?(File.basename(f)) }
   erb :index
 end
 
