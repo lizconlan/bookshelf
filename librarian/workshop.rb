@@ -37,8 +37,48 @@ helpers do
     book.instance_variable_get(:@folder_name)
   end
 
+  def glob_escape(path)
+    path.gsub(/[\[\]\{\}\*\?\\]/) { |c| "\\#{c}" }
+  end
+
+  # Returns subfolders of a multi-edition book that have their own _meta/info.js
+  def edition_subfolders(folder_path)
+    Dir.glob("#{glob_escape(folder_path)}/*")
+       .select { |sub| File.exist?("#{sub}/_meta/info.js") }
+  end
+
+  # Builds a Book+Edition object graph for a folder that has no top-level
+  # info.js but does have edition subfolders (bypasses BookBinder's Dir.glob
+  # calls, which fail when the shelf path contains [ ] characters).
+  def load_edition_book(folder_path)
+    subs = edition_subfolders(folder_path)
+    return nil if subs.empty?
+
+    first = JSON.parse(File.read("#{subs.first}/_meta/info.js"))
+    book  = Book.new(
+      folder_name: folder_path,
+      title:       File.basename(folder_path),
+      authors:     first['authors'],
+      publisher:   first['publisher'],
+      isbn:        first['ISBN'] || first['isbn']
+    )
+
+    subs.each do |sub|
+      info = JSON.parse(File.read("#{sub}/_meta/info.js"))
+      book.append_edition(Edition.new(book,
+        folder_name: sub,
+        isbn:        info['ISBN'] || info['isbn'],
+        authors:     info['authors'],
+        notes:       info['notes']
+      ))
+    end
+
+    book
+  end
+
   def cover_exists?(folder_path)
-    File.exist?("#{folder_path}/_meta/cover.jpg")
+    return true if File.exist?("#{folder_path}/_meta/cover.jpg")
+    edition_subfolders(folder_path).any? { |sub| File.exist?("#{sub}/_meta/cover.jpg") }
   end
 
   def read_info(folder_path)
@@ -80,18 +120,33 @@ end
 
 get '/' do
   result = BookBinder.get_book_data(SHELF_GLOB)
-  @books = result[:books]
+
+  # BookBinder misses multi-edition books when the shelf path contains glob
+  # special characters (like [LC]): partition them out of incompletes and
+  # build the Book objects ourselves using glob-escaped paths.
+  edition_folders, genuine_incompletes = result[:incompletes].partition do |f|
+    !edition_subfolders(f).empty?
+  end
+
+  @books = (result[:books] + edition_folders.map { |f| load_edition_book(f) }.compact)
     .reject { |b| EXCLUDE.include?(File.basename(book_folder(b))) }
     .sort_by { |b| b.sort_title.downcase }
-  @incompletes = result[:incompletes]
+  @incompletes = genuine_incompletes
     .reject { |f| EXCLUDE.include?(File.basename(f)) }
   erb :index
 end
 
 get '/covers/:id' do
   folder_path = decode_id(params[:id])
-  cover_path = "#{folder_path}/_meta/cover.jpg"
-  halt 404 unless File.exist?(cover_path)
+  cover_path  = "#{folder_path}/_meta/cover.jpg"
+
+  # Fall back to first edition's cover for multi-edition books
+  unless File.exist?(cover_path)
+    first_edition = edition_subfolders(folder_path).first
+    cover_path = "#{first_edition}/_meta/cover.jpg" if first_edition
+  end
+
+  halt 404 unless cover_path && File.exist?(cover_path)
   send_file cover_path, type: 'image/jpeg'
 end
 
