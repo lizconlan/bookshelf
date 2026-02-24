@@ -12,6 +12,8 @@ $LOAD_PATH.unshift File.expand_path('../app/lib', __dir__)
 require 'book_binder'
 
 SHELF = ENV.fetch('BOOKSHELF_PATH', File.expand_path('../../', __dir__))
+# Dir.glob treats [ ] { } * ? as pattern characters; escape for BookBinder
+SHELF_GLOB = SHELF.gsub(/[\[\]\{\}\*\?\\]/) { |c| "\\#{c}" }
 
 enable :sessions
 enable :method_override
@@ -74,7 +76,7 @@ end
 # ── Book listing ────────────────────────────────────────────────────────────
 
 get '/' do
-  result = BookBinder.get_book_data(SHELF)
+  result = BookBinder.get_book_data(SHELF_GLOB)
   @books = result[:books].sort_by { |b| b.sort_title.downcase }
   @incompletes = result[:incompletes]
   erb :index
