@@ -37,6 +37,10 @@ helpers do
     book.instance_variable_get(:@folder_name)
   end
 
+  def edition_folder(edition)
+    edition.instance_variable_get(:@folder_name)
+  end
+
   def glob_escape(path)
     path.gsub(/[\[\]\{\}\*\?\\]/) { |c| "\\#{c}" }
   end
@@ -274,6 +278,25 @@ post '/books/:id/init' do
   redirect "/books/#{params[:id]}/edit"
 end
 
+# ── Editions overview (for bundle/multi-edition books) ───────────────────────
+
+get '/books/:id/editions' do
+  @folder_path = decode_id(params[:id])
+  halt 404, 'Folder not found' unless File.directory?(@folder_path)
+
+  @id    = params[:id]
+  @title = File.basename(@folder_path)
+  @editions = edition_subfolders(@folder_path).map do |sub|
+    info = JSON.parse(File.read("#{sub}/_meta/info.js")) rescue {}
+    { path: sub, id: encode_id(sub),
+      title:      info['title']     || File.basename(sub),
+      folder_name: File.basename(sub),
+      has_cover:  File.exist?("#{sub}/_meta/cover.jpg") }
+  end
+
+  erb :editions
+end
+
 # ── Edit book ─────────────────────────────────────────────────────────────────
 
 get '/books/:id/edit' do
@@ -283,12 +306,6 @@ get '/books/:id/edit' do
   @id        = params[:id]
   @info      = read_info(@folder_path)
   @has_cover = cover_exists?(@folder_path)
-
-  # Candidate parents for "make this an edition of…"
-  @shelf_folders = Dir.glob("#{SHELF_GLOB}/*")
-    .select  { |f| File.directory?(f) && f != @folder_path }
-    .reject  { |f| EXCLUDE.include?(File.basename(f)) }
-    .sort_by { |f| File.basename(f).downcase }
 
   erb :edit
 end
@@ -308,6 +325,33 @@ patch '/books/:id' do
 
   session[:flash_success] = "\u2018#{title}\u2019 updated"
   redirect '/'
+end
+
+# ── Rename folder ────────────────────────────────────────────────────────────
+
+post '/books/:id/rename' do
+  folder_path = decode_id(params[:id])
+  new_name    = sanitize_folder_name(params[:new_name].to_s)
+
+  halt 404, 'Folder not found' unless File.directory?(folder_path)
+
+  if new_name.empty?
+    session[:flash_error] = 'New name cannot be blank'
+    redirect "/books/#{params[:id]}/edit"
+    return
+  end
+
+  new_path = File.join(File.dirname(folder_path), new_name)
+
+  if File.exist?(new_path)
+    session[:flash_error] = "\u2018#{new_name}\u2019 already exists"
+    redirect "/books/#{params[:id]}/edit"
+    return
+  end
+
+  FileUtils.mv(folder_path, new_path)
+  session[:flash_success] = "Folder renamed to \u2018#{new_name}\u2019"
+  redirect "/books/#{encode_id(new_path)}/edit"
 end
 
 # ── Wrap top-level content of a folder into a named edition subfolder ─────────
@@ -342,11 +386,17 @@ end
 # ── Move book to become an edition of another book ───────────────────────────
 
 post '/books/:id/move' do
-  folder_path = decode_id(params[:id])
-  parent_path = decode_id(params[:parent_id].to_s)
+  folder_path  = decode_id(params[:id])
+  parent_name  = params[:parent_name].to_s.strip
+  parent_path  = File.join(SHELF, sanitize_folder_name(parent_name))
 
-  halt 404, 'Book not found'   unless File.directory?(folder_path)
-  halt 404, 'Target not found' unless File.directory?(parent_path)
+  halt 404, 'Book not found' unless File.directory?(folder_path)
+
+  unless File.directory?(parent_path)
+    session[:flash_error] = "No folder named \u2018#{parent_name}\u2019 found on the shelf"
+    redirect "/books/#{params[:id]}/edit"
+    return
+  end
 
   # If the target is still a standalone book, wrap its content first
   if File.exist?("#{parent_path}/_meta/info.js")

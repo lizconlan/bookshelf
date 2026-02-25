@@ -51,7 +51,11 @@
         </td>
         <td style="font-size:0.85rem; color:#666"><%= ERB::Util.html_escape(book.isbn.to_s) %></td>
         <td>
-          <a href="/books/<%= id %>/edit" class="btn btn-secondary btn-sm">Edit</a>
+          <% if book.editions? %>
+            <a href="/books/<%= id %>/editions" class="btn btn-secondary btn-sm">Editions</a>
+          <% else %>
+            <a href="/books/<%= id %>/edit" class="btn btn-secondary btn-sm">Edit</a>
+          <% end %>
         </td>
       </tr>
     <% end %>
