@@ -1,0 +1,9 @@
+{
+  "exclude": [
+    "__index",
+    "node_modules",
+    "_video",
+    "_slide decks",
+    "_reports : papers"
+  ]
+}
