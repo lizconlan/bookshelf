@@ -4,7 +4,6 @@
     initialize() {
       document.querySelector('h1.fallback').style.color = "#fff"
       document.querySelector('header').style.height = "110"
-      document.querySelector('#nav_info').style.display = "block"
       document.querySelector('#filters').style.display = "block"
       document.querySelector('.pubfilter').selectedIndex = -1
       document.querySelector('#pub_sort').style.display = "block"

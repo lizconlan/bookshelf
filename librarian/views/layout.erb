@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Librarian</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+           max-width: 1100px; margin: 0 auto; padding: 1rem; color: #333; }
+    nav { display: flex; align-items: center; gap: 1rem; padding: 0.6rem 0;
+          border-bottom: 2px solid #4a6741; margin-bottom: 1.5rem; }
+    nav strong { color: #4a6741; font-size: 1.1rem; margin-right: 0.5rem; }
+    nav a { text-decoration: none; color: #4a6741; font-weight: 600; }
+    nav a:hover { text-decoration: underline; }
+    nav form { margin: 0; margin-left: auto; }
+    h1 { color: #4a6741; margin-top: 0; }
+    h2 { color: #4a6741; }
+    h3 { color: #555; }
+    .flash-success { background: #d4edda; color: #155724; padding: 0.75rem 1rem;
+                     border-radius: 4px; margin-bottom: 1rem; }
+    .flash-error   { background: #f8d7da; color: #721c24; padding: 0.75rem 1rem;
+                     border-radius: 4px; margin-bottom: 1rem; }
+    label { display: block; font-weight: 600; margin-top: 0.8rem; margin-bottom: 0.25rem; }
+    label small { font-weight: normal; color: #666; }
+    input[type=text], input[type=url], input[type=search], input[type=file],
+    textarea { width: 100%; padding: 0.45rem 0.6rem; border: 1px solid #ccc;
+               border-radius: 4px; font-size: 0.95rem; font-family: inherit; }
+    textarea { resize: vertical; }
+    input:focus, textarea:focus { outline: 2px solid #4a6741; border-color: #4a6741; }
+    button, .btn { background: #4a6741; color: white; border: none;
+                   padding: 0.5rem 1.1rem; border-radius: 4px; cursor: pointer;
+                   font-size: 0.95rem; text-decoration: none; display: inline-block; }
+    button:hover, .btn:hover { background: #3a5731; }
+    .btn-secondary { background: #6c757d; }
+    .btn-secondary:hover { background: #5a6268; }
+    .btn-sm { padding: 0.25rem 0.6rem; font-size: 0.82rem; }
+    .btn-rebuild { background: #7a5c3a; }
+    .btn-rebuild:hover { background: #5e4428; }
+    table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    th, td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid #eee; }
+    th { background: #f2f5f1; font-weight: 600; color: #444; }
+    tr:hover td { background: #fafcf9; }
+    .cover-thumb { width: 28px; height: 38px; object-fit: cover;
+                   border: 1px solid #ddd; display: block; }
+    .tag { display: inline-block; background: #e8f0e6; color: #4a6741;
+           padding: 0.1rem 0.45rem; border-radius: 3px; font-size: 0.78rem; }
+    .tag-missing { background: #fde8e8; color: #b22; }
+    hr { border: none; border-top: 1px solid #e0e0e0; margin: 2rem 0; }
+    pre { background: #f5f5f5; padding: 1rem; border-radius: 4px;
+          overflow-x: auto; font-size: 0.85rem; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <nav>
+    <strong>&#128218; Librarian</strong>
+    <a href="/">All Books</a>
+    <a href="/books/new">+ Add Book</a>
+    <form action="/rebuild" method="post">
+      <button type="submit" class="btn-rebuild btn-sm">Rebuild Shelf</button>
+    </form>
+  </nav>
+
+  <% if session[:flash_success] %>
+    <div class="flash-success"><%= session.delete(:flash_success) %></div>
+  <% end %>
+  <% if session[:flash_error] %>
+    <div class="flash-error"><%= session.delete(:flash_error) %></div>
+  <% end %>
+
+  <%= yield %>
+</body>
+</html>

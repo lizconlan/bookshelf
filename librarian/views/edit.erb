@@ -1,0 +1,117 @@
+<h1>Edit: <em><%= ERB::Util.html_escape(@info['title'].to_s) %></em></h1>
+
+<form action="/books/<%= @id %>/rename" method="post"
+      style="display:flex; gap:0.5rem; align-items:center; margin-bottom:1.2rem; background:#f7f7f7; padding:0.6rem 0.8rem; border-radius:4px;">
+  <span style="font-size:0.85rem; color:#666; white-space:nowrap;">Folder:</span>
+  <input type="text" name="new_name" value="<%= ERB::Util.html_escape(File.basename(@folder_path)) %>"
+         style="flex:1; font-size:0.85rem; padding:0.3rem 0.5rem;">
+  <button type="submit" class="btn-secondary btn-sm btn" style="white-space:nowrap;">Rename folder</button>
+</form>
+
+<form action="/books/<%= @id %>" method="post">
+  <input type="hidden" name="_method" value="PATCH">
+
+  <label for="title">Title <span style="color:#c00;">*</span></label>
+  <input type="text" id="title" name="title" required
+         value="<%= ERB::Util.html_escape(@info['title'].to_s) %>">
+
+  <label for="authors">Authors <small>(comma-separated)</small></label>
+  <input type="text" id="authors" name="authors"
+         value="<%= ERB::Util.html_escape((@info['authors'] || []).join(', ')) %>">
+
+  <label for="publisher">Publisher</label>
+  <input type="text" id="publisher" name="publisher"
+         value="<%= ERB::Util.html_escape(@info['publisher'].to_s) %>">
+
+  <label for="isbn">ISBN</label>
+  <input type="text" id="isbn" name="isbn"
+         value="<%= ERB::Util.html_escape((@info['ISBN'] || @info['isbn']).to_s) %>">
+
+  <label for="notes">Notes</label>
+  <textarea id="notes" name="notes" rows="4"><%= ERB::Util.html_escape(@info['notes'].to_s) %></textarea>
+
+  <div style="margin-top:1.2rem; display:flex; gap:0.75rem; align-items:center;">
+    <button type="submit">Save Changes</button>
+    <a href="/" class="btn btn-secondary">Cancel</a>
+  </div>
+</form>
+
+<hr>
+
+<h2>Cover Image</h2>
+
+<% if @has_cover %>
+  <img src="/covers/<%= @id %>" alt="Current cover"
+       style="height:160px; border:1px solid #ddd; border-radius:3px;
+              display:block; margin-bottom:1rem;">
+<% else %>
+  <p style="color:#999; margin-bottom:1rem;">No cover image yet.</p>
+<% end %>
+
+<h3>Upload a file</h3>
+<form action="/books/<%= @id %>/cover" method="post" enctype="multipart/form-data"
+      style="display:flex; gap:0.75rem; align-items:flex-end; flex-wrap:wrap;">
+  <div style="flex:1; min-width:200px;">
+    <label for="cover_file" style="margin-top:0;">Image file</label>
+    <input type="file" id="cover_file" name="cover_file" accept="image/*">
+  </div>
+  <button type="submit">Upload</button>
+</form>
+
+<h3>Fetch from URL</h3>
+<form action="/books/<%= @id %>/cover" method="post"
+      style="display:flex; gap:0.75rem; align-items:flex-end; flex-wrap:wrap;">
+  <div style="flex:1; min-width:200px;">
+    <label for="cover_url" style="margin-top:0;">Image URL</label>
+    <input type="url" id="cover_url" name="cover_url" placeholder="https://…">
+  </div>
+  <button type="submit">Fetch Cover</button>
+</form>
+
+<hr>
+
+<h2 style="color:#8b2020;">Danger Zone</h2>
+
+<h3>Wrap top-level content as an edition</h3>
+<p style="color:#666; font-size:0.9rem; margin-top:-0.5rem;">
+  Moves this book&rsquo;s files and metadata into a named subfolder, converting it from a
+  standalone book into an edition bundle. Use this to fix a folder that has both
+  top-level metadata and edition subfolders.
+</p>
+<form action="/books/<%= @id %>/wrap" method="post"
+      style="display:flex; gap:0.75rem; align-items:flex-end; flex-wrap:wrap;"
+      onsubmit="return confirm('Wrap top-level content? This cannot be undone from here.')">
+  <div style="flex:1; min-width:200px;">
+    <label for="edition_name" style="margin-top:0;">Edition subfolder name</label>
+    <input type="text" id="edition_name" name="edition_name" placeholder="e.g. 1st Edition">
+  </div>
+  <button type="submit" style="background:#8b2020;">Wrap</button>
+</form>
+
+<h3>Make this an edition of&hellip;</h3>
+<p style="color:#666; font-size:0.9rem; margin-top:-0.5rem;">
+  Moves this folder inside the named parent folder so the viewer treats it as an edition.
+  If the parent is still a standalone book, fill in <em>Existing edition name</em> too
+  &mdash; its content will be wrapped into that subfolder first.
+</p>
+<form action="/books/<%= @id %>/move" method="post"
+      onsubmit="return confirm('Move this folder? This cannot be undone from here.')">
+  <label for="parent_name" style="margin-top:0;">Parent book title</label>
+  <input type="text" id="parent_name" name="parent_name"
+         value="<%= ERB::Util.html_escape(@info['title'].to_s) %>" style="margin-bottom:0.5rem;">
+  <label for="existing_edition_name">Existing edition name <small>(only if parent is a standalone book)</small></label>
+  <input type="text" id="existing_edition_name" name="existing_edition_name"
+         placeholder="e.g. 1st Edition" style="margin-bottom:0.75rem;">
+  <div><button type="submit" style="background:#8b2020;">Move</button></div>
+</form>
+
+<h3>Delete this book</h3>
+<p style="color:#666; font-size:0.9rem; margin-top:-0.5rem;">
+  If the folder contains only metadata (no book files) it will be deleted entirely.
+  Otherwise only the metadata is removed and the folder is kept.
+</p>
+<form action="/books/<%= @id %>" method="post"
+      onsubmit="return confirm('Delete \u201c<%= ERB::Util.html_escape(@info['title'].to_s) %>\u201d? This cannot be undone.')">
+  <input type="hidden" name="_method" value="DELETE">
+  <button type="submit" style="background:#8b2020;">Delete</button>
+</form>

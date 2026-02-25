@@ -1,0 +1,37 @@
+<h1><%= ERB::Util.html_escape(@title) %></h1>
+<p style="color:#666; margin-top:-0.5rem;"><%= @editions.count %> edition<%= @editions.count == 1 ? '' : 's' %></p>
+
+<% if @editions.empty? %>
+  <p style="color:#999;">No edition subfolders with metadata found.</p>
+<% else %>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:44px">Cover</th>
+        <th>Title (from metadata)</th>
+        <th>Folder name</th>
+        <th style="width:70px"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @editions.each do |ed| %>
+        <tr>
+          <td>
+            <% if ed[:has_cover] %>
+              <img src="/covers/<%= ed[:id] %>" class="cover-thumb" alt="">
+            <% else %>
+              <span class="tag tag-missing" title="No cover">&mdash;</span>
+            <% end %>
+          </td>
+          <td><strong><%= ERB::Util.html_escape(ed[:title]) %></strong></td>
+          <td style="font-size:0.85rem; color:#666;"><%= ERB::Util.html_escape(ed[:folder_name]) %></td>
+          <td><a href="/books/<%= ed[:id] %>/edit" class="btn btn-secondary btn-sm">Edit</a></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<div style="margin-top:1.5rem;">
+  <a href="/" class="btn btn-secondary">&larr; Back to library</a>
+</div>
