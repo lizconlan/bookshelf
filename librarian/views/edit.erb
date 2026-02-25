@@ -59,3 +59,37 @@
   </div>
   <button type="submit">Fetch Cover</button>
 </form>
+
+<hr>
+
+<h2 style="color:#8b2020;">Danger Zone</h2>
+
+<h3>Make this an edition of&hellip;</h3>
+<p style="color:#666; font-size:0.9rem; margin-top:-0.5rem;">
+  Moves this folder inside another book folder. The static viewer will treat it as one of that book's editions.
+</p>
+<form action="/books/<%= @id %>/move" method="post"
+      style="display:flex; gap:0.75rem; align-items:flex-end; flex-wrap:wrap;"
+      onsubmit="return confirm('Move this folder? This cannot be undone from here.')">
+  <div style="flex:1; min-width:200px;">
+    <label for="parent_id" style="margin-top:0;">Parent book</label>
+    <select id="parent_id" name="parent_id" style="width:100%; padding:0.45rem 0.6rem; border:1px solid #ccc; border-radius:4px; font-size:0.95rem;">
+      <option value="">— select —</option>
+      <% @shelf_folders.each do |f| %>
+        <option value="<%= encode_id(f) %>"><%= ERB::Util.html_escape(File.basename(f)) %></option>
+      <% end %>
+    </select>
+  </div>
+  <button type="submit" style="background:#8b2020;">Move</button>
+</form>
+
+<h3>Delete this book</h3>
+<p style="color:#666; font-size:0.9rem; margin-top:-0.5rem;">
+  If the folder contains only metadata (no book files) it will be deleted entirely.
+  Otherwise only the metadata is removed and the folder is kept.
+</p>
+<form action="/books/<%= @id %>" method="post"
+      onsubmit="return confirm('Delete \u201c<%= ERB::Util.html_escape(@info['title'].to_s) %>\u201d? This cannot be undone.')">
+  <input type="hidden" name="_method" value="DELETE">
+  <button type="submit" style="background:#8b2020;">Delete</button>
+</form>

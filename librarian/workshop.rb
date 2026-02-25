@@ -267,9 +267,16 @@ get '/books/:id/edit' do
   @folder_path = decode_id(params[:id])
   halt 404, 'Book not found' unless File.exist?("#{@folder_path}/_meta/info.js")
 
-  @id       = params[:id]
-  @info     = read_info(@folder_path)
+  @id        = params[:id]
+  @info      = read_info(@folder_path)
   @has_cover = cover_exists?(@folder_path)
+
+  # Candidate parents for "make this an edition of…"
+  @shelf_folders = Dir.glob("#{SHELF_GLOB}/*")
+    .select  { |f| File.directory?(f) && f != @folder_path }
+    .reject  { |f| EXCLUDE.include?(File.basename(f)) }
+    .sort_by { |f| File.basename(f).downcase }
+
   erb :edit
 end
 
@@ -287,6 +294,53 @@ patch '/books/:id' do
   File.write("#{folder_path}/_meta/info.js", JSON.pretty_generate(info))
 
   session[:flash_success] = "\u2018#{title}\u2019 updated"
+  redirect '/'
+end
+
+# ── Move book to become an edition of another book ───────────────────────────
+
+post '/books/:id/move' do
+  folder_path = decode_id(params[:id])
+  parent_path = decode_id(params[:parent_id].to_s)
+
+  halt 404, 'Book not found'   unless File.directory?(folder_path)
+  halt 404, 'Target not found' unless File.directory?(parent_path)
+
+  dest = File.join(parent_path, File.basename(folder_path))
+
+  if File.exist?(dest)
+    session[:flash_error] = "\u2018#{File.basename(folder_path)}\u2019 already exists inside \u2018#{File.basename(parent_path)}\u2019"
+    redirect "/books/#{params[:id]}/edit"
+    return
+  end
+
+  FileUtils.mv(folder_path, dest)
+  session[:flash_success] = "\u2018#{File.basename(folder_path)}\u2019 moved into \u2018#{File.basename(parent_path)}\u2019"
+  redirect '/'
+end
+
+# ── Delete book ───────────────────────────────────────────────────────────────
+
+delete '/books/:id' do
+  folder_path = decode_id(params[:id])
+  halt 404, 'Book not found' unless File.directory?(folder_path)
+
+  title = File.basename(folder_path)
+
+  # Check for real content (anything outside _meta/)
+  real_files = Dir.glob("#{glob_escape(folder_path)}/**/*")
+    .reject { |f| File.directory?(f) }
+    .reject { |f| f.start_with?("#{folder_path}/_meta/") }
+
+  if real_files.empty?
+    FileUtils.rm_rf(folder_path)
+    session[:flash_success] = "\u2018#{title}\u2019 deleted"
+  else
+    FileUtils.rm_f("#{folder_path}/_meta/info.js")
+    FileUtils.rm_f("#{folder_path}/_meta/cover.jpg")
+    session[:flash_success] = "Metadata removed from \u2018#{title}\u2019 — folder kept (contains book files)"
+  end
+
   redirect '/'
 end
 
