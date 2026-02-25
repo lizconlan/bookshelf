@@ -108,6 +108,19 @@ helpers do
     resize_cover(dest_path)
   end
 
+  # Moves all top-level items from folder_path into dest_path, skipping:
+  #   - the dest_path itself
+  #   - hidden files/dirs (e.g. .DS_Store)
+  #   - existing edition subfolders (dirs that already have _meta/info.js)
+  def wrap_top_level_into(folder_path, dest_path)
+    Dir.glob("#{glob_escape(folder_path)}/*").each do |item|
+      next if item == dest_path
+      next if File.basename(item).start_with?('.')
+      next if File.directory?(item) && File.exist?("#{item}/_meta/info.js")
+      FileUtils.mv(item, File.join(dest_path, File.basename(item)))
+    end
+  end
+
   def resize_cover(path)
     require 'mini_magick'
     image = MiniMagick::Image.open(path)
@@ -297,6 +310,35 @@ patch '/books/:id' do
   redirect '/'
 end
 
+# ── Wrap top-level content of a folder into a named edition subfolder ─────────
+
+post '/books/:id/wrap' do
+  folder_path  = decode_id(params[:id])
+  edition_name = params[:edition_name].to_s.strip
+
+  halt 404, 'Folder not found' unless File.directory?(folder_path)
+
+  if edition_name.empty?
+    session[:flash_error] = 'Edition name is required'
+    redirect "/books/#{params[:id]}/edit"
+    return
+  end
+
+  edition_path = File.join(folder_path, edition_name)
+
+  if File.exist?(edition_path)
+    session[:flash_error] = "\u2018#{edition_name}\u2019 already exists inside this folder"
+    redirect "/books/#{params[:id]}/edit"
+    return
+  end
+
+  FileUtils.mkdir_p(edition_path)
+  wrap_top_level_into(folder_path, edition_path)
+
+  session[:flash_success] = "Top-level content wrapped into \u2018#{edition_name}\u2019"
+  redirect '/'
+end
+
 # ── Move book to become an edition of another book ───────────────────────────
 
 post '/books/:id/move' do
@@ -305,6 +347,29 @@ post '/books/:id/move' do
 
   halt 404, 'Book not found'   unless File.directory?(folder_path)
   halt 404, 'Target not found' unless File.directory?(parent_path)
+
+  # If the target is still a standalone book, wrap its content first
+  if File.exist?("#{parent_path}/_meta/info.js")
+    existing_name = params[:existing_edition_name].to_s.strip
+
+    if existing_name.empty?
+      session[:flash_error] = "\u2018#{File.basename(parent_path)}\u2019 is a standalone book. " \
+        "Provide a name for its existing content (e.g. \u20181st Edition\u2019) so it can be wrapped first."
+      redirect "/books/#{params[:id]}/edit"
+      return
+    end
+
+    existing_path = File.join(parent_path, existing_name)
+
+    if File.exist?(existing_path)
+      session[:flash_error] = "\u2018#{existing_name}\u2019 already exists inside \u2018#{File.basename(parent_path)}\u2019"
+      redirect "/books/#{params[:id]}/edit"
+      return
+    end
+
+    FileUtils.mkdir_p(existing_path)
+    wrap_top_level_into(parent_path, existing_path)
+  end
 
   dest = File.join(parent_path, File.basename(folder_path))
 

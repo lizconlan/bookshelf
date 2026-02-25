@@ -64,23 +64,41 @@
 
 <h2 style="color:#8b2020;">Danger Zone</h2>
 
+<h3>Wrap top-level content as an edition</h3>
+<p style="color:#666; font-size:0.9rem; margin-top:-0.5rem;">
+  Moves this book&rsquo;s files and metadata into a named subfolder, converting it from a
+  standalone book into an edition bundle. Use this to fix a folder that has both
+  top-level metadata and edition subfolders.
+</p>
+<form action="/books/<%= @id %>/wrap" method="post"
+      style="display:flex; gap:0.75rem; align-items:flex-end; flex-wrap:wrap;"
+      onsubmit="return confirm('Wrap top-level content? This cannot be undone from here.')">
+  <div style="flex:1; min-width:200px;">
+    <label for="edition_name" style="margin-top:0;">Edition subfolder name</label>
+    <input type="text" id="edition_name" name="edition_name" placeholder="e.g. 1st Edition">
+  </div>
+  <button type="submit" style="background:#8b2020;">Wrap</button>
+</form>
+
 <h3>Make this an edition of&hellip;</h3>
 <p style="color:#666; font-size:0.9rem; margin-top:-0.5rem;">
-  Moves this folder inside another book folder. The static viewer will treat it as one of that book's editions.
+  Moves this folder inside another book folder so the viewer treats it as an edition.
+  If the target is still a standalone book, fill in <em>Existing edition name</em> too
+  — its content will be wrapped into that subfolder first.
 </p>
 <form action="/books/<%= @id %>/move" method="post"
-      style="display:flex; gap:0.75rem; align-items:flex-end; flex-wrap:wrap;"
       onsubmit="return confirm('Move this folder? This cannot be undone from here.')">
-  <div style="flex:1; min-width:200px;">
-    <label for="parent_id" style="margin-top:0;">Parent book</label>
-    <select id="parent_id" name="parent_id" style="width:100%; padding:0.45rem 0.6rem; border:1px solid #ccc; border-radius:4px; font-size:0.95rem;">
-      <option value="">— select —</option>
-      <% @shelf_folders.each do |f| %>
-        <option value="<%= encode_id(f) %>"><%= ERB::Util.html_escape(File.basename(f)) %></option>
-      <% end %>
-    </select>
-  </div>
-  <button type="submit" style="background:#8b2020;">Move</button>
+  <label for="parent_id" style="margin-top:0;">Parent book</label>
+  <select id="parent_id" name="parent_id" style="width:100%; padding:0.45rem 0.6rem; border:1px solid #ccc; border-radius:4px; font-size:0.95rem; margin-bottom:0.5rem;">
+    <option value="">— select —</option>
+    <% @shelf_folders.each do |f| %>
+      <option value="<%= encode_id(f) %>"><%= ERB::Util.html_escape(File.basename(f)) %></option>
+    <% end %>
+  </select>
+  <label for="existing_edition_name">Existing edition name <small>(only if parent is a standalone book)</small></label>
+  <input type="text" id="existing_edition_name" name="existing_edition_name"
+         placeholder="e.g. 1st Edition" style="margin-bottom:0.75rem;">
+  <div><button type="submit" style="background:#8b2020;">Move</button></div>
 </form>
 
 <h3>Delete this book</h3>
