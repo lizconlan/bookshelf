@@ -57,7 +57,9 @@ Which allows me to a) group them in a way that looks reasonably sensible to me (
 
 ## How do I make it go?
 
-Ok, sorry, probably should have done this bit sooner...
+Oh, sorry, probably should have done this bit sooner…
+
+### Bookshelf
 
 1. Git clone your own copy of the repository
 2. Drop `assets` and `app` directories and the `Rakefile` into the top level directory of [a folder structure that's arranged a bit like mine](#file-structure) and has lots of books in it<sup>[&dagger;](#footnote-1)</sup>
@@ -71,6 +73,18 @@ Ok, sorry, probably should have done this bit sooner...
 6. Load the resulting index.html into your favourite browser
 
 Tip: vary the value of `shelf=` to change the target directory for the script
+
+### Librarian
+
+If you want to edit any of your files or add new books without having to hand edit every single `_meta/info.js` file (and crop and upload your own images), you'll need to spin up the companion Librarian app. This runs over http, designed to be run temporarily on localhost (do not use this on the open web!) then shut down again once you're done. The handy `Rebuild Shelf` button runs the rake task to regenerate the bookshelf so you don't have to.
+
+<img width="2168" height="690" alt="Librarian-Book-List" src="https://github.com/user-attachments/assets/31fdd6bd-b42c-437d-a888-63babb72e668" />
+
+The easiest way to add a new book is - having clicked the `+ Add Book` button - to paste the ISBN 10 or 13 into the ISBN field and it should fetch the rest from openlibrary.org (although you might want to check the publisher names to make sure they fit the filters you're expecting in the dropdown - Inc. vs Incorporated. vs a different publisher taking over).
+
+<img width="1796" height="1364" alt="Librarian-Editor" src="https://github.com/user-attachments/assets/da22478d-21d9-4551-adf4-d1cc6358c941" />
+
+Images can also be added or changed by using the drag and drop feature if you have a local image file, or you can paste in the url of the cover image you prefer. The app will scale and resize the cover image to a max height of 160px to help keep the layout grid tidy.
 
 * * *
 
