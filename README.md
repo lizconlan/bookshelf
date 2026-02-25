@@ -72,7 +72,12 @@ Oh, sorry, probably should have done this bit sooner...
     <pre>rake generate_index_file shelf="."</pre>
 6. Load the resulting index.html into your favourite browser
 
-Tip: vary the value of `shelf=` to change the target directory for the script
+<img align="center" width="800" height="600" alt="Bookshelf-demo" src="https://github.com/user-attachments/assets/8d2f6da3-78d5-4915-a919-a23c02e06dc2" />
+
+<br />
+
+**Tip:** _vary the value of `shelf=` to change the target directory for the script_
+
 
 ### Librarian
 
