@@ -74,7 +74,7 @@ Oh, sorry, probably should have done this bit sooner...
 
 <img align="center" width="800" height="600" alt="Bookshelf-demo" src="https://github.com/user-attachments/assets/8d2f6da3-78d5-4915-a919-a23c02e06dc2" />
 
-<br />
+&nbsp;<br />
 
 **Tip:** _vary the value of `shelf=` to change the target directory for the script_
 
